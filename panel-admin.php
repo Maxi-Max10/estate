@@ -22,29 +22,237 @@ $userName = $_SESSION['user_name'] ?: 'Administrador';
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Panel Admin | Estate</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="assets/css/admin.css" rel="stylesheet">
 </head>
-<body class="bg-light">
-    <nav class="navbar navbar-dark bg-primary">
-        <div class="container-fluid">
-            <span class="navbar-brand">Panel Admin</span>
+<body>
+    <nav class="navbar navbar-dark bg-gradient admin-navbar">
+        <div class="container-fluid py-3">
+            <div>
+                <span class="navbar-brand h3 mb-0">Estate · Panel Administrador</span>
+                <p class="mb-0 text-white-50">Control centralizado de cuadrillas, fincas y asistencia</p>
+            </div>
             <div class="d-flex align-items-center gap-3 text-white">
-                <span><strong>Hola:</strong> <?php echo htmlspecialchars($userName, ENT_QUOTES, 'UTF-8'); ?></span>
-                <a class="btn btn-outline-light btn-sm" href="logout.php">Salir</a>
+                <span class="fw-semibold"><i class="bi bi-person-badge me-2"></i><?php echo htmlspecialchars($userName, ENT_QUOTES, 'UTF-8'); ?></span>
+                <a class="btn btn-outline-light btn-sm" href="logout.php"><i class="bi bi-box-arrow-right me-1"></i>Salir</a>
             </div>
         </div>
     </nav>
-    <main class="container py-5">
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <h1 class="h4 mb-3">Dashboard administrativo</h1>
-                <p class="text-muted">
-                    Aquí podrás gestionar cuadrillas, usuarios y reportes. Sustituye este bloque por tus módulos reales.
-                </p>
-                <div class="alert alert-info">
-                    Rol autenticado: <strong><?php echo htmlspecialchars($_SESSION['user_role'], ENT_QUOTES, 'UTF-8'); ?></strong>
+
+    <div class="dashboard-shell">
+        <div class="container-fluid">
+            <div class="row g-3 mb-4">
+                <div class="col-md-3">
+                    <div class="card stat-card p-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <p class="text-muted mb-1">Trabajadores activos</p>
+                                <h3 class="mb-0" id="statTrabajadores">0</h3>
+                            </div>
+                            <div class="stat-icon bg-primary-subtle text-primary"><i class="bi bi-people"></i></div>
+                        </div>
+                        <small class="text-success">+3 nuevos esta semana</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card stat-card p-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <p class="text-muted mb-1">Fincas registradas</p>
+                                <h3 class="mb-0" id="statFincas">0</h3>
+                            </div>
+                            <div class="stat-icon bg-warning-subtle text-warning"><i class="bi bi-map"></i></div>
+                        </div>
+                        <small class="text-warning">2 inspecciones pendientes</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card stat-card p-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <p class="text-muted mb-1">Asistencias hoy</p>
+                                <h3 class="mb-0" id="statAsistenciaHoy">0</h3>
+                            </div>
+                            <div class="stat-icon bg-success-subtle text-success"><i class="bi bi-check2-circle"></i></div>
+                        </div>
+                        <small class="text-success" id="statAsistenciaPct">0% del total</small>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card stat-card p-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <p class="text-muted mb-1">Ausencias</p>
+                                <h3 class="mb-0" id="statAusencias">0</h3>
+                            </div>
+                            <div class="stat-icon bg-danger-subtle text-danger"><i class="bi bi-exclamation-octagon"></i></div>
+                        </div>
+                        <small class="text-danger">Revisar justificativos</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4 mb-4">
+                <div class="col-lg-6">
+                    <div class="card form-section p-4 h-100">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <h2 class="h5 mb-0">Registrar trabajador</h2>
+                                <small class="text-muted">Carga rápida de cuadrilleros o supervisores</small>
+                            </div>
+                            <span class="badge bg-primary-subtle text-primary"><i class="bi bi-plus-lg me-1"></i>Nuevo</span>
+                        </div>
+                        <form id="workerForm" class="row g-3" novalidate>
+                            <div class="col-md-6">
+                                <label class="form-label">Nombre completo</label>
+                                <input type="text" class="form-control" name="nombre" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Documento</label>
+                                <input type="text" class="form-control" name="documento" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Rol</label>
+                                <select class="form-select" name="rol" required>
+                                    <option value="" selected disabled>Selecciona</option>
+                                    <option value="cuadrillero">Cuadrillero</option>
+                                    <option value="supervisor">Supervisor</option>
+                                    <option value="admin">Admin</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Finca asignada</label>
+                                <input type="text" class="form-control" name="finca" list="fincaList">
+                                <datalist id="fincaList"></datalist>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Inicio de actividades</label>
+                                <input type="date" class="form-control" name="inicio" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Observaciones</label>
+                                <textarea class="form-control" rows="2" name="observaciones" placeholder="Licencia, tipo de contrato, etc."></textarea>
+                            </div>
+                            <div class="col-12 text-end">
+                                <button class="btn btn-outline-secondary me-2" type="reset">Limpiar</button>
+                                <button class="btn btn-primary" type="submit">Guardar trabajador</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card form-section p-4 h-100">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <h2 class="h5 mb-0">Registrar finca</h2>
+                                <small class="text-muted">Administra predios y cuadrillas asignadas</small>
+                            </div>
+                            <span class="badge bg-success-subtle text-success"><i class="bi bi-building-add me-1"></i>Infraestructura</span>
+                        </div>
+                        <form id="farmForm" class="row g-3" novalidate>
+                            <div class="col-md-7">
+                                <label class="form-label">Nombre de la finca</label>
+                                <input type="text" class="form-control" name="nombre_finca" required>
+                            </div>
+                            <div class="col-md-5">
+                                <label class="form-label">Código interno</label>
+                                <input type="text" class="form-control" name="codigo" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Ubicación</label>
+                                <input type="text" class="form-control" name="ubicacion" placeholder="Departamento / Coordenadas" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Capacidad</label>
+                                <input type="number" min="1" class="form-control" name="capacidad" placeholder="Trabajadores simultáneos">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Supervisor</label>
+                                <input type="text" class="form-control" name="supervisor">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Notas</label>
+                                <textarea class="form-control" rows="2" name="notas"></textarea>
+                            </div>
+                            <div class="col-12 text-end">
+                                <button class="btn btn-outline-secondary me-2" type="reset">Limpiar</button>
+                                <button class="btn btn-success" type="submit">Guardar finca</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-lg mb-4">
+                <div class="card-body">
+                    <div class="d-flex flex-column flex-lg-row justify-content-between gap-3 mb-4">
+                        <div>
+                            <h2 class="h5 mb-1">Control de asistencia</h2>
+                            <small class="text-muted">Filtra por rango y exporta a CSV/XLSX</small>
+                        </div>
+                        <form id="filtersForm" class="row g-3 align-items-end flex-grow-1">
+                            <div class="col-md-3">
+                                <label class="form-label">Ver</label>
+                                <select id="viewRange" class="form-select">
+                                    <option value="hoy">Hoy</option>
+                                    <option value="semana">Últimos 7 días</option>
+                                    <option value="mes">Últimos 30 días</option>
+                                    <option value="personalizado">Personalizado</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Desde</label>
+                                <input type="date" id="startDate" class="form-control">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Hasta</label>
+                                <input type="date" id="endDate" class="form-control">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Finca</label>
+                                <select id="filterFinca" class="form-select">
+                                    <option value="">Todas</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+                        <button class="btn btn-outline-primary" id="btnExportCsv"><i class="bi bi-filetype-csv me-1"></i>Exportar CSV</button>
+                        <button class="btn btn-outline-success" id="btnExportXlsx"><i class="bi bi-file-earmark-spreadsheet me-1"></i>Exportar XLSX</button>
+                        <button class="btn btn-outline-secondary" id="btnPrint"><i class="bi bi-printer me-1"></i>Imprimir</button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table align-middle table-hover" id="attendanceTable">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Trabajador</th>
+                                    <th>Finca</th>
+                                    <th>Entrada</th>
+                                    <th>Salida</th>
+                                    <th>Horas</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-    </main>
+    </div>
+
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 1080;">
+        <div id="actionToast" class="toast align-items-center text-bg-primary border-0" role="status" aria-live="assertive">
+            <div class="d-flex">
+                <div class="toast-body" id="toastBody">Guardado con éxito.</div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Cerrar"></button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sheetjs@0.20.0/dist/xlsx.full.min.js"></script>
+    <script src="assets/js/panel-admin.js"></script>
 </body>
 </html>
