@@ -12,14 +12,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = filter_var($oldEmail, FILTER_VALIDATE_EMAIL);
     $password = $_POST['password'] ?? '';
 
-    if (!$email || strlen($password) < 8) {
-        $error = 'Revisa tu correo y escribe una contraseña de al menos 8 caracteres.';
+    if (!$email || $password === '') {
+        $error = 'Ingresa un correo válido y una contraseña.';
     } else {
         $stmt = $pdo->prepare('SELECT id, email, password_hash, rol, nombre FROM usuarios WHERE email = ? LIMIT 1');
         $stmt->execute([$email]);
         $user = $stmt->fetch();
 
-        if ($user && password_verify($password, $user['password_hash'])) {
+        $storedPassword = $user['password_hash'] ?? '';
+        if ($user && hash_equals($storedPassword, $password)) {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['user_email'] = $user['email'];
             $_SESSION['user_role'] = $user['rol'];
