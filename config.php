@@ -4,7 +4,7 @@
 const DB_HOST = 'localhost';
 const DB_NAME = 'u404968876_estate';
 const DB_USER = 'u404968876_estate';
-const DB_PASS = 'PON_AQUI_TU_PASSWORD';
+const DB_PASS = 'Estate00-$';
 const DB_CHARSET = 'utf8mb4';
 
 $dsn = sprintf('mysql:host=%s;dbname=%s;charset=%s', DB_HOST, DB_NAME, DB_CHARSET);
