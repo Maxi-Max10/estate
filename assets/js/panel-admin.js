@@ -34,6 +34,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const endDateInput = document.getElementById('endDate');
     const filterFinca = document.getElementById('filterFinca');
     const fincaDatalist = document.getElementById('fincaList');
+    const farmForm = document.getElementById('farmForm');
+    const farmSuccessModalEl = document.getElementById('farmSuccessModal');
+    const farmSuccessModalBody = document.getElementById('farmSuccessModalBody');
+    const farmSuccessModal = farmSuccessModalEl ? new bootstrap.Modal(farmSuccessModalEl) : null;
 
     let filteredData = [...attendanceData];
 
@@ -174,13 +178,11 @@ document.addEventListener('DOMContentLoaded', () => {
         event.target.reset();
     });
 
-    const farmForm = document.getElementById('farmForm');
     if (farmForm) {
         farmForm.addEventListener('submit', async event => {
             event.preventDefault();
-            const form = event.target;
-            const submitBtn = form.querySelector('[type="submit"]');
-            const originalText = submitBtn ? submitBtn.textContent : '';
+            const submitBtn = farmForm.querySelector('[type="submit"]');
+            const originalBtnText = submitBtn ? submitBtn.textContent : '';
 
             if (submitBtn) {
                 submitBtn.disabled = true;
@@ -188,31 +190,34 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             try {
-                const response = await fetch(form.action, {
+                const response = await fetch(farmForm.action, {
                     method: 'POST',
-                    body: new FormData(form),
+                    body: new FormData(farmForm),
                     headers: {
                         'X-Requested-With': 'XMLHttpRequest',
                         'Accept': 'application/json'
                     }
                 });
 
-                const isJson = response.headers.get('Content-Type')?.includes('application/json');
-                const payload = isJson ? await response.json() : {};
+                const expectsJson = response.headers.get('Content-Type')?.includes('application/json');
+                const payload = expectsJson ? await response.json() : {};
 
                 if (!response.ok || payload.success === false) {
-                    const message = payload.message || 'No se pudo guardar la finca. Intenta nuevamente.';
-                    throw new Error(message);
+                    throw new Error(payload.message || 'No se pudo guardar la finca.');
                 }
 
-                showToast('Finca guardada correctamente.', 'success');
-                form.reset();
+                if (farmSuccessModalBody && payload.message) {
+                    farmSuccessModalBody.textContent = payload.message;
+                }
+
+                farmForm.reset();
+                farmSuccessModal?.show();
             } catch (error) {
                 showToast(error.message || 'Ocurrió un error al guardar la finca.', 'danger');
             } finally {
                 if (submitBtn) {
                     submitBtn.disabled = false;
-                    submitBtn.textContent = originalText;
+                    submitBtn.textContent = originalBtnText;
                 }
             }
         });

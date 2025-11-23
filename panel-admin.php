@@ -292,6 +292,23 @@ $userName = $_SESSION['user_name'] ?: 'Administrador';
         </div>
     </div>
 
+    <div class="modal fade" id="farmSuccessModal" tabindex="-1" aria-labelledby="farmSuccessModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-0">
+                    <h1 class="modal-title fs-5" id="farmSuccessModalLabel">Finca registrada</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body" id="farmSuccessModalBody">
+                    La finca se guardó correctamente.
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Entendido</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sheetjs@0.20.0/dist/xlsx.full.min.js"></script>
     <script src="assets/js/panel-admin.js?v=20241123"></script>
