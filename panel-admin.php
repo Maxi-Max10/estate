@@ -73,6 +73,9 @@ $userName = $_SESSION['user_name'] ?: 'Administrador';
                     <a class="btn btn-outline-info btn-sm text-white" href="trabajadores-admin.php">
                         <i class="bi bi-people me-1"></i>Trabajadores
                     </a>
+                    <a class="btn btn-outline-success btn-sm text-white" href="fincas-admin.php">
+                        <i class="bi bi-map me-1"></i>Fincas
+                    </a>
                     <a class="btn btn-outline-light btn-sm" href="logout.php"><i class="bi bi-box-arrow-right me-1"></i>Salir</a>
                 </div>
             </div>
