@@ -174,11 +174,8 @@ document.addEventListener('DOMContentLoaded', () => {
         event.target.reset();
     });
 
-    document.getElementById('farmForm').addEventListener('submit', event => {
-        event.preventDefault();
-        showToast('Finca enviada para registro. Conecta el backend para guardar.', 'success');
-        event.target.reset();
-    });
+    // Deja que el formulario de finca se envíe al backend (guardar_finca.php)
+    // sin interceptar el submit desde JavaScript.
 
     viewRange.addEventListener('change', () => {
         if (viewRange.value !== 'personalizado') {
