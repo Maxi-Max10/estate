@@ -70,6 +70,9 @@ $userName = $_SESSION['user_name'] ?: 'Administrador';
                 </div>
                 <div class="d-flex align-items-center gap-2 gap-sm-3 text-white user-actions">
                     <span class="fw-semibold"><i class="bi bi-person-badge me-2"></i><?php echo htmlspecialchars($userName, ENT_QUOTES, 'UTF-8'); ?></span>
+                    <a class="btn btn-outline-info btn-sm text-white" href="trabajadores-admin.php">
+                        <i class="bi bi-people me-1"></i>Trabajadores
+                    </a>
                     <a class="btn btn-outline-light btn-sm" href="logout.php"><i class="bi bi-box-arrow-right me-1"></i>Salir</a>
                 </div>
             </div>
