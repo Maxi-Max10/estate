@@ -54,7 +54,16 @@ try {
         ':observacion'    => $observacion,
     ]);
 
-    $respond(true, 'Finca guardada correctamente.');
+    $newFinca = [
+        'id'             => (int) $pdo->lastInsertId(),
+        'nombre'         => $nombre,
+        'link_ubicacion' => $linkUbicacion,
+        'descripcion'    => $descripcion,
+        'tarea_asignada' => $tareaAsignada,
+        'observacion'    => $observacion,
+    ];
+
+    $respond(true, 'Finca guardada correctamente.', ['finca' => $newFinca]);
 } catch (Throwable $e) {
     error_log('Error al guardar finca: ' . $e->getMessage());
     $respond(false, 'Ocurrió un error al guardar la finca.');

@@ -27,13 +27,13 @@ $respond = function (bool $success, string $message = '', array $extra = []) use
         ], $extra));
     } else {
         $status = $success ? 'ok' : 'error';
-        $query = http_build_query(['worker' => $status]);
+        $query = http_build_query(['workerUpdate' => $status]);
         header('Location: panel-admin.php?' . $query);
     }
-
     exit;
 };
 
+$id            = isset($_POST['id']) ? (int) $_POST['id'] : 0;
 $nombre        = trim($_POST['nombre'] ?? '');
 $documento     = trim($_POST['documento'] ?? '');
 $rol           = trim($_POST['rol'] ?? '');
@@ -44,7 +44,11 @@ $especialidad  = trim($_POST['especialidad'] ?? '');
 
 $validRoles = ['admin', 'cuadrillero', 'colaborador', 'supervisor'];
 
-if ($nombre === '' || $documento === '' || $rol === '' || !in_array($rol, $validRoles, true)) {
+if ($id <= 0) {
+    $respond(false, 'ID de trabajador inválido.');
+}
+
+if ($nombre === '' || $documento === '' || !in_array($rol, $validRoles, true)) {
     $respond(false, 'Nombre, documento y rol son obligatorios.');
 }
 
@@ -77,9 +81,6 @@ if ($rol === 'cuadrillero') {
     }
 
     $fincaNombre = $finca['nombre'];
-} else {
-    $fincaId = null;
-    $fincaNombre = null;
 }
 
 if ($rol === 'colaborador') {
@@ -89,7 +90,7 @@ if ($rol === 'colaborador') {
 }
 
 try {
-    $stmt = $pdo->prepare('INSERT INTO trabajadores (nombre, documento, rol, finca_id, finca_nombre, especialidad, inicio_actividades, observaciones) VALUES (:nombre, :documento, :rol, :finca_id, :finca_nombre, :especialidad, :inicio, :observaciones)');
+    $stmt = $pdo->prepare('UPDATE trabajadores SET nombre = :nombre, documento = :documento, rol = :rol, finca_id = :finca_id, finca_nombre = :finca_nombre, especialidad = :especialidad, inicio_actividades = :inicio, observaciones = :observaciones WHERE id = :id');
     $stmt->execute([
         ':nombre'        => $nombre,
         ':documento'     => $documento,
@@ -99,22 +100,14 @@ try {
         ':especialidad'  => $especialidad,
         ':inicio'        => $inicio,
         ':observaciones' => $observaciones,
+        ':id'            => $id,
     ]);
+    $stmtFetch = $pdo->prepare('SELECT id, nombre, documento, rol, finca_id, finca_nombre, especialidad, inicio_actividades, observaciones FROM trabajadores WHERE id = :id');
+    $stmtFetch->execute([':id' => $id]);
+    $updatedWorker = $stmtFetch->fetch(PDO::FETCH_ASSOC);
 
-    $newWorker = [
-        'id'              => (int) $pdo->lastInsertId(),
-        'nombre'          => $nombre,
-        'documento'       => $documento,
-        'rol'             => $rol,
-        'finca_id'        => $fincaId,
-        'finca_nombre'    => $fincaNombre,
-        'especialidad'    => $especialidad,
-        'inicio_actividades' => $inicio,
-        'observaciones'   => $observaciones,
-    ];
-
-    $respond(true, 'Trabajador guardado correctamente.', ['trabajador' => $newWorker]);
+    $respond(true, 'Trabajador actualizado correctamente.', ['trabajador' => $updatedWorker]);
 } catch (Throwable $e) {
-    error_log('Error al guardar trabajador: ' . $e->getMessage());
-    $respond(false, 'Ocurrió un error al guardar el trabajador.');
+    error_log('Error actualizando trabajador: ' . $e->getMessage());
+    $respond(false, 'Ocurrió un error al actualizar el trabajador.');
 }

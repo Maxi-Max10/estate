@@ -13,14 +13,19 @@ if (($_SESSION['user_role'] ?? '') !== 'admin') {
     exit;
 }
 
+require_once __DIR__ . '/config.php';
+
 $availableFincas = [];
+$availableTrabajadores = [];
 
 try {
-    require_once __DIR__ . '/config.php';
-    $stmt = $pdo->query('SELECT id, nombre FROM fincas ORDER BY nombre ASC');
-    $availableFincas = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+    $stmtFincas = $pdo->query('SELECT id, nombre, link_ubicacion, descripcion, tarea_asignada, observacion FROM fincas ORDER BY nombre ASC');
+    $availableFincas = $stmtFincas->fetchAll(PDO::FETCH_ASSOC) ?: [];
+
+    $stmtTrabajadores = $pdo->query('SELECT id, nombre, documento, rol, finca_id, finca_nombre, especialidad, inicio_actividades, observaciones FROM trabajadores ORDER BY nombre ASC');
+    $availableTrabajadores = $stmtTrabajadores->fetchAll(PDO::FETCH_ASSOC) ?: [];
 } catch (Throwable $e) {
-    $availableFincas = [];
+    error_log('Error cargando datos panel admin: ' . $e->getMessage());
 }
 
 $userName = $_SESSION['user_name'] ?: 'Administrador';
@@ -247,6 +252,68 @@ $userName = $_SESSION['user_name'] ?: 'Administrador';
                 </div>
             </div>
 
+            <div class="row g-4 mb-4">
+                <div class="col-xxl-6">
+                    <div class="card table-card border-0 shadow-sm h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div>
+                                    <h2 class="h5 mb-1">Trabajadores registrados</h2>
+                                    <small class="text-muted">Edita o elimina registros existentes</small>
+                                </div>
+                                <a class="btn btn-outline-primary btn-sm" href="#workerForm">
+                                    <i class="bi bi-plus-lg me-1"></i>Nuevo
+                                </a>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table align-middle" id="workersTable">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Nombre</th>
+                                            <th>Documento</th>
+                                            <th>Rol</th>
+                                            <th>Finca</th>
+                                            <th>Inicio</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xxl-6">
+                    <div class="card table-card border-0 shadow-sm h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div>
+                                    <h2 class="h5 mb-1">Fincas registradas</h2>
+                                    <small class="text-muted">Actualiza información o elimina registros</small>
+                                </div>
+                                <a class="btn btn-outline-success btn-sm" href="#farmForm">
+                                    <i class="bi bi-building-add me-1"></i>Nueva
+                                </a>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table align-middle" id="farmsTable">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Nombre</th>
+                                            <th>Link ubicación</th>
+                                            <th>Tarea asignada</th>
+                                            <th>Observación</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="card table-card border-0 shadow-lg mb-4">
                 <div class="card-body">
                     <div class="d-flex flex-column flex-lg-row justify-content-between gap-3 mb-4">
@@ -332,6 +399,63 @@ $userName = $_SESSION['user_name'] ?: 'Administrador';
         </div>
     </div>
 
+    <div class="modal fade" id="workerEditModal" tabindex="-1" aria-labelledby="workerEditModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <form id="workerEditForm" method="post" action="actualizar_trabajador.php">
+                    <div class="modal-header border-0 pb-0">
+                        <h1 class="modal-title fs-5" id="workerEditModalLabel">Editar trabajador</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="id" id="editWorkerId">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Nombre completo</label>
+                                <input type="text" class="form-control" name="nombre" id="editWorkerName" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Documento</label>
+                                <input type="text" class="form-control" name="documento" id="editWorkerDocument" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Rol</label>
+                                <select class="form-select" name="rol" id="editWorkerRole" required>
+                                    <option value="admin">Administrador</option>
+                                    <option value="cuadrillero">Cuadrillero</option>
+                                    <option value="colaborador">Colaborador (Cosechador)</option>
+                                    <option value="supervisor">Supervisor</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6" id="editWorkerFincaWrapper">
+                                <label class="form-label">Finca asignada</label>
+                                <select class="form-select" name="finca_id" id="editWorkerFinca">
+                                    <option value="">Selecciona una finca</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Especialidad</label>
+                                <input type="text" class="form-control" name="especialidad" id="editWorkerEspecialidad" placeholder="cosechador, encargado, etc.">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Inicio de actividades</label>
+                                <input type="date" class="form-control" name="inicio" id="editWorkerInicio" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Observaciones</label>
+                                <textarea class="form-control" rows="2" name="observaciones" id="editWorkerObservaciones"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0 pt-0">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="farmSuccessModal" tabindex="-1" aria-labelledby="farmSuccessModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -349,10 +473,71 @@ $userName = $_SESSION['user_name'] ?: 'Administrador';
         </div>
     </div>
 
+    <div class="modal fade" id="farmEditModal" tabindex="-1" aria-labelledby="farmEditModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <form id="farmEditForm" method="post" action="actualizar_finca.php">
+                    <div class="modal-header border-0 pb-0">
+                        <h1 class="modal-title fs-5" id="farmEditModalLabel">Editar finca</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="id" id="editFarmId">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Nombre</label>
+                                <input type="text" class="form-control" name="nombre" id="editFarmNombre" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Link de ubicación</label>
+                                <input type="url" class="form-control" name="link_ubicacion" id="editFarmLink" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Descripción</label>
+                                <textarea class="form-control" rows="2" name="descripcion" id="editFarmDescripcion"></textarea>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Tarea asignada</label>
+                                <textarea class="form-control" rows="2" name="tarea_asignada" id="editFarmTarea"></textarea>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Observación</label>
+                                <textarea class="form-control" rows="2" name="observacion" id="editFarmObservacion"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0 pt-0">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-success">Guardar cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-0">
+                    <h1 class="modal-title fs-5" id="confirmDeleteModalLabel">Confirmar eliminación</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body" id="confirmDeleteBody">
+                    ¿Seguro que deseas eliminar este registro?
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sheetjs@0.20.0/dist/xlsx.full.min.js"></script>
     <script>
         window.__FincasData = <?php echo json_encode($availableFincas, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT); ?>;
+        window.__TrabajadoresData = <?php echo json_encode($availableTrabajadores, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT); ?>;
     </script>
     <script src="assets/js/panel-admin.js?v=20241123"></script>
 </body>
