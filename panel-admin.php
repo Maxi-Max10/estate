@@ -41,7 +41,7 @@ $userName = $_SESSION['user_name'] ?: 'Administrador';
 
     <div class="dashboard-shell">
         <div class="container-fluid">
-            <div class="row g-3 mb-4">
+            <div class="row g-3 mb-4 stats-grid">
                 <div class="col-md-3">
                     <div class="card stat-card p-3">
                         <div class="d-flex justify-content-between align-items-center">
@@ -183,14 +183,57 @@ $userName = $_SESSION['user_name'] ?: 'Administrador';
                 </div>
             </div>
 
-            <div class="card border-0 shadow-lg mb-4">
+            <div class="row g-4 mb-4">
+                <div class="col-lg-6">
+                    <div class="card form-section p-4 h-100">
+                        <h2 class="h5 mb-3">Acciones rápidas</h2>
+                        <p class="info-text">Centraliza tareas frecuentes para reaccionar ante eventos diarios.</p>
+                        <div class="list-group list-group-flush">
+                            <button class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" type="button">
+                                Programar capacitación
+                                <span class="badge bg-primary rounded-pill"><i class="bi bi-calendar-event"></i></span>
+                            </button>
+                            <button class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" type="button">
+                                Crear comunicado a cuadrillas
+                                <span class="badge bg-info rounded-pill"><i class="bi bi-megaphone"></i></span>
+                            </button>
+                            <button class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" type="button">
+                                Generar reporte mensual
+                                <span class="badge bg-success rounded-pill"><i class="bi bi-clipboard-data"></i></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card form-section p-4 h-100">
+                        <h2 class="h5 mb-3">Alertas operativas</h2>
+                        <p class="info-text">Mantente al tanto de incidencias y ausencias críticas.</p>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Ausencias consecutivas (3)
+                                <span class="badge bg-danger rounded-pill">Revisar</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Equipos con mantenimiento pendiente
+                                <span class="badge bg-warning text-dark rounded-pill">2</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Licencias a vencer
+                                <span class="badge bg-secondary rounded-pill">5 días</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card table-card border-0 shadow-lg mb-4">
                 <div class="card-body">
                     <div class="d-flex flex-column flex-lg-row justify-content-between gap-3 mb-4">
                         <div>
                             <h2 class="h5 mb-1">Control de asistencia</h2>
-                            <small class="text-muted">Filtra por rango y exporta a CSV/XLSX</small>
+                            <small class="info-text">Filtra por rango y exporta a CSV/XLSX</small>
                         </div>
-                        <form id="filtersForm" class="row g-3 align-items-end flex-grow-1">
+                        <form id="filtersForm" class="row g-3 align-items-end flex-grow-1 filters-form">
                             <div class="col-md-3">
                                 <label class="form-label">Ver</label>
                                 <select id="viewRange" class="form-select">
@@ -216,7 +259,7 @@ $userName = $_SESSION['user_name'] ?: 'Administrador';
                             </div>
                         </form>
                     </div>
-                    <div class="d-flex flex-wrap gap-2 mb-3">
+                    <div class="d-flex flex-wrap gap-2 mb-3 action-buttons">
                         <button class="btn btn-outline-primary" id="btnExportCsv"><i class="bi bi-filetype-csv me-1"></i>Exportar CSV</button>
                         <button class="btn btn-outline-success" id="btnExportXlsx"><i class="bi bi-file-earmark-spreadsheet me-1"></i>Exportar XLSX</button>
                         <button class="btn btn-outline-secondary" id="btnPrint"><i class="bi bi-printer me-1"></i>Imprimir</button>
