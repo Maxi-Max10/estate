@@ -244,3 +244,5 @@ document.addEventListener('DOMContentLoaded', () => {
     populateFincasSelectors();
     applyFilters();
 });
+
+<script src="assets/js/panel-admin.js?v=20241123"></script>

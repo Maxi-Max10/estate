@@ -294,6 +294,6 @@ $userName = $_SESSION['user_name'] ?: 'Administrador';
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sheetjs@0.20.0/dist/xlsx.full.min.js"></script>
-    <script src="assets/js/panel-admin.js"></script>
+    <script src="assets/js/panel-admin.js?v=20241123"></script>
 </body>
 </html>
