@@ -8,27 +8,58 @@
 }
 
 body {
-    background: var(--navy);
+    background: #e2e8f0;
     min-height: 100vh;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #0f172a;
 }
 
 .admin-navbar {
+    background: transparent;
+    padding-bottom: 0;
+}
+
+.admin-hero {
     background: linear-gradient(135deg, var(--blue-dark), var(--blue));
-    box-shadow: 0 10px 35px rgba(15, 23, 42, 0.3);
-    position: relative;
-    z-index: 2;
+    color: #fff;
+    padding: clamp(1.5rem, 4vw, 3rem) 0 clamp(1rem, 3vw, 2rem);
+    box-shadow: 0 10px 35px rgba(15, 23, 42, 0.25);
+}
+
+.admin-hero h1 {
+    margin-bottom: 0.5rem;
+}
+
+.hero-badge {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 999px;
+    padding: 0.35rem 0.9rem;
+    font-size: 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.hero-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.hero-meta .meta-card {
+    background: rgba(15, 23, 42, 0.25);
+    border-radius: 0.85rem;
+    padding: 0.75rem 1rem;
+    min-width: 160px;
 }
 
 .dashboard-shell {
     background: var(--shell-bg);
-    border-radius: 1.5rem 1.5rem 0 0;
+    border-radius: 1.5rem;
     margin-top: -2rem;
     padding: clamp(1.25rem, 2.5vw, 2.5rem);
-    box-shadow: 0 -10px 40px rgba(15, 23, 42, 0.35);
-    position: relative;
-    z-index: 1;
+    box-shadow: 0 20px 50px rgba(15, 23, 42, 0.12);
 }
 
 .stats-grid .card {
@@ -96,13 +127,13 @@ body {
     .action-buttons {
         flex-direction: column;
     }
+
+    .hero-meta .meta-card {
+        width: 100%;
+    }
 }
 
 @media (max-width: 768px) {
-    .dashboard-shell {
-        border-radius: 1rem 1rem 0 0;
-    }
-
     .stats-grid {
         gap: 0.75rem;
     }
