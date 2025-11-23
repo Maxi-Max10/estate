@@ -1,22 +1,35 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const summary = {
-        asistencia: { valor: 18, meta: '90% de 20 programados' },
-        tareas: { valor: 8, meta: '3 urgentes · 5 en curso' },
-        alertas: 2,
+    const data = window.__CuadrilleroData || {};
+    const stats = data.stats || {};
+    const assignedFarms = Array.isArray(data.assignedFarms) ? data.assignedFarms : [];
+
+    const setText = (id, value, fallback = '') => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.textContent = value ?? fallback;
+        }
     };
 
-    const timeline = [
-        { hora: '07:30', titulo: 'Check-in general', detalle: 'Registro biométrico en Finca Norte' },
-        { hora: '09:00', titulo: 'Riego sector B', detalle: 'Equipo 2 completó 80% del turno' },
-        { hora: '12:30', titulo: 'Pausa activa', detalle: 'Supervisión de seguridad realizada' },
-        { hora: '15:00', titulo: 'Control de plagas', detalle: 'Aplicación eco en Finca Central' },
+    setText('summaryAsistencia', stats.farms ?? 0);
+    setText('summaryAsistenciaMeta', stats.farmsLabel ?? 'Fincas asignadas');
+    setText('summaryTareas', stats.tasks ?? 0);
+    setText('summaryTareasMeta', stats.tasksLabel ?? 'Con tareas registradas');
+    setText('summaryAlertas', stats.alerts ?? 0);
+    setText('summaryAlertasMeta', stats.alertsLabel ?? 'Observaciones pendientes');
+
+    const fallbackTimeline = [
+        { hora: '07:30', titulo: 'Check-in general', detalle: 'Registro biométrico en finca principal' },
+        { hora: '09:30', titulo: 'Supervisión de riego', detalle: 'Revisión de válvulas y presión' },
+        { hora: '14:00', titulo: 'Control sanitario', detalle: 'Checklist de EPP con la cuadrilla' },
     ];
 
-    const tasks = [
-        { titulo: 'Verificar fumigación', finca: 'Finca Sur', estado: 'Pendiente', prioridad: 'alta' },
-        { titulo: 'Subir reporte fotográfico', finca: 'Finca Norte', estado: 'En progreso', prioridad: 'media' },
-        { titulo: 'Actualizar checklist de EPP', finca: 'Finca Central', estado: 'Completado', prioridad: 'baja' },
-    ];
+    const timeline = assignedFarms.length
+        ? assignedFarms.map((farm, index) => ({
+              hora: `${String(7 + index * 2).padStart(2, '0')}:00`,
+              titulo: farm.nombre || `Finca ${index + 1}`,
+              detalle: farm.tarea ? `Tarea: ${farm.tarea}` : 'Seguimiento general del predio',
+          }))
+        : fallbackTimeline;
 
     const safetyChecks = [
         { titulo: 'Extintores al día', progreso: 80, estado: 'En revisión' },
@@ -24,35 +37,55 @@ document.addEventListener('DOMContentLoaded', () => {
         { titulo: 'Botiquines completos', progreso: 100, estado: 'Completado' },
     ];
 
-    document.getElementById('summaryAsistencia').textContent = summary.asistencia.valor;
-    document.getElementById('summaryAsistenciaMeta').textContent = summary.asistencia.meta;
-    document.getElementById('summaryTareas').textContent = summary.tareas.valor;
-    document.getElementById('summaryTareasMeta').textContent = summary.tareas.meta;
-    document.getElementById('summaryAlertas').textContent = summary.alertas;
-
     const timelineList = document.getElementById('timelineList');
-    timeline.forEach(item => {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'timeline-item';
-        wrapper.innerHTML = `
-            <div class="fw-semibold">${item.hora} · ${item.titulo}</div>
-            <p class="text-muted small mb-0">${item.detalle}</p>`;
-        timelineList.appendChild(wrapper);
-    });
+    if (timelineList) {
+        timelineList.innerHTML = '';
+        if (timeline.length === 0) {
+            timelineList.innerHTML = '<p class="text-muted small mb-0">Sin hitos registrados aún.</p>';
+        } else {
+            timeline.forEach(item => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'timeline-item';
+                wrapper.innerHTML = `
+                    <div class="fw-semibold">${item.hora} · ${item.titulo}</div>
+                    <p class="text-muted small mb-0">${item.detalle}</p>`;
+                timelineList.appendChild(wrapper);
+            });
+        }
+    }
+
+    const derivedTasks = assignedFarms
+        .filter(farm => typeof farm.tarea === 'string' && farm.tarea.trim() !== '')
+        .map(farm => ({
+            titulo: farm.tarea,
+            finca: farm.nombre || 'Finca sin nombre',
+            estado: farm.observacion ? 'Observación' : 'En curso',
+            prioridad: farm.observacion ? 'alta' : 'media',
+        }));
 
     const taskList = document.getElementById('taskList');
-    tasks.forEach(task => {
-        const item = document.createElement('div');
-        item.className = 'list-group-item d-flex justify-content-between align-items-center';
-        const badgeClass = task.estado === 'Completado' ? 'bg-success-subtle text-success' : task.estado === 'En progreso' ? 'bg-warning text-dark' : 'bg-danger-subtle text-danger';
-        item.innerHTML = `
-            <div>
-                <div class="fw-semibold">${task.titulo}</div>
-                <small class="text-muted">${task.finca} · Prioridad ${task.prioridad}</small>
-            </div>
-            <span class="badge ${badgeClass} task-status">${task.estado}</span>`;
-        taskList.appendChild(item);
-    });
+    if (taskList) {
+        taskList.innerHTML = '';
+        if (!derivedTasks.length) {
+            taskList.innerHTML = '<div class="list-group-item text-muted small">Aún no hay tareas registradas para tus fincas.</div>';
+        } else {
+            derivedTasks.forEach(task => {
+                const item = document.createElement('div');
+                item.className = 'list-group-item d-flex justify-content-between align-items-center';
+                let badgeClass = 'bg-warning text-dark';
+                if (task.estado === 'Observación') {
+                    badgeClass = 'bg-danger-subtle text-danger';
+                }
+                item.innerHTML = `
+                    <div>
+                        <div class="fw-semibold">${task.titulo}</div>
+                        <small class="text-muted">${task.finca}</small>
+                    </div>
+                    <span class="badge ${badgeClass} task-status">${task.estado}</span>`;
+                taskList.appendChild(item);
+            });
+        }
+    }
 
     const safetyContainer = document.getElementById('safetyChecks');
     safetyChecks.forEach(check => {
