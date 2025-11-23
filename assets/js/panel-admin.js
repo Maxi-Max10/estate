@@ -6,11 +6,13 @@ document.addEventListener('DOMContentLoaded', () => {
         { nombre: 'Lucía Torres', documento: '28999888', rol: 'cuadrillero', finca: 'Finca Norte' }
     ];
 
-    const fincasDemo = [
-        { nombre: 'Finca Norte', codigo: 'FN-01' },
-        { nombre: 'Finca Sur', codigo: 'FS-02' },
-        { nombre: 'Finca Central', codigo: 'FC-03' }
+    const fallbackFincas = [
+        { id: 1, nombre: 'Finca Norte' },
+        { id: 2, nombre: 'Finca Sur' },
+        { id: 3, nombre: 'Finca Central' }
     ];
+
+    const fincasData = Array.isArray(window.__FincasData) && window.__FincasData.length ? window.__FincasData : fallbackFincas;
 
     const attendanceData = [
         { fecha: '2025-11-22', trabajador: 'Juan Pérez', finca: 'Finca Norte', horaEntrada: '07:55', horaSalida: '17:10', horas: 9.25, estado: 'Presente' },
@@ -38,12 +40,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const farmSuccessModalEl = document.getElementById('farmSuccessModal');
     const farmSuccessModalBody = document.getElementById('farmSuccessModalBody');
     const farmSuccessModal = farmSuccessModalEl ? new bootstrap.Modal(farmSuccessModalEl) : null;
+    const workerForm = document.getElementById('workerForm');
+    const workerRoleField = document.getElementById('workerRole');
+    const workerFincaWrapper = document.getElementById('workerFincaWrapper');
+    const workerFincaSelect = document.getElementById('workerFincaSelect');
+    const workerEspecialidadInput = document.getElementById('workerEspecialidad');
+    const workerSuccessModalEl = document.getElementById('workerSuccessModal');
+    const workerSuccessModalBody = document.getElementById('workerSuccessModalBody');
+    const workerSuccessModal = workerSuccessModalEl ? new bootstrap.Modal(workerSuccessModalEl) : null;
 
     let filteredData = [...attendanceData];
 
     function initStats() {
         document.getElementById('statTrabajadores').textContent = trabajadoresDemo.length;
-        document.getElementById('statFincas').textContent = fincasDemo.length;
+        document.getElementById('statFincas').textContent = fincasData.length;
         const today = new Date().toISOString().slice(0, 10);
         const todayRecords = attendanceData.filter(item => item.fecha === today);
         document.getElementById('statAsistenciaHoy').textContent = todayRecords.length;
@@ -54,15 +64,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function populateFincasSelectors() {
-        fincasDemo.forEach(finca => {
-            const option = document.createElement('option');
-            option.value = finca.nombre;
-            fincaDatalist.appendChild(option);
+        if (fincaDatalist) {
+            fincaDatalist.innerHTML = '';
+        }
 
-            const selectOption = document.createElement('option');
-            selectOption.value = finca.nombre;
-            selectOption.textContent = finca.nombre;
-            filterFinca.appendChild(selectOption);
+        if (filterFinca) {
+            filterFinca.innerHTML = '<option value="">Todas</option>';
+        }
+
+        fincasData.forEach(finca => {
+            if (fincaDatalist) {
+                const option = document.createElement('option');
+                option.value = finca.nombre;
+                fincaDatalist.appendChild(option);
+            }
+
+            if (filterFinca) {
+                const selectOption = document.createElement('option');
+                selectOption.value = finca.nombre;
+                selectOption.textContent = finca.nombre;
+                filterFinca.appendChild(selectOption);
+            }
         });
     }
 
@@ -172,11 +194,80 @@ document.addEventListener('DOMContentLoaded', () => {
         XLSX.writeFile(wb, `asistencia_${Date.now()}.xlsx`);
     }
 
-    document.getElementById('workerForm').addEventListener('submit', event => {
-        event.preventDefault();
-        showToast('Trabajador enviado para registro. Conecta el backend para guardar.', 'success');
-        event.target.reset();
-    });
+    function handleWorkerRoleChange() {
+        if (!workerRoleField || !workerFincaWrapper || !workerFincaSelect) {
+            return;
+        }
+
+        const role = workerRoleField.value;
+        const needsFinca = role === 'cuadrillero';
+
+        workerFincaWrapper.classList.toggle('d-none', !needsFinca);
+        workerFincaSelect.disabled = !needsFinca;
+        workerFincaSelect.required = needsFinca;
+
+        if (!needsFinca) {
+            workerFincaSelect.value = '';
+        }
+
+        if (workerEspecialidadInput) {
+            workerEspecialidadInput.value = role === 'colaborador' ? 'cosechador' : '';
+        }
+    }
+
+    if (workerRoleField) {
+        workerRoleField.addEventListener('change', handleWorkerRoleChange);
+    }
+
+    if (workerForm) {
+        workerForm.addEventListener('submit', async event => {
+            event.preventDefault();
+            const submitBtn = workerForm.querySelector('[type="submit"]');
+            const originalText = submitBtn ? submitBtn.textContent : '';
+
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Guardando...';
+            }
+
+            try {
+                const response = await fetch(workerForm.action, {
+                    method: 'POST',
+                    body: new FormData(workerForm),
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    }
+                });
+
+                const expectsJson = response.headers.get('Content-Type')?.includes('application/json');
+                const payload = expectsJson ? await response.json() : {};
+
+                if (!response.ok || payload.success === false) {
+                    throw new Error(payload.message || 'No se pudo guardar el trabajador.');
+                }
+
+                if (workerSuccessModalBody && payload.message) {
+                    workerSuccessModalBody.textContent = payload.message;
+                }
+
+                workerForm.reset();
+                handleWorkerRoleChange();
+                if (workerSuccessModal) {
+                    workerSuccessModal.show();
+                } else {
+                    showToast('Trabajador guardado correctamente.', 'success');
+                }
+            } catch (error) {
+                showToast(error.message || 'Ocurrió un error al guardar el trabajador.', 'danger');
+            } finally {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalText;
+                }
+            }
+        });
+    }
 
     if (farmForm) {
         farmForm.addEventListener('submit', async event => {
@@ -211,7 +302,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 farmForm.reset();
-                farmSuccessModal?.show();
+                if (farmSuccessModal) {
+                    farmSuccessModal.show();
+                } else {
+                    showToast('Finca guardada correctamente.', 'success');
+                }
             } catch (error) {
                 showToast(error.message || 'Ocurrió un error al guardar la finca.', 'danger');
             } finally {
@@ -247,5 +342,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initStats();
     populateFincasSelectors();
+    handleWorkerRoleChange();
     applyFilters();
 });

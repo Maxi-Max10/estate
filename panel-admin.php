@@ -13,6 +13,16 @@ if (($_SESSION['user_role'] ?? '') !== 'admin') {
     exit;
 }
 
+$availableFincas = [];
+
+try {
+    require_once __DIR__ . '/config.php';
+    $stmt = $pdo->query('SELECT id, nombre FROM fincas ORDER BY nombre ASC');
+    $availableFincas = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+} catch (Throwable $e) {
+    $availableFincas = [];
+}
+
 $userName = $_SESSION['user_name'] ?: 'Administrador';
 ?>
 <!DOCTYPE html>
@@ -104,7 +114,7 @@ $userName = $_SESSION['user_name'] ?: 'Administrador';
                             </div>
                             <span class="badge bg-primary-subtle text-primary"><i class="bi bi-plus-lg me-1"></i>Nuevo</span>
                         </div>
-                        <form id="workerForm" class="row g-3" novalidate>
+                        <form id="workerForm" class="row g-3" method="post" action="guardar_trabajador.php" novalidate>
                             <div class="col-md-6">
                                 <label class="form-label">Nombre completo</label>
                                 <input type="text" class="form-control" name="nombre" required>
@@ -115,18 +125,31 @@ $userName = $_SESSION['user_name'] ?: 'Administrador';
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Rol</label>
-                                <select class="form-select" name="rol" required>
+                                <select class="form-select" name="rol" id="workerRole" required>
                                     <option value="" selected disabled>Selecciona</option>
+                                    <option value="admin">Administrador</option>
                                     <option value="cuadrillero">Cuadrillero</option>
+                                    <option value="colaborador">Colaborador (Cosechador)</option>
                                     <option value="supervisor">Supervisor</option>
-                                    <option value="admin">Admin</option>
                                 </select>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6" id="workerFincaWrapper">
                                 <label class="form-label">Finca asignada</label>
-                                <input type="text" class="form-control" name="finca" list="fincaList">
-                                <datalist id="fincaList"></datalist>
+                                <select class="form-select" name="finca_id" id="workerFincaSelect" disabled>
+                                    <option value="">Selecciona una finca</option>
+                                    <?php if (!$availableFincas): ?>
+                                        <option value="" disabled>No hay fincas registradas</option>
+                                    <?php else: ?>
+                                        <?php foreach ($availableFincas as $finca): ?>
+                                            <option value="<?php echo (int) $finca['id']; ?>">
+                                                <?php echo htmlspecialchars($finca['nombre'], ENT_QUOTES, 'UTF-8'); ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </select>
+                                <small class="text-muted">Solo requerido para cuadrilleros.</small>
                             </div>
+                            <input type="hidden" name="especialidad" id="workerEspecialidad" value="">
                             <div class="col-md-6">
                                 <label class="form-label">Inicio de actividades</label>
                                 <input type="date" class="form-control" name="inicio" required>
@@ -292,6 +315,23 @@ $userName = $_SESSION['user_name'] ?: 'Administrador';
         </div>
     </div>
 
+    <div class="modal fade" id="workerSuccessModal" tabindex="-1" aria-labelledby="workerSuccessModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-0">
+                    <h1 class="modal-title fs-5" id="workerSuccessModalLabel">Trabajador registrado</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body" id="workerSuccessModalBody">
+                    El trabajador fue guardado correctamente.
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Listo</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="farmSuccessModal" tabindex="-1" aria-labelledby="farmSuccessModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -311,6 +351,9 @@ $userName = $_SESSION['user_name'] ?: 'Administrador';
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sheetjs@0.20.0/dist/xlsx.full.min.js"></script>
+    <script>
+        window.__FincasData = <?php echo json_encode($availableFincas, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT); ?>;
+    </script>
     <script src="assets/js/panel-admin.js?v=20241123"></script>
 </body>
 </html>
