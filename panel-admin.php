@@ -278,68 +278,6 @@ $userName = $_SESSION['user_name'] ?: 'Administrador';
                 </div>
             </div>
 
-            <div class="row g-4 mb-4">
-                <div class="col-xxl-6">
-                    <div class="card table-card border-0 shadow-sm h-100">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <div>
-                                    <h2 class="h5 mb-1">Trabajadores registrados</h2>
-                                    <small class="text-muted">Edita o elimina registros existentes</small>
-                                </div>
-                                <a class="btn btn-outline-primary btn-sm" href="#workerForm">
-                                    <i class="bi bi-plus-lg me-1"></i>Nuevo
-                                </a>
-                            </div>
-                            <div class="table-responsive">
-                                <table class="table align-middle" id="workersTable">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>Nombre</th>
-                                            <th>Documento</th>
-                                            <th>Rol</th>
-                                            <th>Finca</th>
-                                            <th>Inicio</th>
-                                            <th>Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody></tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xxl-6">
-                    <div class="card table-card border-0 shadow-sm h-100">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <div>
-                                    <h2 class="h5 mb-1">Fincas registradas</h2>
-                                    <small class="text-muted">Actualiza información o elimina registros</small>
-                                </div>
-                                <a class="btn btn-outline-success btn-sm" href="#farmForm">
-                                    <i class="bi bi-building-add me-1"></i>Nueva
-                                </a>
-                            </div>
-                            <div class="table-responsive">
-                                <table class="table align-middle" id="farmsTable">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>Nombre</th>
-                                            <th>Link ubicación</th>
-                                            <th>Tarea asignada</th>
-                                            <th>Observación</th>
-                                            <th>Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody></tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <div class="card table-card border-0 shadow-lg mb-4">
                 <div class="card-body">
                     <div class="d-flex flex-column flex-lg-row justify-content-between gap-3 mb-4">
