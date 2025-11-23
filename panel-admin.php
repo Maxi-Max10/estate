@@ -151,30 +151,26 @@ $userName = $_SESSION['user_name'] ?: 'Administrador';
                             </div>
                             <span class="badge bg-success-subtle text-success"><i class="bi bi-building-add me-1"></i>Infraestructura</span>
                         </div>
-                        <form id="farmForm" class="row g-3" novalidate>
-                            <div class="col-md-7">
+                        <form id="farmForm" class="row g-3" method="post" action="guardar_finca.php" novalidate>
+                            <div class="col-12">
                                 <label class="form-label">Nombre de la finca</label>
-                                <input type="text" class="form-control" name="nombre_finca" required>
-                            </div>
-                            <div class="col-md-5">
-                                <label class="form-label">Código interno</label>
-                                <input type="text" class="form-control" name="codigo" required>
+                                <input type="text" class="form-control" name="nombre" required>
                             </div>
                             <div class="col-12">
-                                <label class="form-label">Ubicación</label>
-                                <input type="text" class="form-control" name="ubicacion" placeholder="Departamento / Coordenadas" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Capacidad</label>
-                                <input type="number" min="1" class="form-control" name="capacidad" placeholder="Trabajadores simultáneos">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Supervisor</label>
-                                <input type="text" class="form-control" name="supervisor">
+                                <label class="form-label">Link de ubicación</label>
+                                <input type="url" class="form-control" name="link_ubicacion" placeholder="https://maps.google.com/..." required>
                             </div>
                             <div class="col-12">
-                                <label class="form-label">Notas</label>
-                                <textarea class="form-control" rows="2" name="notas"></textarea>
+                                <label class="form-label">Descripción</label>
+                                <textarea class="form-control" rows="2" name="descripcion"></textarea>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Tarea asignada</label>
+                                <textarea class="form-control" rows="2" name="tarea_asignada"></textarea>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Observación</label>
+                                <textarea class="form-control" rows="2" name="observacion"></textarea>
                             </div>
                             <div class="col-12 text-end">
                                 <button class="btn btn-outline-secondary me-2" type="reset">Limpiar</button>
