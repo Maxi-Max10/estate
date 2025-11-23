@@ -17,6 +17,8 @@ body {
 .admin-navbar {
     background: linear-gradient(135deg, var(--blue-dark), var(--blue));
     box-shadow: 0 10px 35px rgba(15, 23, 42, 0.3);
+    position: relative;
+    z-index: 2;
 }
 
 .dashboard-shell {
@@ -25,6 +27,8 @@ body {
     margin-top: -2rem;
     padding: clamp(1.25rem, 2.5vw, 2.5rem);
     box-shadow: 0 -10px 40px rgba(15, 23, 42, 0.35);
+    position: relative;
+    z-index: 1;
 }
 
 .stats-grid .card {
