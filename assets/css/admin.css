@@ -20,9 +20,13 @@ body {
 }
 
 .admin-logo {
-    width: 42px;
-    height: 42px;
+    width: 36px;
+    height: 36px;
     object-fit: contain;
+}
+
+.admin-navbar .navbar-brand {
+    font-weight: 600;
 }
 
 .admin-hero {
@@ -51,8 +55,12 @@ body {
     flex-wrap: wrap;
     gap: 1rem;
     margin-top: 1rem;
-}
-
+        background: rgba(15, 23, 42, 0.25);
+        padding: 0;
+        backdrop-filter: blur(6px);
+        border-radius: 0.85rem;
+        margin: 0 auto;
+        max-width: 1200px;
 .hero-meta .meta-card {
     background: rgba(15, 23, 42, 0.25);
     border-radius: 0.85rem;
@@ -62,9 +70,9 @@ body {
 
 .dashboard-shell {
     background: var(--shell-bg);
-    border-radius: 1.5rem;
+        background: linear-gradient(120deg, #0f172a, #1e40af);
     margin-top: -2rem;
-    padding: clamp(1.25rem, 2.5vw, 2.5rem);
+        padding: 0.5rem 0;
     box-shadow: 0 20px 50px rgba(15, 23, 42, 0.12);
 }
 
@@ -99,7 +107,7 @@ body {
 .form-section .form-label {
     font-weight: 600;
     color: var(--text-muted);
-}
+        margin-top: 1.5rem;
 
 .filters-form .form-label {
     font-size: 0.85rem;
