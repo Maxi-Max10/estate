@@ -174,8 +174,49 @@ document.addEventListener('DOMContentLoaded', () => {
         event.target.reset();
     });
 
-    // Deja que el formulario de finca se envíe al backend (guardar_finca.php)
-    // sin interceptar el submit desde JavaScript.
+    const farmForm = document.getElementById('farmForm');
+    if (farmForm) {
+        farmForm.addEventListener('submit', async event => {
+            event.preventDefault();
+            const form = event.target;
+            const submitBtn = form.querySelector('[type="submit"]');
+            const originalText = submitBtn ? submitBtn.textContent : '';
+
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Guardando...';
+            }
+
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: new FormData(form),
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    }
+                });
+
+                const isJson = response.headers.get('Content-Type')?.includes('application/json');
+                const payload = isJson ? await response.json() : {};
+
+                if (!response.ok || payload.success === false) {
+                    const message = payload.message || 'No se pudo guardar la finca. Intenta nuevamente.';
+                    throw new Error(message);
+                }
+
+                showToast('Finca guardada correctamente.', 'success');
+                form.reset();
+            } catch (error) {
+                showToast(error.message || 'Ocurrió un error al guardar la finca.', 'danger');
+            } finally {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalText;
+                }
+            }
+        });
+    }
 
     viewRange.addEventListener('change', () => {
         if (viewRange.value !== 'personalizado') {
