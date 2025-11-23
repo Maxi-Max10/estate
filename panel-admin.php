@@ -29,7 +29,10 @@ $userName = $_SESSION['user_name'] ?: 'Administrador';
     <header class="admin-hero">
         <nav class="navbar navbar-dark admin-navbar">
             <div class="container-fluid py-3">
-                <span class="navbar-brand h3 mb-0">Estate · Panel Administrador</span>
+                <div class="d-flex align-items-center gap-3">
+                    <img src="assets/img/logo.png" class="admin-logo" alt="Estate" />
+                    <span class="navbar-brand h3 mb-0 mb-0">Estate · Panel Administrador</span>
+                </div>
                 <div class="d-flex align-items-center gap-3 text-white">
                     <span class="fw-semibold"><i class="bi bi-person-badge me-2"></i><?php echo htmlspecialchars($userName, ENT_QUOTES, 'UTF-8'); ?></span>
                     <a class="btn btn-outline-light btn-sm" href="logout.php"><i class="bi bi-box-arrow-right me-1"></i>Salir</a>

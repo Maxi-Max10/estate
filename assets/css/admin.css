@@ -19,6 +19,12 @@ body {
     padding-bottom: 0;
 }
 
+.admin-logo {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+}
+
 .admin-hero {
     background: linear-gradient(135deg, var(--blue-dark), var(--blue));
     color: #fff;
