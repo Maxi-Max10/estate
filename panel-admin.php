@@ -36,32 +36,6 @@ $userName = $_SESSION['user_name'] ?: 'Administrador';
                 </div>
             </div>
         </nav>
-        <div class="container-fluid py-3">
-            <div class="row gy-3 align-items-center">
-                <div class="col-lg-8 text-white">
-                    <span class="hero-badge"><i class="bi bi-shield-lock"></i> Operaciones seguras</span>
-                    <h1 class="display-6">Control centralizado de cuadrillas, fincas y asistencia</h1>
-                    <p class="text-white-50 mb-0">Monitorea métricas clave, carga nuevos equipos y exporta reportes en segundos.</p>
-                    <div class="hero-meta">
-                        <div class="meta-card">
-                            <small class="text-uppercase text-white-50">Hoy</small>
-                            <div class="fw-semibold fs-5"><?php echo date('d/m/Y'); ?></div>
-                        </div>
-                        <div class="meta-card">
-                            <small class="text-uppercase text-white-50">Última sincronización</small>
-                            <div class="fw-semibold fs-5">Hace 5 min</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 text-lg-end text-white">
-                    <p class="mb-2 text-white-50">Acciones frecuentes</p>
-                    <div class="d-flex gap-2 flex-wrap justify-content-lg-end">
-                        <button class="btn btn-outline-light btn-sm"><i class="bi bi-plus-circle me-1"></i>Nuevo trabajador</button>
-                        <button class="btn btn-outline-light btn-sm"><i class="bi bi-graph-up-arrow me-1"></i>Reporte rápido</button>
-                    </div>
-                </div>
-            </div>
-        </div>
     </header>
 
     <div class="dashboard-shell">
