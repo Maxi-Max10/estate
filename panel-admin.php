@@ -66,7 +66,7 @@ $userName = $_SESSION['user_name'] ?: 'Administrador';
             <div class="container-fluid py-2">
                 <div class="d-flex align-items-center gap-2 gap-sm-3 flex-wrap">
                     <img src="assets/img/logo.png" class="admin-logo" alt="Estate" />
-                    <span class="navbar-brand fs-6 mb-0">Estate · Panel Administrador</span>
+                    <span class="navbar-brand fs-6 mb-0">Panel Administrador</span>
                 </div>
                 <div class="d-flex align-items-center gap-2 gap-sm-3 text-white user-actions">
                     <span class="fw-semibold"><i class="bi bi-person-badge me-2"></i><?php echo htmlspecialchars($userName, ENT_QUOTES, 'UTF-8'); ?></span>
