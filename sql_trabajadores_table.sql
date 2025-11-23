@@ -1,13 +1,13 @@
-CREATE TABLE IF NOT EXISTS trabajadores (
+CREATE TABLE IF NOT EXISTS peones (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(150) NOT NULL,
-    documento VARCHAR(50) NOT NULL,
-    rol VARCHAR(30) NOT NULL,
-    finca_id INT NULL,
-    finca_nombre VARCHAR(150) NULL,
-    especialidad VARCHAR(100) NULL,
-    inicio_actividades DATE NOT NULL,
-    observaciones TEXT NULL,
+    nombre VARCHAR(120) NOT NULL,
+    apellido VARCHAR(120) NOT NULL,
+    dni VARCHAR(50) NOT NULL,
+    fecha_ingreso DATE NOT NULL,
+    estado ENUM('activo','inactivo') NOT NULL DEFAULT 'activo',
+    telefono VARCHAR(30) NULL,
+    cuadrilla_id INT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_trabajadores_fincas FOREIGN KEY (finca_id) REFERENCES fincas(id) ON DELETE SET NULL
+    updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT fk_peones_cuadrilla FOREIGN KEY (cuadrilla_id) REFERENCES usuarios(id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

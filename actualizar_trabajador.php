@@ -33,81 +33,72 @@ $respond = function (bool $success, string $message = '', array $extra = []) use
     exit;
 };
 
-$id            = isset($_POST['id']) ? (int) $_POST['id'] : 0;
-$nombre        = trim($_POST['nombre'] ?? '');
-$documento     = trim($_POST['documento'] ?? '');
-$rol           = trim($_POST['rol'] ?? '');
-$fincaIdRaw    = $_POST['finca_id'] ?? null;
-$inicio        = trim($_POST['inicio'] ?? '');
-$observaciones = trim($_POST['observaciones'] ?? '');
-$especialidad  = trim($_POST['especialidad'] ?? '');
-
-$validRoles = ['admin', 'cuadrillero', 'colaborador', 'supervisor'];
+$id           = isset($_POST['id']) ? (int) $_POST['id'] : 0;
+$nombre       = trim($_POST['nombre'] ?? '');
+$apellido     = trim($_POST['apellido'] ?? '');
+$dni          = trim($_POST['dni'] ?? '');
+$fechaIngreso = trim($_POST['fecha_ingreso'] ?? '');
+$estado       = strtolower(trim($_POST['estado'] ?? 'activo'));
+$telefono     = trim($_POST['telefono'] ?? '');
+$cuadrillaRaw = $_POST['cuadrilla_id'] ?? null;
 
 if ($id <= 0) {
-    $respond(false, 'ID de trabajador inválido.');
+    $respond(false, 'ID de peón inválido.');
 }
 
-if ($nombre === '' || $documento === '' || !in_array($rol, $validRoles, true)) {
-    $respond(false, 'Nombre, documento y rol son obligatorios.');
+if ($nombre === '' || $apellido === '' || $dni === '' || $fechaIngreso === '') {
+    $respond(false, 'Nombre, apellido, DNI y fecha de ingreso son obligatorios.');
 }
 
-if ($inicio === '') {
-    $respond(false, 'Selecciona la fecha de inicio.');
+if (!in_array($estado, ['activo', 'inactivo'], true)) {
+    $estado = 'activo';
 }
 
 try {
-    $inicioDate = new DateTimeImmutable($inicio);
-    $inicio = $inicioDate->format('Y-m-d');
+    $fecha = new DateTimeImmutable($fechaIngreso);
+    $fechaIngreso = $fecha->format('Y-m-d');
 } catch (Throwable $e) {
-    $respond(false, 'La fecha de inicio no es válida.');
+    $respond(false, 'La fecha de ingreso no es válida.');
 }
 
-$fincaId = null;
-$fincaNombre = null;
-
-if ($rol === 'cuadrillero') {
-    $fincaId = is_numeric($fincaIdRaw) ? (int) $fincaIdRaw : null;
-    if (!$fincaId) {
-        $respond(false, 'Debes seleccionar una finca para el cuadrillero.');
+$cuadrillaId = null;
+$cuadrillaNombre = null;
+if ($cuadrillaRaw !== null && $cuadrillaRaw !== '') {
+    if (!is_numeric($cuadrillaRaw)) {
+        $respond(false, 'El cuadrillero seleccionado no es válido.');
     }
 
-    $stmtFinca = $pdo->prepare('SELECT id, nombre FROM fincas WHERE id = :id LIMIT 1');
-    $stmtFinca->execute([':id' => $fincaId]);
-    $finca = $stmtFinca->fetch(PDO::FETCH_ASSOC);
+    $cuadrillaId = (int) $cuadrillaRaw;
+    $stmtUser = $pdo->prepare('SELECT id, nombre, rol FROM usuarios WHERE id = :id LIMIT 1');
+    $stmtUser->execute([':id' => $cuadrillaId]);
+    $cuadrillero = $stmtUser->fetch(PDO::FETCH_ASSOC);
 
-    if (!$finca) {
-        $respond(false, 'La finca seleccionada no existe.');
+    if (!$cuadrillero || ($cuadrillero['rol'] ?? '') !== 'cuadrillero') {
+        $respond(false, 'El cuadrillero seleccionado no existe.');
     }
 
-    $fincaNombre = $finca['nombre'];
-}
-
-if ($rol === 'colaborador') {
-    $especialidad = $especialidad ?: 'cosechador';
-} else {
-    $especialidad = null;
+    $cuadrillaNombre = $cuadrillero['nombre'] ?? null;
 }
 
 try {
-    $stmt = $pdo->prepare('UPDATE trabajadores SET nombre = :nombre, documento = :documento, rol = :rol, finca_id = :finca_id, finca_nombre = :finca_nombre, especialidad = :especialidad, inicio_actividades = :inicio, observaciones = :observaciones WHERE id = :id');
+    $stmt = $pdo->prepare('UPDATE peones SET nombre = :nombre, apellido = :apellido, dni = :dni, fecha_ingreso = :fecha_ingreso, estado = :estado, telefono = :telefono, cuadrilla_id = :cuadrilla_id WHERE id = :id');
     $stmt->execute([
         ':nombre'        => $nombre,
-        ':documento'     => $documento,
-        ':rol'           => $rol,
-        ':finca_id'      => $fincaId,
-        ':finca_nombre'  => $fincaNombre,
-        ':especialidad'  => $especialidad,
-        ':inicio'        => $inicio,
-        ':observaciones' => $observaciones,
+        ':apellido'      => $apellido,
+        ':dni'           => $dni,
+        ':fecha_ingreso' => $fechaIngreso,
+        ':estado'        => $estado,
+        ':telefono'      => $telefono ?: null,
+        ':cuadrilla_id'  => $cuadrillaId,
         ':id'            => $id,
     ]);
-    $stmtFetch = $pdo->prepare('SELECT id, nombre, documento, rol, finca_id, finca_nombre, especialidad, inicio_actividades, observaciones FROM trabajadores WHERE id = :id');
-    $stmtFetch->execute([':id' => $id]);
-    $updatedWorker = $stmtFetch->fetch(PDO::FETCH_ASSOC);
 
-    $respond(true, 'Trabajador actualizado correctamente.', ['trabajador' => $updatedWorker]);
+    $stmtFetch = $pdo->prepare('SELECT p.*, u.nombre AS cuadrilla_nombre FROM peones p LEFT JOIN usuarios u ON u.id = p.cuadrilla_id WHERE p.id = :id');
+    $stmtFetch->execute([':id' => $id]);
+    $updatedPeon = $stmtFetch->fetch(PDO::FETCH_ASSOC);
+
+    $respond(true, 'Peón actualizado correctamente.', ['peon' => $updatedPeon]);
 } catch (Throwable $e) {
-    error_log('Error actualizando trabajador: ' . $e->getMessage());
-    $respond(false, 'Ocurrió un error al actualizar el trabajador.');
+    error_log('Error actualizando peón: ' . $e->getMessage());
+    $respond(false, 'Ocurrió un error al actualizar el peón.');
 }

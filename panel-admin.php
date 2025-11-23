@@ -1,82 +1,62 @@
 <?php
 declare(strict_types=1);
 
-session_start();
-
-if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php');
-    exit;
-}
-
-if (($_SESSION['user_role'] ?? '') !== 'admin') {
-    header('Location: panel-cuadrillero.php');
-    exit;
-}
-
-require_once __DIR__ . '/config.php';
-
-$availableFincas = [];
-$availableTrabajadores = [];
-$fincasById = [];
-
-try {
-    $stmtFincas = $pdo->query('SELECT * FROM fincas ORDER BY nombre ASC');
-    $availableFincas = $stmtFincas->fetchAll(PDO::FETCH_ASSOC) ?: [];
-
-    if ($availableFincas) {
-        foreach ($availableFincas as $finca) {
-            $id = isset($finca['id']) ? (int) $finca['id'] : null;
-            if ($id) {
-                $fincasById[$id] = $finca['nombre'] ?? 'Sin nombre';
-            }
-        }
-    }
-
-    $stmtTrabajadores = $pdo->query('SELECT * FROM trabajadores ORDER BY nombre ASC');
-    $availableTrabajadores = $stmtTrabajadores->fetchAll(PDO::FETCH_ASSOC) ?: [];
-
-    if ($availableTrabajadores && $fincasById) {
-        foreach ($availableTrabajadores as &$trabajador) {
-            $fincaId = isset($trabajador['finca_id']) ? (int) $trabajador['finca_id'] : null;
-            if ($fincaId && (empty($trabajador['finca_nombre']) || !is_string($trabajador['finca_nombre']))) {
-                $trabajador['finca_nombre'] = $fincasById[$fincaId] ?? null;
-            }
-        }
-        unset($trabajador);
-    }
-} catch (Throwable $e) {
-    error_log('Error cargando datos panel admin: ' . $e->getMessage());
-}
-
-$userName = $_SESSION['user_name'] ?: 'Administrador';
-?>
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Panel Admin | Estate</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="assets/css/admin.css" rel="stylesheet">
-</head>
-<body>
-    <header class="admin-hero">
-        <nav class="navbar navbar-dark admin-navbar">
-            <div class="container-fluid py-2">
-                <div class="d-flex align-items-center gap-2 gap-sm-3 flex-wrap">
-                    <img src="assets/img/logo.png" class="admin-logo" alt="Estate" />
-                    <span class="navbar-brand fs-6 mb-0">Panel Administrador</span>
+                <div class="col-lg-6">
+                    <div class="card form-section p-4 h-100">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <h2 class="h5 mb-0">Registrar peón</h2>
+                                <small class="text-muted">Carga rápida de personal de cuadrillas</small>
+                            </div>
+                            <span class="badge bg-primary-subtle text-primary"><i class="bi bi-plus-lg me-1"></i>Nuevo</span>
+                        </div>
+                        <form id="workerForm" class="row g-3" method="post" action="guardar_trabajador.php" novalidate>
+                            <div class="col-md-6">
+                                <label class="form-label">Nombre</label>
+                                <input type="text" class="form-control" name="nombre" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Apellido</label>
+                                <input type="text" class="form-control" name="apellido" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">DNI</label>
+                                <input type="text" class="form-control" name="dni" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Teléfono</label>
+                                <input type="tel" class="form-control" name="telefono" placeholder="099 123 456">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Fecha de ingreso</label>
+                                <input type="date" class="form-control" name="fecha_ingreso" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Estado</label>
+                                <select class="form-select" name="estado" required>
+                                    <option value="activo" selected>Activo</option>
+                                    <option value="inactivo">Inactivo</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Cuadrillero asignado</label>
+                                <select class="form-select" name="cuadrilla_id">
+                                    <option value="">Sin asignar</option>
+                                    <?php foreach ($cuadrilleros as $cuadrillero): ?>
+                                        <option value="<?php echo (int) $cuadrillero['id']; ?>">
+                                            <?php echo htmlspecialchars($cuadrillero['nombre'], ENT_QUOTES, 'UTF-8'); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <small class="text-muted">Define quién supervisa al peón.</small>
+                            </div>
+                            <div class="col-12 text-end">
+                                <button class="btn btn-outline-secondary me-2" type="reset">Limpiar</button>
+                                <button class="btn btn-primary" type="submit">Guardar peón</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-                <div class="d-flex align-items-center gap-2 gap-sm-3 text-white user-actions">
-                    <span class="fw-semibold"><i class="bi bi-person-badge me-2"></i><?php echo htmlspecialchars($userName, ENT_QUOTES, 'UTF-8'); ?></span>
-                    <a class="btn btn-outline-info btn-sm text-white" href="trabajadores-admin.php">
-                        <i class="bi bi-people me-1"></i>Trabajadores
-                    </a>
-                    <a class="btn btn-outline-success btn-sm text-white" href="fincas-admin.php">
-                        <i class="bi bi-map me-1"></i>Fincas
-                    </a>
-                    <a class="btn btn-outline-light btn-sm" href="logout.php"><i class="bi bi-box-arrow-right me-1"></i>Salir</a>
                 </div>
             </div>
         </nav>
@@ -89,7 +69,7 @@ $userName = $_SESSION['user_name'] ?: 'Administrador';
                     <div class="card stat-card p-3">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <p class="text-muted mb-1">Trabajadores activos</p>
+                                <p class="text-muted mb-1">Peones registrados</p>
                                 <h3 class="mb-0" id="statTrabajadores">0</h3>
                             </div>
                             <div class="stat-icon bg-primary-subtle text-primary"><i class="bi bi-people"></i></div>
@@ -140,58 +120,54 @@ $userName = $_SESSION['user_name'] ?: 'Administrador';
                     <div class="card form-section p-4 h-100">
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <div>
-                                <h2 class="h5 mb-0">Registrar trabajador</h2>
-                                <small class="text-muted">Carga rápida de cuadrilleros o supervisores</small>
+                                <h2 class="h5 mb-0">Registrar peón</h2>
+                                <small class="text-muted">Carga rápida de personal de cuadrillas</small>
                             </div>
                             <span class="badge bg-primary-subtle text-primary"><i class="bi bi-plus-lg me-1"></i>Nuevo</span>
                         </div>
                         <form id="workerForm" class="row g-3" method="post" action="guardar_trabajador.php" novalidate>
                             <div class="col-md-6">
-                                <label class="form-label">Nombre completo</label>
+                                <label class="form-label">Nombre</label>
                                 <input type="text" class="form-control" name="nombre" required>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">Documento</label>
-                                <input type="text" class="form-control" name="documento" required>
+                                <label class="form-label">Apellido</label>
+                                <input type="text" class="form-control" name="apellido" required>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">Rol</label>
-                                <select class="form-select" name="rol" id="workerRole" required>
-                                    <option value="" selected disabled>Selecciona</option>
-                                    <option value="admin">Administrador</option>
-                                    <option value="cuadrillero">Cuadrillero</option>
-                                    <option value="colaborador">Colaborador (Cosechador)</option>
-                                    <option value="supervisor">Supervisor</option>
-                                </select>
+                                <label class="form-label">DNI</label>
+                                <input type="text" class="form-control" name="dni" required>
                             </div>
-                            <div class="col-md-6" id="workerFincaWrapper">
-                                <label class="form-label">Finca asignada</label>
-                                <select class="form-select" name="finca_id" id="workerFincaSelect" disabled>
-                                    <option value="">Selecciona una finca</option>
-                                    <?php if (!$availableFincas): ?>
-                                        <option value="" disabled>No hay fincas registradas</option>
-                                    <?php else: ?>
-                                        <?php foreach ($availableFincas as $finca): ?>
-                                            <option value="<?php echo (int) $finca['id']; ?>">
-                                                <?php echo htmlspecialchars($finca['nombre'], ENT_QUOTES, 'UTF-8'); ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    <?php endif; ?>
-                                </select>
-                                <small class="text-muted">Solo requerido para cuadrilleros.</small>
-                            </div>
-                            <input type="hidden" name="especialidad" id="workerEspecialidad" value="">
                             <div class="col-md-6">
-                                <label class="form-label">Inicio de actividades</label>
-                                <input type="date" class="form-control" name="inicio" required>
+                                <label class="form-label">Teléfono</label>
+                                <input type="tel" class="form-control" name="telefono" placeholder="099 123 456">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Fecha de ingreso</label>
+                                <input type="date" class="form-control" name="fecha_ingreso" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Estado</label>
+                                <select class="form-select" name="estado" required>
+                                    <option value="activo" selected>Activo</option>
+                                    <option value="inactivo">Inactivo</option>
+                                </select>
                             </div>
                             <div class="col-12">
-                                <label class="form-label">Observaciones</label>
-                                <textarea class="form-control" rows="2" name="observaciones" placeholder="Licencia, tipo de contrato, etc."></textarea>
+                                <label class="form-label">Cuadrillero asignado</label>
+                                <select class="form-select" name="cuadrilla_id">
+                                    <option value="">Sin asignar</option>
+                                    <?php foreach ($cuadrilleros as $cuadrillero): ?>
+                                        <option value="<?php echo (int) $cuadrillero['id']; ?>">
+                                            <?php echo htmlspecialchars($cuadrillero['nombre'], ENT_QUOTES, 'UTF-8'); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <small class="text-muted">Define quién supervisa al peón.</small>
                             </div>
                             <div class="col-12 text-end">
                                 <button class="btn btn-outline-secondary me-2" type="reset">Limpiar</button>
-                                <button class="btn btn-primary" type="submit">Guardar trabajador</button>
+                                <button class="btn btn-primary" type="submit">Guardar peón</button>
                             </div>
                         </form>
                     </div>
@@ -350,11 +326,11 @@ $userName = $_SESSION['user_name'] ?: 'Administrador';
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header border-0 pb-0">
-                    <h1 class="modal-title fs-5" id="workerSuccessModalLabel">Trabajador registrado</h1>
+                    <h1 class="modal-title fs-5" id="workerSuccessModalLabel">Peón registrado</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body" id="workerSuccessModalBody">
-                    El trabajador fue guardado correctamente.
+                    El peón fue guardado correctamente.
                 </div>
                 <div class="modal-footer border-0 pt-0">
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Listo</button>
@@ -368,46 +344,49 @@ $userName = $_SESSION['user_name'] ?: 'Administrador';
             <div class="modal-content">
                 <form id="workerEditForm" method="post" action="actualizar_trabajador.php">
                     <div class="modal-header border-0 pb-0">
-                        <h1 class="modal-title fs-5" id="workerEditModalLabel">Editar trabajador</h1>
+                        <h1 class="modal-title fs-5" id="workerEditModalLabel">Editar peón</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                     </div>
                     <div class="modal-body">
                         <input type="hidden" name="id" id="editWorkerId">
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label class="form-label">Nombre completo</label>
+                                <label class="form-label">Nombre</label>
                                 <input type="text" class="form-control" name="nombre" id="editWorkerName" required>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">Documento</label>
-                                <input type="text" class="form-control" name="documento" id="editWorkerDocument" required>
+                                <label class="form-label">Apellido</label>
+                                <input type="text" class="form-control" name="apellido" id="editWorkerLastName" required>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">Rol</label>
-                                <select class="form-select" name="rol" id="editWorkerRole" required>
-                                    <option value="admin">Administrador</option>
-                                    <option value="cuadrillero">Cuadrillero</option>
-                                    <option value="colaborador">Colaborador (Cosechador)</option>
-                                    <option value="supervisor">Supervisor</option>
+                                <label class="form-label">DNI</label>
+                                <input type="text" class="form-control" name="dni" id="editWorkerDocument" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Teléfono</label>
+                                <input type="tel" class="form-control" name="telefono" id="editWorkerPhone">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Fecha de ingreso</label>
+                                <input type="date" class="form-control" name="fecha_ingreso" id="editWorkerInicio" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Estado</label>
+                                <select class="form-select" name="estado" id="editWorkerStatus" required>
+                                    <option value="activo">Activo</option>
+                                    <option value="inactivo">Inactivo</option>
                                 </select>
-                            </div>
-                            <div class="col-md-6" id="editWorkerFincaWrapper">
-                                <label class="form-label">Finca asignada</label>
-                                <select class="form-select" name="finca_id" id="editWorkerFinca">
-                                    <option value="">Selecciona una finca</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Especialidad</label>
-                                <input type="text" class="form-control" name="especialidad" id="editWorkerEspecialidad" placeholder="cosechador, encargado, etc.">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Inicio de actividades</label>
-                                <input type="date" class="form-control" name="inicio" id="editWorkerInicio" required>
                             </div>
                             <div class="col-12">
-                                <label class="form-label">Observaciones</label>
-                                <textarea class="form-control" rows="2" name="observaciones" id="editWorkerObservaciones"></textarea>
+                                <label class="form-label">Cuadrillero asignado</label>
+                                <select class="form-select" name="cuadrilla_id" id="editWorkerCuadrilla">
+                                    <option value="">Sin asignar</option>
+                                    <?php foreach ($cuadrilleros as $cuadrillero): ?>
+                                        <option value="<?php echo (int) $cuadrillero['id']; ?>">
+                                            <?php echo htmlspecialchars($cuadrillero['nombre'], ENT_QUOTES, 'UTF-8'); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -501,7 +480,8 @@ $userName = $_SESSION['user_name'] ?: 'Administrador';
     <script src="https://cdn.jsdelivr.net/npm/sheetjs@0.20.0/dist/xlsx.full.min.js"></script>
     <script>
         window.__FincasData = <?php echo json_encode($availableFincas, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT); ?>;
-        window.__TrabajadoresData = <?php echo json_encode($availableTrabajadores, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT); ?>;
+        window.__PeonesData = <?php echo json_encode($availablePeones, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT); ?>;
+        window.__CuadrillerosData = <?php echo json_encode($cuadrilleros, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT); ?>;
     </script>
     <script src="assets/js/panel-admin.js?v=20241123"></script>
 </body>

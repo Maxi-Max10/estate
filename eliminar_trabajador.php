@@ -36,14 +36,14 @@ $respond = function (bool $success, string $message = '') use ($isAjaxRequest): 
 $id = isset($_POST['id']) ? (int) $_POST['id'] : 0;
 
 if ($id <= 0) {
-    $respond(false, 'ID de trabajador inválido.');
+    $respond(false, 'ID de peón inválido.');
 }
 
 try {
-    $stmt = $pdo->prepare('DELETE FROM trabajadores WHERE id = :id');
+    $stmt = $pdo->prepare('DELETE FROM peones WHERE id = :id');
     $stmt->execute([':id' => $id]);
-    $respond(true, 'Trabajador eliminado.');
+    $respond(true, 'Peón eliminado.');
 } catch (Throwable $e) {
-    error_log('Error eliminando trabajador: ' . $e->getMessage());
-    $respond(false, 'Ocurrió un error al eliminar el trabajador.');
+    error_log('Error eliminando peón: ' . $e->getMessage());
+    $respond(false, 'Ocurrió un error al eliminar el peón.');
 }

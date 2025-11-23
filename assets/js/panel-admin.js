@@ -14,20 +14,28 @@ document.addEventListener('DOMContentLoaded', () => {
         observacion: finca.observacion || '',
     });
 
-    const normalizeWorker = worker => ({
-        id: Number(worker.id) || 0,
-        nombre: worker.nombre || 'Sin nombre',
-        documento: worker.documento || '',
-        rol: worker.rol || 'colaborador',
-        finca_id: worker.finca_id !== null && worker.finca_id !== undefined ? Number(worker.finca_id) : null,
-        finca_nombre: worker.finca_nombre || null,
-        especialidad: worker.especialidad || null,
-        inicio_actividades: worker.inicio_actividades || '',
-        observaciones: worker.observaciones || '',
-    });
+    const normalizePeon = peon => {
+        const nombre = peon.nombre || '';
+        const apellido = peon.apellido || '';
+
+        return {
+            id: Number(peon.id) || 0,
+            nombre,
+            apellido,
+            fullName: `${nombre} ${apellido}`.trim() || 'Sin nombre',
+            dni: peon.dni || '',
+            telefono: peon.telefono || '',
+            fecha_ingreso: peon.fecha_ingreso || '',
+            estado: peon.estado || 'activo',
+            cuadrilla_id: peon.cuadrilla_id !== null && peon.cuadrilla_id !== undefined && peon.cuadrilla_id !== ''
+                ? Number(peon.cuadrilla_id)
+                : null,
+            cuadrilla_nombre: peon.cuadrilla_nombre || null,
+        };
+    };
 
     let fincasData = Array.isArray(window.__FincasData) && window.__FincasData.length ? window.__FincasData.map(normalizeFinca) : fallbackFincas.map(normalizeFinca);
-    let workersData = Array.isArray(window.__TrabajadoresData) ? window.__TrabajadoresData.map(normalizeWorker) : [];
+    let workersData = Array.isArray(window.__PeonesData) ? window.__PeonesData.map(normalizePeon) : [];
 
     const attendanceData = [
         { fecha: '2025-11-22', trabajador: 'Juan Pérez', finca: 'Finca Norte', horaEntrada: '07:55', horaSalida: '17:10', horas: 9.25, estado: 'Presente' },
@@ -50,12 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const startDateInput = document.getElementById('startDate');
     const endDateInput = document.getElementById('endDate');
     const filterFinca = document.getElementById('filterFinca');
-    const fincaDatalist = document.getElementById('fincaList');
     const workerForm = document.getElementById('workerForm');
-    const workerRoleField = document.getElementById('workerRole');
-    const workerFincaWrapper = document.getElementById('workerFincaWrapper');
-    const workerFincaSelect = document.getElementById('workerFincaSelect');
-    const workerEspecialidadInput = document.getElementById('workerEspecialidad');
     const workerSuccessModal = document.getElementById('workerSuccessModal') ? new bootstrap.Modal(document.getElementById('workerSuccessModal')) : null;
     const farmForm = document.getElementById('farmForm');
     const farmSuccessModal = document.getElementById('farmSuccessModal') ? new bootstrap.Modal(document.getElementById('farmSuccessModal')) : null;
@@ -69,10 +72,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const farmEditModal = farmEditModalEl ? new bootstrap.Modal(farmEditModalEl) : null;
     const workerEditForm = document.getElementById('workerEditForm');
     const farmEditForm = document.getElementById('farmEditForm');
-    const editWorkerRoleField = document.getElementById('editWorkerRole');
-    const editWorkerFincaWrapper = document.getElementById('editWorkerFincaWrapper');
-    const editWorkerFincaSelect = document.getElementById('editWorkerFinca');
-    const editWorkerEspecialidadInput = document.getElementById('editWorkerEspecialidad');
     const confirmDeleteModalEl = document.getElementById('confirmDeleteModal');
     const confirmDeleteModal = confirmDeleteModalEl ? new bootstrap.Modal(confirmDeleteModalEl) : null;
     const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
@@ -119,63 +118,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    const setFincaFieldState = (role, wrapper, select) => {
-        if (!wrapper || !select) return;
-        const needsFinca = role === 'cuadrillero';
-        wrapper.classList.toggle('d-none', !needsFinca);
-        select.disabled = !needsFinca;
-        select.required = needsFinca;
-        if (!needsFinca) {
-            select.value = '';
-        }
-    };
-
-    const setEspecialidadValue = (role, input, currentValue = '') => {
-        if (!input) return;
-        if (role === 'colaborador') {
-            input.value = currentValue || 'cosechador';
-        } else {
-            input.value = '';
-        }
-    };
-
-    const fillFincaSelect = (selectEl, selectedId = '') => {
-        if (!selectEl) return;
-        const previous = selectedId !== undefined ? String(selectedId ?? '') : selectEl.value;
-        selectEl.innerHTML = '<option value="">Selecciona una finca</option>';
+    const populateFincaSelectors = () => {
+        if (!filterFinca) return;
+        filterFinca.innerHTML = '<option value="">Todas</option>';
         fincasData.forEach(finca => {
             const option = document.createElement('option');
-            option.value = String(finca.id);
+            option.value = finca.nombre;
             option.textContent = finca.nombre;
-            selectEl.appendChild(option);
+            filterFinca.appendChild(option);
         });
-        if (previous) {
-            selectEl.value = String(previous);
-        }
-    };
-
-    const populateFincaSelectors = () => {
-        if (fincaDatalist) {
-            fincaDatalist.innerHTML = '';
-            fincasData.forEach(finca => {
-                const option = document.createElement('option');
-                option.value = finca.nombre;
-                fincaDatalist.appendChild(option);
-            });
-        }
-
-        if (filterFinca) {
-            filterFinca.innerHTML = '<option value="">Todas</option>';
-            fincasData.forEach(finca => {
-                const option = document.createElement('option');
-                option.value = finca.nombre;
-                option.textContent = finca.nombre;
-                filterFinca.appendChild(option);
-            });
-        }
-
-        fillFincaSelect(workerFincaSelect);
-        fillFincaSelect(editWorkerFincaSelect);
     };
 
     const renderWorkersTable = () => {
@@ -184,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!workersData.length) {
             const row = document.createElement('tr');
-            row.innerHTML = '<td colspan="6" class="text-center text-muted">Sin trabajadores registrados.</td>';
+            row.innerHTML = '<td colspan="6" class="text-center text-muted">Sin peones registrados.</td>';
             workersTableBody.appendChild(row);
             return;
         }
@@ -194,17 +145,16 @@ document.addEventListener('DOMContentLoaded', () => {
             row.dataset.id = worker.id;
             row.innerHTML = `
                 <td>
-                    <span class="fw-semibold">${worker.nombre}</span><br>
-                    <small class="text-muted">${worker.especialidad || ''}</small>
+                    <span class="fw-semibold">${worker.fullName}</span><br>
+                    <small class="text-muted">${formatPeonState(worker.estado)}</small>
                 </td>
-                <td>${worker.documento}</td>
-                <td class="text-capitalize">${worker.rol}</td>
-                <td>${worker.finca_nombre ?? '-'}</td>
-                <td>${worker.inicio_actividades || '-'}
-                </td>
+                <td>${worker.dni || '-'}</td>
+                <td>${worker.telefono || '-'}</td>
+                <td>${worker.cuadrilla_nombre ?? 'Sin asignar'}</td>
+                <td>${worker.fecha_ingreso || '-'}</td>
                 <td>
                     <button class="btn btn-sm btn-link text-primary" data-action="edit-worker" data-id="${worker.id}"><i class="bi bi-pencil-square"></i></button>
-                    <button class="btn btn-sm btn-link text-danger" data-action="delete-worker" data-id="${worker.id}" data-name="${worker.nombre}"><i class="bi bi-trash"></i></button>
+                    <button class="btn btn-sm btn-link text-danger" data-action="delete-worker" data-id="${worker.id}" data-name="${worker.fullName}"><i class="bi bi-trash"></i></button>
                 </td>`;
             workersTableBody.appendChild(row);
         });
@@ -276,6 +226,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (status === 'Presente') return 'bg-success-subtle text-success';
         if (status === 'Ausente') return 'bg-danger-subtle text-danger';
         return 'bg-warning-subtle text-warning';
+    };
+
+    const formatPeonState = state => {
+        if (!state) return '';
+        if (state.toLowerCase() === 'inactivo') return 'Inactivo';
+        return 'Activo';
     };
 
     const applyFilters = () => {
@@ -354,15 +310,16 @@ document.addEventListener('DOMContentLoaded', () => {
         workerEditForm.reset();
         workerEditForm.querySelector('#editWorkerId').value = worker.id;
         workerEditForm.querySelector('#editWorkerName').value = worker.nombre;
-        workerEditForm.querySelector('#editWorkerDocument').value = worker.documento;
-        editWorkerRoleField.value = worker.rol;
-        fillFincaSelect(editWorkerFincaSelect, worker.finca_id);
-        editWorkerFincaSelect.value = worker.finca_id ? String(worker.finca_id) : '';
-        workerEditForm.querySelector('#editWorkerInicio').value = worker.inicio_actividades || '';
-        workerEditForm.querySelector('#editWorkerObservaciones').value = worker.observaciones || '';
-        editWorkerEspecialidadInput.value = worker.especialidad || '';
-        setFincaFieldState(worker.rol, editWorkerFincaWrapper, editWorkerFincaSelect);
-        setEspecialidadValue(worker.rol, editWorkerEspecialidadInput, worker.especialidad || '');
+        workerEditForm.querySelector('#editWorkerLastName').value = worker.apellido;
+        workerEditForm.querySelector('#editWorkerDocument').value = worker.dni;
+        const phoneInput = workerEditForm.querySelector('#editWorkerPhone');
+        if (phoneInput) phoneInput.value = worker.telefono || '';
+        workerEditForm.querySelector('#editWorkerInicio').value = worker.fecha_ingreso || '';
+        workerEditForm.querySelector('#editWorkerStatus').value = (worker.estado || 'activo').toLowerCase();
+        const cuadrillaSelect = workerEditForm.querySelector('#editWorkerCuadrilla');
+        if (cuadrillaSelect) {
+            cuadrillaSelect.value = worker.cuadrilla_id ? String(worker.cuadrilla_id) : '';
+        }
         workerEditModal.show();
     };
 
@@ -381,47 +338,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const openDeleteModal = (type, entity) => {
         if (!confirmDeleteModal || !confirmDeleteBtn || !confirmDeleteBody) return;
         deleteContext = { type, id: entity.id };
-        confirmDeleteBody.textContent = `¿Eliminar ${type === 'worker' ? 'al trabajador' : 'la finca'} "${entity.nombre}"?`;
+        const label = type === 'worker' ? 'al peón' : 'la finca';
+        const entityName = entity.fullName || entity.nombre;
+        confirmDeleteBody.textContent = `¿Eliminar ${label} "${entityName}"?`;
         confirmDeleteModal.show();
     };
 
-    const syncWorkersFincaName = finca => {
-        if (!finca) return;
-        workersData = workersData.map(worker => {
-            if (worker.finca_id === finca.id) {
-                return { ...worker, finca_nombre: finca.nombre };
-            }
-            return worker;
-        });
-    };
-
-    const clearWorkersFincaReference = fincaId => {
-        workersData = workersData.map(worker => {
-            if (worker.finca_id === fincaId) {
-                return { ...worker, finca_id: null, finca_nombre: null };
-            }
-            return worker;
-        });
-    };
-
-    const handleWorkerRoleChange = () => {
-        if (!workerRoleField) return;
-        const role = workerRoleField.value;
-        setFincaFieldState(role, workerFincaWrapper, workerFincaSelect);
-        setEspecialidadValue(role, workerEspecialidadInput);
-    };
-
-    if (workerRoleField) {
-        workerRoleField.addEventListener('change', handleWorkerRoleChange);
-    }
-
-    if (editWorkerRoleField) {
-        editWorkerRoleField.addEventListener('change', () => {
-            const role = editWorkerRoleField.value;
-            setFincaFieldState(role, editWorkerFincaWrapper, editWorkerFincaSelect);
-            setEspecialidadValue(role, editWorkerEspecialidadInput, editWorkerEspecialidadInput.value);
-        });
-    }
 
     if (workerForm) {
         workerForm.addEventListener('submit', async event => {
@@ -431,23 +353,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
             try {
                 const payload = await sendForm(workerForm.action, new FormData(workerForm));
-                if (payload.trabajador) {
-                    workersData.push(normalizeWorker(payload.trabajador));
+                if (payload.peon) {
+                    workersData.push(normalizePeon(payload.peon));
                     renderWorkersTable();
                     updateStats();
                 }
                 workerForm.reset();
-                handleWorkerRoleChange();
                 if (workerSuccessModal) {
                     if (workerSuccessModalBody && payload.message) {
                         workerSuccessModalBody.textContent = payload.message;
                     }
                     workerSuccessModal.show();
                 } else {
-                    showToast('Trabajador guardado correctamente.', 'success');
+                    showToast('Peón guardado correctamente.', 'success');
                 }
             } catch (error) {
-                showToast(error.message || 'Ocurrió un error al guardar el trabajador.', 'danger');
+                showToast(error.message || 'Ocurrió un error al guardar el peón.', 'danger');
             } finally {
                 toggleButtonState(submitBtn, false);
             }
@@ -462,16 +383,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
             try {
                 const payload = await sendForm(workerEditForm.action, new FormData(workerEditForm));
-                if (payload.trabajador) {
-                    const updated = normalizeWorker(payload.trabajador);
+                if (payload.peon) {
+                    const updated = normalizePeon(payload.peon);
                     workersData = workersData.map(worker => (worker.id === updated.id ? updated : worker));
                     renderWorkersTable();
                     updateStats();
                 }
                 workerEditModal?.hide();
-                showToast(payload.message || 'Trabajador actualizado correctamente.', 'success');
+                showToast(payload.message || 'Peón actualizado correctamente.', 'success');
             } catch (error) {
-                showToast(error.message || 'Ocurrió un error al actualizar el trabajador.', 'danger');
+                showToast(error.message || 'Ocurrió un error al actualizar el peón.', 'danger');
             } finally {
                 toggleButtonState(submitBtn, false);
             }
@@ -520,7 +441,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (payload.finca) {
                     const updated = normalizeFinca(payload.finca);
                     fincasData = fincasData.map(finca => (finca.id === updated.id ? updated : finca));
-                    syncWorkersFincaName(updated);
                     renderFincasTable();
                     renderWorkersTable();
                     populateFincaSelectors();
@@ -583,7 +503,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     renderWorkersTable();
                 } else {
                     fincasData = fincasData.filter(finca => finca.id !== deleteContext.id);
-                    clearWorkersFincaReference(deleteContext.id);
                     renderFincasTable();
                     renderWorkersTable();
                     populateFincaSelectors();
@@ -627,6 +546,5 @@ document.addEventListener('DOMContentLoaded', () => {
     renderFincasTable();
     updateStats();
     renderTable(filteredData);
-    handleWorkerRoleChange();
     applyFilters();
 });
