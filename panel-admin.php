@@ -17,13 +17,33 @@ require_once __DIR__ . '/config.php';
 
 $availableFincas = [];
 $availableTrabajadores = [];
+$fincasById = [];
 
 try {
-    $stmtFincas = $pdo->query('SELECT id, nombre, link_ubicacion, descripcion, tarea_asignada, observacion FROM fincas ORDER BY nombre ASC');
+    $stmtFincas = $pdo->query('SELECT * FROM fincas ORDER BY nombre ASC');
     $availableFincas = $stmtFincas->fetchAll(PDO::FETCH_ASSOC) ?: [];
 
-    $stmtTrabajadores = $pdo->query('SELECT id, nombre, documento, rol, finca_id, finca_nombre, especialidad, inicio_actividades, observaciones FROM trabajadores ORDER BY nombre ASC');
+    if ($availableFincas) {
+        foreach ($availableFincas as $finca) {
+            $id = isset($finca['id']) ? (int) $finca['id'] : null;
+            if ($id) {
+                $fincasById[$id] = $finca['nombre'] ?? 'Sin nombre';
+            }
+        }
+    }
+
+    $stmtTrabajadores = $pdo->query('SELECT * FROM trabajadores ORDER BY nombre ASC');
     $availableTrabajadores = $stmtTrabajadores->fetchAll(PDO::FETCH_ASSOC) ?: [];
+
+    if ($availableTrabajadores && $fincasById) {
+        foreach ($availableTrabajadores as &$trabajador) {
+            $fincaId = isset($trabajador['finca_id']) ? (int) $trabajador['finca_id'] : null;
+            if ($fincaId && (empty($trabajador['finca_nombre']) || !is_string($trabajador['finca_nombre']))) {
+                $trabajador['finca_nombre'] = $fincasById[$fincaId] ?? null;
+            }
+        }
+        unset($trabajador);
+    }
 } catch (Throwable $e) {
     error_log('Error cargando datos panel admin: ' . $e->getMessage());
 }
