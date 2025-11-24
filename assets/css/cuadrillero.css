@@ -18,7 +18,7 @@ body {
     position: relative;
     width: 100%;
     min-height: 240px;
-    background: url('../img/banner.jpg') center center / cover no-repeat;
+    background: url('../img/banner.jpg') center center / cover no-repeat, linear-gradient(135deg, #064e3b, #047857);
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -64,7 +64,8 @@ body {
 .dashboard-shell {
     background: var(--surface);
     border-radius: 1.5rem 1.5rem 0 0;
-    margin-top: -2rem;
+    /* Se elimina el margin-top negativo que ocultaba el banner */
+    margin-top: 0;
     padding: clamp(1.25rem, 2vw, 2.5rem);
 }
 
