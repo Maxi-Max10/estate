@@ -128,9 +128,6 @@ $dynamicGreeting .= ', ' . htmlspecialchars($userName, ENT_QUOTES, 'UTF-8');
                                     <tr>
                                         <th>Nombre</th>
                                         <th>DNI</th>
-                                        <th>Estado</th>
-                                        <th>Ingreso</th>
-                                        <th>Teléfono</th>
                                         <th>Asistencia hoy</th>
                                     </tr>
                                 </thead>
@@ -139,9 +136,6 @@ $dynamicGreeting .= ', ' . htmlspecialchars($userName, ENT_QUOTES, 'UTF-8');
                                     <tr data-peon-id="<?php echo $pid; ?>">
                                         <td><?php echo htmlspecialchars(trim((string)$p['nombre'].' '.$p['apellido']), ENT_QUOTES, 'UTF-8'); ?></td>
                                         <td><?php echo htmlspecialchars((string)$p['dni'], ENT_QUOTES, 'UTF-8'); ?></td>
-                                        <td><?php if (strtolower((string)$p['estado']) === 'activo'): ?><span class="badge bg-success-subtle text-success">Activo</span><?php else: ?><span class="badge bg-secondary">Inactivo</span><?php endif; ?></td>
-                                        <td><?php echo htmlspecialchars((string)$p['fecha_ingreso'], ENT_QUOTES, 'UTF-8'); ?></td>
-                                        <td><?php echo $p['telefono'] ? htmlspecialchars((string)$p['telefono'], ENT_QUOTES, 'UTF-8') : '<span class="text-muted">-</span>'; ?></td>
                                         <td>
                                             <button type="button" class="btn btn-sm attendance-toggle <?php echo $present ? 'btn-success' : 'btn-outline-secondary'; ?>" data-present="<?php echo $present ? '1' : '0'; ?>">
                                                 <?php echo $present ? 'Presente' : 'Ausente'; ?>
