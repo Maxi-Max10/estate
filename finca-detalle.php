@@ -40,6 +40,8 @@ if (!isset($_SESSION[$sessionKey])) {
     $_SESSION[$sessionKey] = [];
 }
 $asistencias = $_SESSION[$sessionKey];
+$presentes = 0; $ausentes = 0;
+foreach ($peones as $p){ $pid=(int)$p['id']; if(isset($asistencias[$pid]) && $asistencias[$pid]===true){ $presentes++; } else { $ausentes++; } }
 
 // Saludo reutilizable
 $hourNow = (int) date('G');
@@ -83,30 +85,30 @@ $dynamicGreeting .= ', ' . htmlspecialchars($userName, ENT_QUOTES, 'UTF-8');
 </header>
 <div class="dashboard-shell">
     <div class="container-fluid">
+        <?php if(isset($_SESSION['flash_success'])): ?><div class="alert alert-success flash-message px-4 py-3 mb-3">✅ <?php echo htmlspecialchars($_SESSION['flash_success'], ENT_QUOTES, 'UTF-8'); unset($_SESSION['flash_success']); ?></div><?php endif; ?>
+        <?php if(isset($_SESSION['flash_error'])): ?><div class="alert alert-danger flash-message px-4 py-3 mb-3">⚠️ <?php echo htmlspecialchars($_SESSION['flash_error'], ENT_QUOTES, 'UTF-8'); unset($_SESSION['flash_error']); ?></div><?php endif; ?>
         <div class="row mb-4">
             <div class="col-12">
                 <div class="card finca-header-card p-4">
-                    <div class="d-flex flex-column flex-lg-row justify-content-between gap-4">
-                        <div>
+                    <div class="attendance-toolbar mb-3">
+                        <div class="flex-grow-1">
                             <h1 class="h4 mb-2"><?php echo htmlspecialchars($finca['nombre'], ENT_QUOTES, 'UTF-8'); ?></h1>
                             <p class="text-muted mb-2"><?php echo $finca['descripcion'] ? nl2br(htmlspecialchars($finca['descripcion'], ENT_QUOTES, 'UTF-8')) : 'Sin descripción.'; ?></p>
                             <p class="mb-2"><strong>Tarea asignada:</strong> <?php echo $finca['tarea_asignada'] ? htmlspecialchars($finca['tarea_asignada'], ENT_QUOTES, 'UTF-8') : 'Sin tarea.'; ?></p>
                             <?php if ($finca['observacion']): ?><div class="alert alert-warning py-2 mb-2"><i class="bi bi-exclamation-triangle-fill me-1"></i><?php echo htmlspecialchars($finca['observacion'], ENT_QUOTES, 'UTF-8'); ?></div><?php endif; ?>
                             <?php if ($finca['link_ubicacion']): ?><a class="btn btn-outline-primary btn-sm" target="_blank" rel="noopener" href="<?php echo htmlspecialchars($finca['link_ubicacion'], ENT_QUOTES, 'UTF-8'); ?>"><i class="bi bi-map me-1"></i>Ubicación</a><?php endif; ?>
                         </div>
-                        <div class="align-self-start">
-                            <form class="border rounded p-3" method="post" action="crear-peon.php">
-                                <h2 class="h6 mb-3">Crear nuevo peón</h2>
-                                <input type="hidden" name="redirect_finca" value="<?php echo (int)$fincaId; ?>">
-                                <div class="mb-2"><input required name="nombre" class="form-control form-control-sm" placeholder="Nombre"></div>
-                                <div class="mb-2"><input name="apellido" class="form-control form-control-sm" placeholder="Apellido"></div>
-                                <div class="mb-2"><input required name="dni" class="form-control form-control-sm" placeholder="DNI"></div>
-                                <div class="mb-2"><input name="telefono" class="form-control form-control-sm" placeholder="Teléfono"></div>
-                                <div class="mb-2"><input type="date" name="fecha_ingreso" class="form-control form-control-sm" value="<?php echo date('Y-m-d'); ?>"></div>
-                                <button class="btn btn-success btn-sm w-100"><i class="bi bi-person-plus me-1"></i>Guardar</button>
-                            </form>
+                        <div class="d-flex gap-2">
+                            <div class="attendance-counter present"><i class="bi bi-person-check"></i><span>Presentes: <?php echo $presentes; ?></span></div>
+                            <div class="attendance-counter absent"><i class="bi bi-person-x"></i><span>Ausentes: <?php echo $ausentes; ?></span></div>
                         </div>
+                        <div class="attendance-search">
+                            <input type="text" id="searchPeon" class="form-control form-control-sm" placeholder="Filtrar peones...">
+                        </div>
+                        <button class="btn btn-success btn-sm create-peon-btn" data-bs-toggle="modal" data-bs-target="#modalCrearPeon"><i class="bi bi-person-plus me-1"></i>Nuevo peón</button>
                     </div>
+                    <div class="filter-divider"></div>
+                    <small class="text-muted">Usa el buscador o marca asistencia rápida.</small>
                 </div>
             </div>
         </div>
@@ -121,7 +123,7 @@ $dynamicGreeting .= ', ' . htmlspecialchars($userName, ENT_QUOTES, 'UTF-8');
                     </div>
                     <?php if ($peones): ?>
                         <div class="table-responsive">
-                            <table class="table align-middle mb-0">
+                            <table class="table align-middle mb-0 table-attendance" id="tablaPeones">
                                 <thead class="table-light">
                                     <tr>
                                         <th>Nombre</th>
@@ -162,6 +164,32 @@ $dynamicGreeting .= ', ' . htmlspecialchars($userName, ENT_QUOTES, 'UTF-8');
         </div>
     </div>
 </div>
+<!-- Modal crear peón -->
+<div class="modal fade" id="modalCrearPeon" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="post" action="crear-peon.php">
+                <div class="modal-header">
+                    <h5 class="modal-title">Nuevo peón</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="redirect_finca" value="<?php echo (int)$fincaId; ?>">
+                    <div class="mb-2"><input required name="nombre" class="form-control" placeholder="Nombre"></div>
+                    <div class="mb-2"><input name="apellido" class="form-control" placeholder="Apellido"></div>
+                    <div class="mb-2"><input required name="dni" class="form-control" placeholder="DNI"></div>
+                    <div class="mb-2"><input name="telefono" class="form-control" placeholder="Teléfono"></div>
+                    <div class="mb-2"><label class="form-label small mb-1">Fecha ingreso</label><input type="date" name="fecha_ingreso" class="form-control" value="<?php echo date('Y-m-d'); ?>"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-success"><i class="bi bi-person-plus me-1"></i>Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 // Toggle asistencia via fetch a script que guarda en sesión
@@ -181,10 +209,33 @@ toggles.forEach(btn => {
                 btn.textContent = data.presente ? 'Presente' : 'Ausente';
                 btn.classList.toggle('btn-success', data.presente);
                 btn.classList.toggle('btn-outline-secondary', !data.presente);
+                                actualizarContadores();
             }
         }).catch(e => console.error(e));
     });
 });
+
+function actualizarContadores(){
+        let presentes=0, ausentes=0;
+        document.querySelectorAll('.attendance-toggle').forEach(b=>{ if(b.getAttribute('data-present')==='1'){ presentes++; } else { ausentes++; } });
+        const cp=document.querySelector('.attendance-counter.present span');
+        const ca=document.querySelector('.attendance-counter.absent span');
+        if(cp) cp.textContent='Presentes: '+presentes; if(ca) ca.textContent='Ausentes: '+ausentes;
+}
+
+// Filtro rápido
+const searchInput = document.getElementById('searchPeon');
+if(searchInput){
+    searchInput.addEventListener('input', () => {
+        const term = searchInput.value.trim().toLowerCase();
+        document.querySelectorAll('#tablaPeones tbody tr').forEach(tr => {
+            const name = tr.children[0].textContent.toLowerCase();
+            tr.style.display = name.includes(term) ? '' : 'none';
+        });
+    });
+}
+
+actualizarContadores();
 </script>
 </body>
 </html>

@@ -47,6 +47,29 @@ body {
     text-align: center;
 }
 
+/* Mejoras UI finca detalle / asistencia */
+.finca-header-card { border:none; border-radius:1.25rem; box-shadow:0 12px 32px rgba(15,23,42,0.12); }
+.attendance-toolbar { display:flex; flex-wrap:wrap; gap:.75rem; align-items:center; }
+.attendance-counter { background:var(--surface); border:1px solid rgba(15,23,42,.08); padding:.65rem 1rem; border-radius:.9rem; font-size:.85rem; display:flex; align-items:center; gap:.4rem; box-shadow:0 6px 18px rgba(15,23,42,.06); }
+.attendance-counter.present { border-color:rgba(16,185,129,.4); }
+.attendance-counter.absent { border-color:rgba(220,38,38,.4); }
+.attendance-search { max-width:260px; }
+.table-attendance tbody tr { transition:background .18s ease, transform .18s ease; }
+.table-attendance tbody tr:hover { background:rgba(16,185,129,.06); }
+.attendance-toggle { min-width:92px; font-weight:600; letter-spacing:.25px; }
+.attendance-toggle.btn-success { box-shadow:0 0 0 1px rgba(16,185,129,.4); }
+.attendance-toggle.btn-outline-secondary { background:#fff; }
+.attendance-status-badge { padding:.35rem .6rem; border-radius:.7rem; font-size:.7rem; font-weight:600; }
+.attendance-status-badge.present { background:rgba(16,185,129,.15); color:#047857; }
+.attendance-status-badge.absent { background:rgba(220,38,38,.15); color:#991b1b; }
+.create-peon-btn { font-weight:600; }
+.filter-divider { width:100%; border-top:1px dashed rgba(15,23,42,.15); margin:.75rem 0; }
+.flash-message { border-radius:.9rem; box-shadow:0 10px 28px rgba(15,23,42,.1); }
+@media (max-width: 992px){
+    .attendance-toolbar { flex-direction:column; align-items:stretch; }
+    .attendance-search { width:100%; }
+}
+
 @media (max-width: 768px) {
     .banner-hero {
         min-height: 180px;
