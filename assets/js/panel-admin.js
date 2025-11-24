@@ -266,9 +266,16 @@ document.addEventListener('DOMContentLoaded', () => {
         return 'Activo';
     };
 
-    // Helpers de fecha (inicio/fin de día)
+    // Helpers de fecha (inicio/fin de día y parseo local de YYYY-MM-DD)
     const startOfDay = d => new Date(d.getFullYear(), d.getMonth(), d.getDate());
     const endOfDay = d => new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59, 999);
+    const parseDateLocal = (s) => {
+        if (!s) return new Date(NaN);
+        const parts = s.split('-').map(n => parseInt(n, 10));
+        if (parts.length !== 3 || parts.some(isNaN)) return new Date(NaN);
+        const [y, m, d] = parts;
+        return new Date(y, m - 1, d);
+    };
 
     const applyFilters = () => {
         const selectedView = viewRange.value;
@@ -296,7 +303,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (endValue) end = endOfDay(new Date(endValue));
 
         filteredData = attendanceData.filter(item => {
-            const recordDate = new Date(item.fecha);
+            const recordDate = parseDateLocal(item.fecha);
             const matchStart = start ? recordDate >= start : true;
             const matchEnd = end ? recordDate <= end : true;
             const matchFinca = fincaValue ? item.finca === fincaValue : true;
@@ -312,7 +319,7 @@ document.addEventListener('DOMContentLoaded', () => {
         filteredData.sort((a,b)=>{
             let va=a[sortField]; let vb=b[sortField];
             // fechas
-            if(sortField==='fecha'){ va=new Date(va); vb=new Date(vb);} else {
+            if(sortField==='fecha'){ va=parseDateLocal(va); vb=parseDateLocal(vb);} else {
                 va = (va||'').toString().toLowerCase();
                 vb = (vb||'').toString().toLowerCase();
             }
