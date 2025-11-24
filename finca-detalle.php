@@ -36,7 +36,12 @@ $peones = $stmtPeones->fetchAll(PDO::FETCH_ASSOC) ?: [];
 
 // Asistencias de hoy: sincronizar desde BD y mantener en sesión para la UI
 $sessionKey = 'asistencia_finca_' . $fincaId;
-if (!isset($_SESSION[$sessionKey])) { $_SESSION[$sessionKey] = []; }
+$dateKey = $sessionKey . '_fecha';
+$todayStr = date('Y-m-d');
+if (!isset($_SESSION[$dateKey]) || $_SESSION[$dateKey] !== $todayStr) {
+    $_SESSION[$sessionKey] = [];
+    $_SESSION[$dateKey] = $todayStr;
+}
 
 // Precarga desde BD para la fecha actual
 if ($peones) {

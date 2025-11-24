@@ -30,9 +30,13 @@ try {
 	exit;
 }
 
-// Mantener compatibilidad con contador en vista finca usando sesión.
+// Mantener compatibilidad con contador en vista finca usando sesión y reseteo diario
 $key = 'asistencia_finca_' . $fincaId;
-if (!isset($_SESSION[$key])) { $_SESSION[$key] = []; }
+$dateKey = $key . '_fecha';
+if (!isset($_SESSION[$dateKey]) || $_SESSION[$dateKey] !== $fecha) {
+	$_SESSION[$key] = [];
+	$_SESSION[$dateKey] = $fecha;
+}
 if ($presente === 1) { $_SESSION[$key][$peonId] = true; } else { unset($_SESSION[$key][$peonId]); }
 
 echo json_encode(['ok'=>true,'presente'=> $presente === 1]);
