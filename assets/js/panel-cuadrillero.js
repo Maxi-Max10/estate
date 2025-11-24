@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const data = window.__CuadrilleroData || {};
     const stats = data.stats || {};
     const assignedFarms = Array.isArray(data.assignedFarms) ? data.assignedFarms : [];
+    const assignedWorkers = Array.isArray(data.assignedWorkers) ? data.assignedWorkers : [];
 
     const setText = (id, value, fallback = '') => {
         const el = document.getElementById(id);
@@ -16,6 +17,9 @@ document.addEventListener('DOMContentLoaded', () => {
     setText('summaryTareasMeta', stats.tasksLabel ?? 'Con tareas registradas');
     setText('summaryAlertas', stats.alerts ?? 0);
     setText('summaryAlertasMeta', stats.alertsLabel ?? 'Observaciones pendientes');
+    setText('summaryPeonesTotales', stats.workers ?? assignedWorkers.length);
+    setText('summaryPeonesActivos', stats.workersActive ?? assignedWorkers.filter(w => (w.estado || '').toLowerCase() === 'activo').length);
+    setText('summaryPeonesInactivos', stats.workersInactive ?? assignedWorkers.filter(w => (w.estado || '').toLowerCase() === 'inactivo').length);
 
     const fallbackTimeline = [
         { hora: '07:30', titulo: 'Check-in general', detalle: 'Registro biométrico en finca principal' },
@@ -62,6 +66,23 @@ document.addEventListener('DOMContentLoaded', () => {
             estado: farm.observacion ? 'Observación' : 'En curso',
             prioridad: farm.observacion ? 'alta' : 'media',
         }));
+
+    // Posible futuro: render dinámico de peones (ya se muestra server-side)
+    // Ejemplo placeholder si se quisiera insertar en un contenedor JS:
+    const workersContainer = document.getElementById('workersAssignedList');
+    if (workersContainer && !workersContainer.dataset.rendered) {
+        workersContainer.dataset.rendered = 'true';
+        if (!assignedWorkers.length) {
+            workersContainer.innerHTML = '<p class="text-muted small mb-0">Sin peones asignados.</p>';
+        } else {
+            assignedWorkers.forEach(w => {
+                const row = document.createElement('div');
+                row.className = 'd-flex justify-content-between border-bottom py-2 small';
+                row.innerHTML = `<span>${(w.nombre || '') + ' ' + (w.apellido || '')}</span><span>${(w.estado || 'activo')}</span>`;
+                workersContainer.appendChild(row);
+            });
+        }
+    }
 
     const taskList = document.getElementById('taskList');
     if (taskList) {

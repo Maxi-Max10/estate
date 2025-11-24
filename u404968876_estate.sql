@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1:3306
--- Tiempo de generación: 24-11-2025 a las 00:21:20
+-- Tiempo de generación: 24-11-2025 a las 04:18:09
 -- Versión del servidor: 11.8.3-MariaDB-log
 -- Versión de PHP: 7.2.34
 
@@ -33,15 +33,16 @@ CREATE TABLE `fincas` (
   `link_ubicacion` varchar(255) DEFAULT NULL,
   `descripcion` text DEFAULT NULL,
   `tarea_asignada` text DEFAULT NULL,
-  `observacion` text DEFAULT NULL
+  `observacion` text DEFAULT NULL,
+  `cuadrillero_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `fincas`
 --
 
-INSERT INTO `fincas` (`id`, `nombre`, `link_ubicacion`, `descripcion`, `tarea_asignada`, `observacion`) VALUES
-(3, 'aaaaaaaa', 'bbbbbbbbb', 'ccccccccccc', 'dddddddddd', 'eeeeeeeeeee');
+INSERT INTO `fincas` (`id`, `nombre`, `link_ubicacion`, `descripcion`, `tarea_asignada`, `observacion`, `cuadrillero_id`) VALUES
+(3, 'Finca Florencia', 'https://maps.app.goo.gl/UxpVqwJJZSqnsoUB8?g_st=ipc', '', '', '', 2);
 
 -- --------------------------------------------------------
 
@@ -92,7 +93,8 @@ CREATE TABLE `usuarios` (
 
 INSERT INTO `usuarios` (`id`, `email`, `password_hash`, `rol`, `nombre`, `creado_en`, `actualizado_en`) VALUES
 (1, 'admin@gmail.com', '12345678', 'admin', 'Administrador', '2025-11-22 19:23:29', '2025-11-22 20:12:03'),
-(2, 'cuadrillero@gmial.com', '987654321', 'cuadrillero', 'Cuadrillero', '2025-11-22 19:25:27', '2025-11-23 22:39:21');
+(2, 'cuadrillero@gmial.com', '987654321', 'cuadrillero', 'Juan Cuadrillero', '2025-11-22 19:25:27', '2025-11-24 04:12:08'),
+(3, 'cuadrillero2@gmial.com', '$2y$10$4UOkqj0lbfY5j2KiLFxfCOpMvWUxaYdQDJ.j/TmymAoJGhTutZyEe', 'cuadrillero', 'cuadrillero2', '2025-11-24 03:58:39', '2025-11-24 03:58:39');
 
 --
 -- Índices para tablas volcadas
@@ -132,13 +134,13 @@ ALTER TABLE `fincas`
 -- AUTO_INCREMENT de la tabla `peones`
 --
 ALTER TABLE `peones`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

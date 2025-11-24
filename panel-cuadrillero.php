@@ -19,57 +19,32 @@ $userId = (int) ($_SESSION['user_id'] ?? 0);
 $userEmail = strtolower((string) ($_SESSION['user_email'] ?? ''));
 $userName = trim((string) ($_SESSION['user_name'] ?? 'Cuadrillero'));
 
-$assignedFarmsMap = [];
-$cuadrilleroProfile = null;
-
+// Cargar fincas asignadas según nuevo esquema (fincas.cuadrillero_id)
+$assignedFarms = [];
 try {
-    $stmt = $pdo->prepare('SELECT t.*, f.id AS linked_finca_id, f.nombre AS linked_finca_nombre, f.link_ubicacion, f.descripcion, f.tarea_asignada AS linked_tarea, f.observacion AS linked_observacion FROM trabajadores t LEFT JOIN fincas f ON f.id = t.finca_id WHERE t.rol = :rol');
-    $stmt->execute([':rol' => 'cuadrillero']);
-    $records = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
-
-    foreach ($records as $record) {
-        $matchScore = 0;
-        if ($userId && array_key_exists('usuario_id', $record) && (int) $record['usuario_id'] === $userId) {
-            $matchScore = 3;
-        } elseif ($userEmail !== '' && array_key_exists('email', $record) && strtolower((string) $record['email']) === $userEmail) {
-            $matchScore = 2;
-        } elseif (strcasecmp((string) ($record['nombre'] ?? ''), $userName) === 0) {
-            $matchScore = 1;
-        }
-
-        if ($matchScore === 0) {
-            continue;
-        }
-
-        $fincaId = (int) ($record['linked_finca_id'] ?? $record['finca_id'] ?? 0);
-        $farmKey = $fincaId ?: ('manual_' . spl_object_id((object) $record));
-
-        if (!isset($assignedFarmsMap[$farmKey])) {
-            $assignedFarmsMap[$farmKey] = [
-                'id' => $fincaId,
-                'nombre' => $record['linked_finca_nombre'] ?? $record['finca_nombre'] ?? 'Finca sin nombre',
-                'link' => $record['link_ubicacion'] ?? null,
-                'descripcion' => $record['descripcion'] ?? '',
-                'tarea' => $record['linked_tarea'] ?? $record['tarea_asignada'] ?? '',
-                'observacion' => $record['linked_observacion'] ?? $record['observaciones'] ?? '',
-                'inicio' => $record['inicio_actividades'] ?? null,
-            ];
-        }
-
-        if ($cuadrilleroProfile === null || $matchScore > ($cuadrilleroProfile['match'] ?? 0)) {
-            $cuadrilleroProfile = [
-                'nombre' => $record['nombre'] ?? $userName,
-                'documento' => $record['documento'] ?? null,
-                'inicio' => $record['inicio_actividades'] ?? null,
-                'match' => $matchScore,
-            ];
-        }
-    }
+    $stmtFincas = $pdo->prepare('SELECT id, nombre, link_ubicacion, descripcion, tarea_asignada, observacion FROM fincas WHERE cuadrillero_id = :id ORDER BY nombre ASC');
+    $stmtFincas->execute([':id' => $userId]);
+    $assignedFarms = $stmtFincas->fetchAll(PDO::FETCH_ASSOC) ?: [];
 } catch (Throwable $e) {
-    error_log('Error cargando fincas para cuadrillero: ' . $e->getMessage());
+    error_log('Error obteniendo fincas asignadas: ' . $e->getMessage());
 }
 
-$assignedFarms = array_values($assignedFarmsMap);
+// Cargar peones asignados (peones.cuadrilla_id = usuario cuadrillero)
+$assignedWorkers = [];
+try {
+    $stmtWorkers = $pdo->prepare('SELECT id, nombre, apellido, dni, estado, fecha_ingreso, telefono FROM peones WHERE cuadrilla_id = :id ORDER BY nombre ASC, apellido ASC');
+    $stmtWorkers->execute([':id' => $userId]);
+    $assignedWorkers = $stmtWorkers->fetchAll(PDO::FETCH_ASSOC) ?: [];
+} catch (Throwable $e) {
+    error_log('Error obteniendo peones asignados: ' . $e->getMessage());
+}
+
+// Perfil básico del cuadrillero (se podría ampliar consultando usuarios)
+$cuadrilleroProfile = [
+    'nombre' => $userName,
+    'documento' => null,
+    'inicio' => null,
+];
 
 $farmsCount = count($assignedFarms);
 $farmsWithTask = 0;
@@ -83,6 +58,15 @@ foreach ($assignedFarms as $farm) {
     }
 }
 
+// Estadísticas de peones
+$workersTotal = count($assignedWorkers);
+$workersActive = 0;
+$workersInactive = 0;
+foreach ($assignedWorkers as $w) {
+    $estado = strtolower((string) ($w['estado'] ?? ''));
+    if ($estado === 'inactivo') { $workersInactive++; } else { $workersActive++; }
+}
+
 $cuadrilleroStats = [
     'farms' => $farmsCount,
     'farmsLabel' => $farmsCount === 1 ? 'Finca asignada' : 'Fincas asignadas',
@@ -90,6 +74,9 @@ $cuadrilleroStats = [
     'tasksLabel' => $farmsWithTask === 1 ? 'Con tarea registrada' : 'Con tareas registradas',
     'alerts' => $farmsWithObservations,
     'alertsLabel' => $farmsWithObservations === 1 ? 'Observación pendiente' : 'Observaciones pendientes',
+    'workers' => $workersTotal,
+    'workersActive' => $workersActive,
+    'workersInactive' => $workersInactive,
 ];
 
 if ($cuadrilleroProfile === null) {
@@ -165,6 +152,44 @@ if ($cuadrilleroProfile === null) {
                     </div>
                 </div>
             </div>
+            <div class="row g-3 mb-4">
+                <div class="col-md-4">
+                    <div class="card summary-card p-4 h-100">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <p class="text-muted mb-1">Peones asignados</p>
+                                <h3 id="summaryPeonesTotales"><?php echo $cuadrilleroStats['workers']; ?></h3>
+                                <small class="text-muted">Total vinculados</small>
+                            </div>
+                            <span class="badge bg-primary-subtle text-primary"><i class="bi bi-people me-1"></i>Peones</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card summary-card p-4 h-100">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <p class="text-muted mb-1">Activos</p>
+                                <h3 id="summaryPeonesActivos"><?php echo $cuadrilleroStats['workersActive']; ?></h3>
+                                <small class="text-muted">Disponibles hoy</small>
+                            </div>
+                            <span class="badge bg-success-subtle text-success"><i class="bi bi-person-check me-1"></i>Activos</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card summary-card p-4 h-100">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <p class="text-muted mb-1">Inactivos</p>
+                                <h3 id="summaryPeonesInactivos"><?php echo $cuadrilleroStats['workersInactive']; ?></h3>
+                                <small class="text-muted">No asignables</small>
+                            </div>
+                            <span class="badge bg-secondary"><i class="bi bi-person-x me-1"></i>Inactivos</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div class="card assigned-card p-4 mb-4">
                 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-3">
@@ -217,6 +242,53 @@ if ($cuadrilleroProfile === null) {
                         <i class="bi bi-geo-alt display-5 mb-2"></i>
                         <p class="mb-1">Aún no tienes fincas asignadas.</p>
                         <small>Contacta al administrador para que te vincule a una cuadrilla.</small>
+                    </div>
+                <?php endif; ?>
+            </div>
+
+            <div class="card assigned-card p-4 mb-4">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-3">
+                    <div>
+                        <h2 class="h5 mb-1">Mis peones asignados</h2>
+                        <small class="text-muted">Estado y fecha de ingreso de cada trabajador.</small>
+                    </div>
+                </div>
+                <?php if ($assignedWorkers): ?>
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>DNI</th>
+                                    <th>Estado</th>
+                                    <th>Ingreso</th>
+                                    <th>Teléfono</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($assignedWorkers as $w): ?>
+                                    <tr>
+                                        <td><?php echo htmlspecialchars(trim((string)$w['nombre'].' '.$w['apellido']), ENT_QUOTES, 'UTF-8'); ?></td>
+                                        <td><?php echo htmlspecialchars((string)$w['dni'], ENT_QUOTES, 'UTF-8'); ?></td>
+                                        <td>
+                                            <?php if (strtolower((string)$w['estado']) === 'activo'): ?>
+                                                <span class="badge bg-success-subtle text-success">Activo</span>
+                                            <?php else: ?>
+                                                <span class="badge bg-secondary">Inactivo</span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td><?php echo htmlspecialchars((string)$w['fecha_ingreso'], ENT_QUOTES, 'UTF-8'); ?></td>
+                                        <td><?php echo $w['telefono'] ? htmlspecialchars((string)$w['telefono'], ENT_QUOTES, 'UTF-8') : '<span class="text-muted">-</span>'; ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                <?php else: ?>
+                    <div class="assigned-empty-state text-center text-muted">
+                        <i class="bi bi-people display-5 mb-2"></i>
+                        <p class="mb-1">No hay peones asignados todavía.</p>
+                        <small>Solicita al administrador la asignación correspondiente.</small>
                     </div>
                 <?php endif; ?>
             </div>
@@ -287,6 +359,7 @@ if ($cuadrilleroProfile === null) {
         window.__CuadrilleroData = <?php echo json_encode([
             'stats' => $cuadrilleroStats,
             'assignedFarms' => $assignedFarms,
+            'assignedWorkers' => $assignedWorkers,
             'profile' => $cuadrilleroProfile,
         ], JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT); ?>;
     </script>
