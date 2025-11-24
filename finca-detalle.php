@@ -175,11 +175,17 @@ $dynamicGreeting .= ', ' . htmlspecialchars($userName, ENT_QUOTES, 'UTF-8');
                 </div>
                 <div class="modal-body">
                     <input type="hidden" name="redirect_finca" value="<?php echo (int)$fincaId; ?>">
-                    <div class="mb-2"><input required name="nombre" class="form-control" placeholder="Nombre"></div>
-                    <div class="mb-2"><input name="apellido" class="form-control" placeholder="Apellido"></div>
-                    <div class="mb-2"><input required name="dni" class="form-control" placeholder="DNI"></div>
-                    <div class="mb-2"><input name="telefono" class="form-control" placeholder="Teléfono"></div>
+                    <div class="mb-2"><input required name="nombre" id="peonNombre" data-voice="nombre" class="form-control" placeholder="Nombre"></div>
+                    <div class="mb-2"><input name="apellido" id="peonApellido" data-voice="apellido" class="form-control" placeholder="Apellido"></div>
+                    <div class="mb-2"><input required name="dni" id="peonDni" data-voice="dni" class="form-control" placeholder="DNI"></div>
+                    <div class="mb-2"><input name="telefono" id="peonTelefono" data-voice="telefono" class="form-control" placeholder="Teléfono"></div>
                     <div class="mb-2"><label class="form-label small mb-1">Fecha ingreso</label><input type="date" name="fecha_ingreso" class="form-control" value="<?php echo date('Y-m-d'); ?>"></div>
+                    <div class="d-flex gap-2 mt-3">
+                        <button type="button" id="btnDictarPeon" class="btn btn-outline-success btn-sm"><i class="bi bi-mic me-1"></i>Dictar</button>
+                        <button type="button" id="btnPararDictadoPeon" class="btn btn-outline-secondary btn-sm d-none"><i class="bi bi-stop-circle me-1"></i>Parar</button>
+                        <small id="estadoDictadoPeon" class="text-muted align-self-center"></small>
+                    </div>
+                    <small class="text-muted d-block mt-2">Ejemplo: "Nombre Juan Apellido Pérez DNI 12345678 Teléfono 1122334455"</small>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -191,6 +197,7 @@ $dynamicGreeting .= ', ' . htmlspecialchars($userName, ENT_QUOTES, 'UTF-8');
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="assets/js/cuadrillero/voice-peon.js"></script>
 <script>
 // Toggle asistencia via fetch a script que guarda en sesión
 const toggles = document.querySelectorAll('.attendance-toggle');
