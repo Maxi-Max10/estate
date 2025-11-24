@@ -65,6 +65,7 @@ $cuadrillerosJson = json_encode($cuadrilleros, JSON_UNESCAPED_UNICODE) ?: '[]';
 				</div>
 				<div class="d-flex align-items-center gap-2 gap-sm-3 text-white user-actions">
 					<a class="btn btn-outline-light btn-sm" href="peones-admin.php"><i class="bi bi-people me-1"></i>Peones</a>
+					<a class="btn btn-outline-info btn-sm" href="cuadrilleros-admin.php"><i class="bi bi-person-lines-fill me-1"></i>Cuadrilleros</a>
 					<a class="btn btn-outline-success btn-sm" href="fincas-admin.php"><i class="bi bi-map me-1"></i>Fincas</a>
 					<span class="fw-semibold"><i class="bi bi-person-badge me-2"></i><?php echo htmlspecialchars($userName, ENT_QUOTES, 'UTF-8'); ?></span>
 					<a class="btn btn-outline-light btn-sm" href="logout.php"><i class="bi bi-box-arrow-right me-1"></i>Salir</a>
