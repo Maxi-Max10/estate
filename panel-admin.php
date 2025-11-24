@@ -317,30 +317,18 @@ $cuadrillerosJson = json_encode($cuadrilleros, JSON_UNESCAPED_UNICODE) ?: '[]';
 				</div>
 				<div class="col-xl-5">
 					<div class="card table-card border-0 h-100">
-						<div class="card-body">
-							<div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
-								<div>
-									<h2 class="h5 mb-1">Fincas registradas</h2>
-									<small class="text-muted">Controla enlaces y tareas activas.</small>
-								</div>
-								<span class="badge bg-success-subtle text-success"><?php echo count($availableFincas); ?> activas</span>
+						<div class="card-body d-flex flex-column justify-content-between">
+							<div class="mb-3">
+								<h2 class="h5 mb-1">Fincas</h2>
+								<small class="text-muted">Ahora el listado completo se ve aparte.</small>
 							</div>
-							<div class="table-responsive">
-								<table class="table align-middle" id="farmsTable">
-									<thead class="table-light">
-										<tr>
-											<th>Finca</th>
-											<th>Ubicación</th>
-											<th>Tarea</th>
-											<th>Observación</th>
-											<th></th>
-										</tr>
-									</thead>
-									<tbody></tbody>
-								</table>
+							<div class="d-flex flex-column gap-2">
+								<p class="mb-1"><span class="badge bg-success-subtle text-success me-2"><?php echo count($availableFincas); ?> activas</span><span class="text-muted">Gestioná enlaces, tareas y observaciones desde la vista dedicada.</span></p>
+								<a href="fincas-admin.php" class="btn btn-outline-success"><i class="bi bi-map me-1"></i>Ver fincas registradas</a>
 							</div>
 						</div>
 					</div>
+				</div>
 				</div>
 			</div>
 
