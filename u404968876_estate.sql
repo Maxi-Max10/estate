@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1:3306
--- Tiempo de generación: 24-11-2025 a las 04:18:09
+-- Tiempo de generación: 24-11-2025 a las 05:29:49
 -- Versión del servidor: 11.8.3-MariaDB-log
 -- Versión de PHP: 7.2.34
 
@@ -20,6 +20,20 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `u404968876_estate`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `asistencias_peones`
+--
+
+CREATE TABLE `asistencias_peones` (
+  `id` int(11) NOT NULL,
+  `finca_id` int(11) NOT NULL,
+  `peon_id` int(11) NOT NULL,
+  `fecha` date NOT NULL,
+  `presente` tinyint(1) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -47,6 +61,19 @@ INSERT INTO `fincas` (`id`, `nombre`, `link_ubicacion`, `descripcion`, `tarea_as
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `finca_peones`
+--
+
+CREATE TABLE `finca_peones` (
+  `id` int(11) NOT NULL,
+  `finca_id` int(11) NOT NULL,
+  `peon_id` int(11) NOT NULL,
+  `asignado_en` date NOT NULL DEFAULT curdate()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `peones`
 --
 
@@ -69,7 +96,8 @@ CREATE TABLE `peones` (
 --
 
 INSERT INTO `peones` (`id`, `nombre`, `apellido`, `dni`, `email`, `fecha_ingreso`, `estado`, `telefono`, `cuadrilla_id`, `created_at`, `updated_at`) VALUES
-(1, 'Maximiliano', '', '414425237', 'cuadrillero@gmail.com', '2025-11-21', 'activo', NULL, NULL, '2025-11-23 05:31:44', '2025-11-23 22:46:27');
+(1, 'Rafael', 'Montes', '414425237', 'cuadrillero@gmail.com', '2025-11-21', 'activo', NULL, 2, '2025-11-23 05:31:44', '2025-11-24 04:31:54'),
+(3, 'juan', 'pérez', '12346578', NULL, '2025-11-24', 'activo', NULL, 2, '2025-11-24 05:16:07', '2025-11-24 05:16:07');
 
 -- --------------------------------------------------------
 
@@ -101,10 +129,24 @@ INSERT INTO `usuarios` (`id`, `email`, `password_hash`, `rol`, `nombre`, `creado
 --
 
 --
+-- Indices de la tabla `asistencias_peones`
+--
+ALTER TABLE `asistencias_peones`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uq_asistencia` (`finca_id`,`peon_id`,`fecha`);
+
+--
 -- Indices de la tabla `fincas`
 --
 ALTER TABLE `fincas`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indices de la tabla `finca_peones`
+--
+ALTER TABLE `finca_peones`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uq_finca_peon` (`finca_id`,`peon_id`);
 
 --
 -- Indices de la tabla `peones`
@@ -125,16 +167,28 @@ ALTER TABLE `usuarios`
 --
 
 --
+-- AUTO_INCREMENT de la tabla `asistencias_peones`
+--
+ALTER TABLE `asistencias_peones`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `fincas`
 --
 ALTER TABLE `fincas`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
+-- AUTO_INCREMENT de la tabla `finca_peones`
+--
+ALTER TABLE `finca_peones`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `peones`
 --
 ALTER TABLE `peones`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`

@@ -37,14 +37,30 @@ document.addEventListener('DOMContentLoaded', () => {
     let fincasData = Array.isArray(window.__FincasData) && window.__FincasData.length ? window.__FincasData.map(normalizeFinca) : fallbackFincas.map(normalizeFinca);
     let workersData = Array.isArray(window.__PeonesData) ? window.__PeonesData.map(normalizePeon) : [];
 
-    const attendanceData = [
-        { fecha: '2025-11-22', trabajador: 'Juan Pérez', finca: 'Finca Norte', horaEntrada: '07:55', horaSalida: '17:10', horas: 9.25, estado: 'Presente' },
-        { fecha: '2025-11-22', trabajador: 'María López', finca: 'Finca Central', horaEntrada: '08:05', horaSalida: '16:45', horas: 8.7, estado: 'Presente' },
-        { fecha: '2025-11-22', trabajador: 'Carlos Silva', finca: 'Finca Sur', horaEntrada: '08:30', horaSalida: '15:00', horas: 6.5, estado: 'Licencia' },
-        { fecha: '2025-11-21', trabajador: 'Lucía Torres', finca: 'Finca Norte', horaEntrada: '08:00', horaSalida: '17:00', horas: 9, estado: 'Presente' },
-        { fecha: '2025-11-20', trabajador: 'Juan Pérez', finca: 'Finca Norte', horaEntrada: '08:10', horaSalida: '16:40', horas: 8.5, estado: 'Presente' },
-        { fecha: '2025-11-19', trabajador: 'María López', finca: 'Finca Central', horaEntrada: '08:20', horaSalida: '16:20', horas: 8, estado: 'Ausente' },
-    ];
+    const normalizeAttendance = r => {
+        const nombre = (r.nombre || '').trim();
+        const apellido = (r.apellido || '').trim();
+        const fullName = `${nombre} ${apellido}`.trim();
+        const presente = Number(r.presente) === 1;
+        return {
+            id: Number(r.id) || 0,
+            fecha: r.fecha || '',
+            trabajador: fullName || 'Sin nombre',
+            dni: r.dni || '',
+            finca: r.finca_nombre || 'Sin finca',
+            finca_id: Number(r.finca_id) || 0,
+            cuadrillero: r.cuadrillero_nombre || 'Sin cuadrillero',
+            cuadrillero_id: r.cuadrillero_id ? Number(r.cuadrillero_id) : null,
+            presente,
+            estado: presente ? 'Presente' : 'Ausente',
+            horaEntrada: '-', // Placeholder hasta que exista en esquema
+            horaSalida: '-',
+            horas: '-',
+        };
+    };
+
+    const rawAttendance = Array.isArray(window.__AttendanceData) ? window.__AttendanceData : [];
+    let attendanceData = rawAttendance.map(normalizeAttendance);
 
     const toastEl = document.getElementById('actionToast');
     if (!toastEl) {
@@ -54,6 +70,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const toast = new bootstrap.Toast(toastEl);
     const toastBody = document.getElementById('toastBody');
     const attendanceTableBody = document.querySelector('#attendanceTable tbody');
+    const filterCuadrillero = document.getElementById('filterCuadrillero');
+    const filterSearch = document.getElementById('filterSearch');
     const viewRange = document.getElementById('viewRange');
     const startDateInput = document.getElementById('startDate');
     const endDateInput = document.getElementById('endDate');
@@ -78,6 +96,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const confirmDeleteBody = document.getElementById('confirmDeleteBody');
 
     let filteredData = [...attendanceData];
+    let sortField = 'fecha';
+    let sortDir = 'desc';
     let deleteContext = null;
 
     const showToast = (message, variant = 'primary') => {
@@ -226,9 +246,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td>${item.fecha}</td>
                 <td>${item.trabajador}</td>
                 <td>${item.finca}</td>
-                <td>${item.horaEntrada}</td>
-                <td>${item.horaSalida}</td>
-                <td>${item.horas}</td>
+                <td>${item.cuadrillero}</td>
+                <td>${item.dni}</td>
                 <td><span class="badge badge-status ${getStatusClass(item.estado)}">${item.estado}</span></td>`;
             attendanceTableBody.appendChild(row);
         });
@@ -251,6 +270,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const startValue = startDateInput.value;
         const endValue = endDateInput.value;
         const fincaValue = filterFinca.value;
+        const cuadrilleroVal = filterCuadrillero ? filterCuadrillero.value : '';
+        const searchVal = (filterSearch ? filterSearch.value : '').trim().toLowerCase();
         const today = new Date();
         let start = null;
         let end = null;
@@ -275,10 +296,26 @@ document.addEventListener('DOMContentLoaded', () => {
             const matchStart = start ? recordDate >= start : true;
             const matchEnd = end ? recordDate <= end : true;
             const matchFinca = fincaValue ? item.finca === fincaValue : true;
-            return matchStart && matchEnd && matchFinca;
+            const matchCuadrillero = cuadrilleroVal ? String(item.cuadrillero_id) === cuadrilleroVal : true;
+            const matchSearch = searchVal ? (item.trabajador.toLowerCase().includes(searchVal) || item.dni.toLowerCase().includes(searchVal)) : true;
+            return matchStart && matchEnd && matchFinca && matchCuadrillero && matchSearch;
         });
-
+        sortFiltered();
         renderTable(filteredData);
+    };
+
+    const sortFiltered = () => {
+        filteredData.sort((a,b)=>{
+            let va=a[sortField]; let vb=b[sortField];
+            // fechas
+            if(sortField==='fecha'){ va=new Date(va); vb=new Date(vb);} else {
+                va = (va||'').toString().toLowerCase();
+                vb = (vb||'').toString().toLowerCase();
+            }
+            if(va<vb) return sortDir==='asc'? -1:1;
+            if(va>vb) return sortDir==='asc'? 1:-1;
+            return 0;
+        });
     };
 
     const exportCsv = () => {
@@ -553,10 +590,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('btnPrint').addEventListener('click', () => window.print());
 
+    // Ordenamiento por click en cabeceras
+    document.querySelectorAll('#attendanceTable thead th.sortable').forEach(th => {
+        th.style.cursor='pointer';
+        th.addEventListener('click', ()=>{
+            const field = th.getAttribute('data-sort');
+            if(field){
+                if(sortField===field){ sortDir = sortDir==='asc' ? 'desc' : 'asc'; }
+                else { sortField = field; sortDir = 'asc'; }
+                sortFiltered();
+                renderTable(filteredData);
+            }
+        });
+    });
+
+    if(filterCuadrillero){ filterCuadrillero.addEventListener('change', applyFilters); }
+    if(filterSearch){ filterSearch.addEventListener('input', applyFilters); }
+
     populateFincaSelectors();
     renderWorkersTable();
     renderFincasTable();
     updateStats();
+    sortFiltered();
     renderTable(filteredData);
     applyFilters();
 });

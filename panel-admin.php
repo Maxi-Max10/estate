@@ -20,9 +20,11 @@ $userName = trim((string) ($_SESSION['user_name'] ?? 'Administrador'));
 $availableFincas = [];
 $availablePeones = [];
 $cuadrilleros = [];
+$attendanceData = [];
 $fincasJson = '[]';
 $peonesJson = '[]';
 $cuadrillerosJson = '[]';
+$attendanceJson = '[]';
 
 try {
 	$stmtFincas = $pdo->query('SELECT id, nombre, link_ubicacion, descripcion, tarea_asignada, observacion FROM fincas ORDER BY nombre ASC');
@@ -34,6 +36,14 @@ try {
 	$stmtCuadrilleros = $pdo->prepare('SELECT id, nombre FROM usuarios WHERE rol = :rol ORDER BY nombre ASC');
 	$stmtCuadrilleros->execute([':rol' => 'cuadrillero']);
 	$cuadrilleros = $stmtCuadrilleros->fetchAll(PDO::FETCH_ASSOC) ?: [];
+
+	// Asistencias últimos 30 días (placeholder sin horas de entrada/salida)
+	try {
+		$attStmt = $pdo->query("SELECT a.id, a.fecha, a.presente, p.id AS peon_id, p.nombre, p.apellido, p.dni, f.id AS finca_id, f.nombre AS finca_nombre, u.id AS cuadrillero_id, u.nombre AS cuadrillero_nombre\n			FROM asistencias_peones a\n			JOIN peones p ON p.id = a.peon_id\n			JOIN fincas f ON f.id = a.finca_id\n			LEFT JOIN usuarios u ON u.id = f.cuadrillero_id\n			WHERE a.fecha >= (CURDATE() - INTERVAL 30 DAY)\n			ORDER BY a.fecha DESC, p.nombre ASC");
+		$attendanceData = $attStmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+	} catch (Throwable $eAtt) {
+		error_log('Error cargando asistencias: ' . $eAtt->getMessage());
+	}
 } catch (Throwable $e) {
 	error_log('Error cargando datos en panel admin: ' . $e->getMessage());
 }
@@ -41,6 +51,7 @@ try {
 $fincasJson = json_encode($availableFincas, JSON_UNESCAPED_UNICODE) ?: '[]';
 $peonesJson = json_encode($availablePeones, JSON_UNESCAPED_UNICODE) ?: '[]';
 $cuadrillerosJson = json_encode($cuadrilleros, JSON_UNESCAPED_UNICODE) ?: '[]';
+$attendanceJson = json_encode($attendanceData, JSON_UNESCAPED_UNICODE) ?: '[]';
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -331,6 +342,19 @@ $cuadrillerosJson = json_encode($cuadrilleros, JSON_UNESCAPED_UNICODE) ?: '[]';
 									<option value="">Todas</option>
 								</select>
 							</div>
+							<div class="col-md-4">
+								<label class="form-label">Filtrar por cuadrillero</label>
+								<select id="filterCuadrillero" class="form-select">
+									<option value="">Todos</option>
+									<?php foreach ($cuadrilleros as $c): ?>
+									<option value="<?php echo (int)$c['id']; ?>"><?php echo htmlspecialchars((string)$c['nombre'], ENT_QUOTES, 'UTF-8'); ?></option>
+									<?php endforeach; ?>
+								</select>
+							</div>
+							<div class="col-md-4">
+								<label class="form-label">Buscar nombre / DNI</label>
+								<input type="text" id="filterSearch" class="form-control" placeholder="Ej. Juan o 1234...">
+							</div>
 						</div>
 						<div class="d-flex gap-2">
 							<button class="btn btn-outline-primary" id="btnExportCsv">Exportar CSV</button>
@@ -342,13 +366,12 @@ $cuadrillerosJson = json_encode($cuadrilleros, JSON_UNESCAPED_UNICODE) ?: '[]';
 						<table class="table align-middle" id="attendanceTable">
 							<thead class="table-light">
 								<tr>
-									<th>Fecha</th>
-									<th>Trabajador</th>
-									<th>Finca</th>
-									<th>Entrada</th>
-									<th>Salida</th>
-									<th>Horas</th>
-									<th>Estado</th>
+									<th data-sort="fecha" class="sortable">Fecha</th>
+									<th data-sort="trabajador" class="sortable">Trabajador</th>
+									<th data-sort="finca" class="sortable">Finca</th>
+									<th data-sort="cuadrillero" class="sortable">Cuadrillero</th>
+									<th data-sort="dni" class="sortable">DNI</th>
+									<th data-sort="estado" class="sortable">Estado</th>
 								</tr>
 							</thead>
 							<tbody></tbody>
