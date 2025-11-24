@@ -226,7 +226,6 @@ $dynamicGreeting .= ', ' . htmlspecialchars($userName, ENT_QUOTES, 'UTF-8');
                     <div class="row g-4">
                         <?php foreach ($assignedFarms as $farm): ?>
                             <div class="col-md-6 col-xl-4">
-                                <a class="text-decoration-none text-reset" href="finca-detalle.php?id=<?php echo (int)$farm['id']; ?>">
                                 <article class="assigned-farm-card h-100 p-4">
                                     <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
                                         <div>
@@ -237,11 +236,12 @@ $dynamicGreeting .= ', ' . htmlspecialchars($userName, ENT_QUOTES, 'UTF-8');
                                                 <small class="text-muted">Sin tarea registrada</small>
                                             <?php endif; ?>
                                         </div>
-                                        <?php if (!empty($farm['link_ubicacion'])): ?>
-                                            <a class="btn btn-outline-primary btn-sm" href="<?php echo htmlspecialchars($farm['link_ubicacion'], ENT_QUOTES, 'UTF-8'); ?>" target="_blank" rel="noopener" title="Ubicación">
-                                                <i class="bi bi-map"></i>
-                                            </a>
-                                        <?php endif; ?>
+                                        <div class="d-flex flex-column align-items-end gap-2">
+                                            <a class="btn btn-outline-success btn-sm" href="finca-detalle.php?id=<?php echo (int)$farm['id']; ?>" title="Ver detalle"><i class="bi bi-people"></i></a>
+                                            <?php if (!empty($farm['link_ubicacion'])): ?>
+                                                <a class="btn btn-outline-primary btn-sm" href="<?php echo htmlspecialchars($farm['link_ubicacion'], ENT_QUOTES, 'UTF-8'); ?>" target="_blank" rel="noopener" title="Ubicación"><i class="bi bi-map"></i></a>
+                                            <?php endif; ?>
+                                        </div>
                                     </div>
                                     <?php if (!empty($farm['descripcion'])): ?>
                                         <p class="text-muted small mb-3"><?php echo nl2br(htmlspecialchars($farm['descripcion'], ENT_QUOTES, 'UTF-8')); ?></p>
@@ -254,7 +254,6 @@ $dynamicGreeting .= ', ' . htmlspecialchars($userName, ENT_QUOTES, 'UTF-8');
                                         <div class="text-muted small mb-0">Sin observaciones recientes.</div>
                                     <?php endif; ?>
                                 </article>
-                                </a>
                             </div>
                         <?php endforeach; ?>
                     </div>
