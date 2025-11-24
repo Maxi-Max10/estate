@@ -1,5 +1,13 @@
 <?php
 declare(strict_types=1);
+
+session_start();
+
+if (!isset($_SESSION['user_id']) || ($_SESSION['user_role'] ?? '') !== 'admin') {
+    header('Location: login.php');
+    exit;
+}
+
 require_once __DIR__ . '/config.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -99,12 +107,4 @@ try {
 } catch (Throwable $e) {
     error_log('Error al guardar peón: ' . $e->getMessage());
     $respond(false, 'Ocurrió un error al guardar el peón.');
-}
-        'observaciones'   => $observaciones,
-    ];
-
-    $respond(true, 'Trabajador guardado correctamente.', ['trabajador' => $newWorker]);
-} catch (Throwable $e) {
-    error_log('Error al guardar trabajador: ' . $e->getMessage());
-    $respond(false, 'Ocurrió un error al guardar el trabajador.');
 }
