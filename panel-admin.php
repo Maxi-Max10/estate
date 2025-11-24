@@ -289,31 +289,16 @@ $cuadrillerosJson = json_encode($cuadrilleros, JSON_UNESCAPED_UNICODE) ?: '[]';
 			<div class="row g-4 mb-4">
 				<div class="col-xl-7">
 					<div class="card table-card border-0 h-100">
-						<div class="card-body">
-							<div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
-								<div>
-									<h2 class="h5 mb-1">Peones registrados</h2>
-									<small class="text-muted">Actualiza datos y asigna cuadrilleros.</small>
-								</div>
-								<span class="badge bg-primary-subtle text-primary"><?php echo count($availablePeones); ?> activos</span>
+						<div class="card-body d-flex flex-column justify-content-between">
+							<div class="mb-3">
+								<h2 class="h5 mb-1">Peones</h2>
+								<small class="text-muted">El listado completo ahora está en una vista aparte.</small>
 							</div>
-							<div class="table-responsive">
-								<table class="table align-middle table-hover" id="workersTable">
-									<thead class="table-light">
-										<tr>
-											<th>Peón</th>
-											<th>DNI</th>
-											<th>Teléfono</th>
-											<th>Cuadrillero</th>
-											<th>Ingreso</th>
-											<th></th>
-										</tr>
-									</thead>
-									<tbody></tbody>
-								</table>
-							</div>
+							<p class="mb-2"><span class="badge bg-primary-subtle text-primary me-2"><?php echo count($availablePeones); ?> activos</span><span class="text-muted">Gestioná edición, eliminación y asignaciones en la vista dedicada.</span></p>
+							<a href="peones-admin.php" class="btn btn-outline-primary align-self-start"><i class="bi bi-people me-1"></i>Ver peones registrados</a>
 						</div>
 					</div>
+				</div>
 				</div>
 				<div class="col-xl-5">
 					<div class="card table-card border-0 h-100">
