@@ -293,64 +293,7 @@ if ($cuadrilleroProfile === null) {
                 <?php endif; ?>
             </div>
 
-            <div class="row g-4 mb-4">
-                <div class="col-lg-6">
-                    <div class="card timeline-card p-4 h-100">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <div>
-                                <h2 class="h5 mb-0">Ruta del día</h2>
-                                <small class="text-muted">Checklist de hitos completados</small>
-                            </div>
-                            <span class="badge bg-emerald text-white">Hoy</span>
-                        </div>
-                        <div id="timelineList"></div>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <div class="card task-card p-4 h-100">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <div>
-                                <h2 class="h5 mb-0">Tareas asignadas</h2>
-                                <small class="text-muted">Prioriza pendientes críticos</small>
-                            </div>
-                            <a href="#" class="btn btn-outline-success btn-sm">Nueva tarea</a>
-                        </div>
-                        <div class="list-group" id="taskList"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row g-4">
-                <div class="col-lg-4">
-                    <div class="card weather-card p-4 h-100">
-                        <h2 class="h6 text-muted">Condiciones climáticas</h2>
-                        <div class="d-flex align-items-center gap-3 py-3">
-                            <i class="bi bi-cloud-sun display-5 text-warning"></i>
-                            <div>
-                                <div class="fs-2" id="weatherTemp">26°C</div>
-                                <small class="text-muted" id="weatherDesc">Parcialmente nublado</small>
-                            </div>
-                        </div>
-                        <ul class="list-group list-group-flush small">
-                            <li class="list-group-item d-flex justify-content-between"><span>Viento</span><strong id="weatherWind">12 km/h</strong></li>
-                            <li class="list-group-item d-flex justify-content-between"><span>Humedad</span><strong id="weatherHumidity">58%</strong></li>
-                            <li class="list-group-item d-flex justify-content-between"><span>Índice UV</span><strong id="weatherUv">7</strong></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-8">
-                    <div class="card task-card p-4 h-100">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <div>
-                                <h2 class="h5 mb-0">Checklist de seguridad</h2>
-                                <small class="text-muted">Confirma avances y reportes</small>
-                            </div>
-                            <button class="btn btn-success btn-sm"><i class="bi bi-upload me-1"></i>Enviar reporte</button>
-                        </div>
-                        <div class="row g-3" id="safetyChecks"></div>
-                    </div>
-                </div>
-            </div>
+            <!-- Secciones eliminadas: Ruta del día, Tareas asignadas, Clima y Checklist de seguridad -->
         </div>
     </div>
 
