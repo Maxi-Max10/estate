@@ -11,6 +11,11 @@
     telefono: document.getElementById('peonTelefono')
   };
 
+  function capitalizeWords(str){
+    if(!str) return '';
+    return str.split(/\s+/).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+  }
+
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   if(!SpeechRecognition){
     statusEl && (statusEl.textContent = 'Reconocimiento de voz no soportado en este navegador');
@@ -46,9 +51,9 @@
 
     // Nombre y apellido
     const nombreVal = extractWords('nombre');
-    if(nombreVal && fields.nombre){ fields.nombre.value = nombreVal; }
+    if(nombreVal && fields.nombre){ fields.nombre.value = capitalizeWords(nombreVal); }
     const apellidoVal = extractWords('apellido');
-    if(apellidoVal && fields.apellido){ fields.apellido.value = apellidoVal; }
+    if(apellidoVal && fields.apellido){ fields.apellido.value = capitalizeWords(apellidoVal); }
 
     // DNI: permitir espacios entre dígitos (ej: "1 2 3 0 5 6") y unirlos
     const dniRe = /dni\s+([0-9 ]{5,})(?=\s+(nombre|apellido|dni|telefono|presente|ausente)|$)/i;
@@ -172,5 +177,13 @@
     statusEl && (statusEl.textContent = 'Dictado detenido.');
     btnStop.classList.add('d-none');
     btnStart.classList.remove('d-none');
+  });
+
+  // Capitalizar manualmente al salir de los campos
+  ['nombre','apellido'].forEach(k => {
+    const f = fields[k];
+    if(f){
+      f.addEventListener('blur', () => { f.value = capitalizeWords(f.value.trim()); });
+    }
   });
 })();
