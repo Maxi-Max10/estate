@@ -119,13 +119,14 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const populateFincaSelectors = () => {
-        if (!filterFinca) return;
-        filterFinca.innerHTML = '<option value="">Todas</option>';
+        const fincaSelect = filterFinca || document.getElementById('filterFinca');
+        if (!fincaSelect) return;
+        fincaSelect.innerHTML = '<option value="">Todas</option>';
         fincasData.forEach(finca => {
             const option = document.createElement('option');
             option.value = finca.nombre;
             option.textContent = finca.nombre;
-            filterFinca.appendChild(option);
+            fincaSelect.appendChild(option);
         });
     };
 
