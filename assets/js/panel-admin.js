@@ -222,7 +222,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const updateStats = () => {
         document.getElementById('statTrabajadores').textContent = workersData.length;
         document.getElementById('statFincas').textContent = fincasData.length;
-        const today = new Date().toISOString().slice(0, 10);
+        const now = new Date();
+        const today = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
         const todayRecords = attendanceData.filter(item => item.fecha === today);
         document.getElementById('statAsistenciaHoy').textContent = todayRecords.length;
         const presentes = todayRecords.filter(item => item.estado === 'Presente').length;
@@ -265,6 +266,10 @@ document.addEventListener('DOMContentLoaded', () => {
         return 'Activo';
     };
 
+    // Helpers de fecha (inicio/fin de día)
+    const startOfDay = d => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    const endOfDay = d => new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59, 999);
+
     const applyFilters = () => {
         const selectedView = viewRange.value;
         const startValue = startDateInput.value;
@@ -277,19 +282,18 @@ document.addEventListener('DOMContentLoaded', () => {
         let end = null;
 
         if (selectedView === 'hoy') {
-            start = end = today;
+            start = startOfDay(today);
+            end = endOfDay(today);
         } else if (selectedView === 'semana') {
-            end = today;
-            start = new Date();
-            start.setDate(end.getDate() - 6);
+            end = endOfDay(today);
+            start = startOfDay(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 6));
         } else if (selectedView === 'mes') {
-            end = today;
-            start = new Date();
-            start.setDate(end.getDate() - 29);
+            end = endOfDay(today);
+            start = startOfDay(new Date(today.getFullYear(), today.getMonth(), today.getDate() - 29));
         }
 
-        if (startValue) start = new Date(startValue);
-        if (endValue) end = new Date(endValue);
+        if (startValue) start = startOfDay(new Date(startValue));
+        if (endValue) end = endOfDay(new Date(endValue));
 
         filteredData = attendanceData.filter(item => {
             const recordDate = new Date(item.fecha);
