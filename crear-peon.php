@@ -36,6 +36,15 @@ try {
         ':tel' => $telefono !== '' ? $telefono : null,
         ':cid' => $userId,
     ]);
+    // Marcar asistencia presente por defecto para la finca destino (sesión temporal)
+    if ($redirectFinca > 0) {
+        $newPeonId = (int) $pdo->lastInsertId();
+        if ($newPeonId > 0) {
+            $attendanceKey = 'asistencia_finca_' . $redirectFinca;
+            if (!isset($_SESSION[$attendanceKey])) { $_SESSION[$attendanceKey] = []; }
+            $_SESSION[$attendanceKey][$newPeonId] = true; // presente por defecto
+        }
+    }
     $_SESSION['flash_success'] = 'Peón creado correctamente';
 } catch (Throwable $e) {
     error_log('Error creando peón: ' . $e->getMessage());
