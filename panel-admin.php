@@ -259,6 +259,19 @@ $cuadrillerosJson = json_encode($cuadrilleros, JSON_UNESCAPED_UNICODE) ?: '[]';
 								</div>
 								<small class="form-text text-muted">Pegá el enlace de Google Maps u otra referencia.</small>
 							</div>
+							<div class="col-sm-6">
+								<label class="form-label fw-semibold">Cuadrillero responsable</label>
+								<div class="input-group">
+									<span class="input-group-text"><i class="bi bi-person-lines-fill"></i></span>
+									<select name="cuadrillero_id" class="form-select">
+										<option value="">Sin asignar</option>
+										<?php foreach ($cuadrilleros as $c): ?>
+											<option value="<?php echo (int)$c['id']; ?>"><?php echo htmlspecialchars((string)$c['nombre'], ENT_QUOTES, 'UTF-8'); ?></option>
+										<?php endforeach; ?>
+									</select>
+								</div>
+								<small class="form-text text-muted">Asignar quién coordina la finca.</small>
+							</div>
 							<div class="col-12">
 								<label class="form-label fw-semibold">Descripción general</label>
 								<textarea name="descripcion" class="form-control" rows="3" placeholder="Notas generales, accesos, etc."></textarea>
@@ -451,6 +464,15 @@ $cuadrillerosJson = json_encode($cuadrilleros, JSON_UNESCAPED_UNICODE) ?: '[]';
 					<div class="col-12">
 						<label class="form-label">Descripción</label>
 						<textarea name="descripcion" id="editFarmDescripcion" class="form-control" rows="2"></textarea>
+					</div>
+					<div class="col-12">
+						<label class="form-label">Cuadrillero responsable</label>
+						<select name="cuadrillero_id" id="editFarmCuadrillero" class="form-select">
+							<option value="">Sin asignar</option>
+							<?php foreach ($cuadrilleros as $c): ?>
+								<option value="<?php echo (int)$c['id']; ?>"><?php echo htmlspecialchars((string)$c['nombre'], ENT_QUOTES, 'UTF-8'); ?></option>
+							<?php endforeach; ?>
+						</select>
 					</div>
 					<div class="col-sm-6">
 						<label class="form-label">Tarea asignada</label>

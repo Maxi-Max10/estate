@@ -39,28 +39,50 @@ $linkUbicacion  = trim($_POST['link_ubicacion'] ?? '');
 $descripcion    = trim($_POST['descripcion'] ?? '');
 $tareaAsignada  = trim($_POST['tarea_asignada'] ?? '');
 $observacion    = trim($_POST['observacion'] ?? '');
+$cuadrilleroRaw = $_POST['cuadrillero_id'] ?? '';
+
+$cuadrilleroId = null;
+if ($cuadrilleroRaw !== '') {
+    if (!ctype_digit((string)$cuadrilleroRaw)) {
+        $respond(false, 'Cuadrillero seleccionado inválido.');
+    }
+    $cuadrilleroId = (int)$cuadrilleroRaw;
+    try {
+        $stmtCheckForeman = $pdo->prepare('SELECT id, nombre, rol FROM usuarios WHERE id = :id LIMIT 1');
+        $stmtCheckForeman->execute([':id' => $cuadrilleroId]);
+        $foremanRow = $stmtCheckForeman->fetch(PDO::FETCH_ASSOC);
+        if (!$foremanRow || ($foremanRow['rol'] ?? '') !== 'cuadrillero') {
+            $respond(false, 'El cuadrillero seleccionado no existe.');
+        }
+    } catch (Throwable $e) {
+        $respond(false, 'Error validando cuadrillero.');
+    }
+}
 
 if ($nombre === '' || $linkUbicacion === '') {
     $respond(false, 'El nombre y el link de ubicación son obligatorios.');
 }
 
 try {
-    $stmt = $pdo->prepare('INSERT INTO fincas (nombre, link_ubicacion, descripcion, tarea_asignada, observacion) VALUES (:nombre, :link_ubicacion, :descripcion, :tarea_asignada, :observacion)');
+    $stmt = $pdo->prepare('INSERT INTO fincas (nombre, link_ubicacion, descripcion, tarea_asignada, observacion, cuadrillero_id) VALUES (:nombre, :link_ubicacion, :descripcion, :tarea_asignada, :observacion, :cuadrillero_id)');
     $stmt->execute([
         ':nombre'         => $nombre,
         ':link_ubicacion' => $linkUbicacion,
         ':descripcion'    => $descripcion,
         ':tarea_asignada' => $tareaAsignada,
         ':observacion'    => $observacion,
+        ':cuadrillero_id' => $cuadrilleroId,
     ]);
 
     $newFinca = [
-        'id'             => (int) $pdo->lastInsertId(),
-        'nombre'         => $nombre,
-        'link_ubicacion' => $linkUbicacion,
-        'descripcion'    => $descripcion,
-        'tarea_asignada' => $tareaAsignada,
-        'observacion'    => $observacion,
+        'id'                 => (int) $pdo->lastInsertId(),
+        'nombre'             => $nombre,
+        'link_ubicacion'     => $linkUbicacion,
+        'descripcion'        => $descripcion,
+        'tarea_asignada'     => $tareaAsignada,
+        'observacion'        => $observacion,
+        'cuadrillero_id'     => $cuadrilleroId,
+        'cuadrillero_nombre' => $foremanRow['nombre'] ?? null,
     ];
 
     $respond(true, 'Finca guardada correctamente.', ['finca' => $newFinca]);

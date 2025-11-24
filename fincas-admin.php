@@ -16,10 +16,14 @@ if (($_SESSION['user_role'] ?? '') !== 'admin') {
 require_once __DIR__ . '/config.php';
 
 $availableFincas = [];
+$cuadrilleros = [];
 
 try {
-    $stmtFincas = $pdo->query('SELECT * FROM fincas ORDER BY nombre ASC');
+    $stmtFincas = $pdo->query('SELECT f.*, u.nombre AS cuadrillero_nombre FROM fincas f LEFT JOIN usuarios u ON u.id = f.cuadrillero_id ORDER BY f.nombre ASC');
     $availableFincas = $stmtFincas->fetchAll(PDO::FETCH_ASSOC) ?: [];
+    $stmtCuadrilleros = $pdo->prepare('SELECT id, nombre FROM usuarios WHERE rol = :rol ORDER BY nombre ASC');
+    $stmtCuadrilleros->execute([':rol' => 'cuadrillero']);
+    $cuadrilleros = $stmtCuadrilleros->fetchAll(PDO::FETCH_ASSOC) ?: [];
 } catch (Throwable $e) {
     error_log('Error cargando fincas admin: ' . $e->getMessage());
 }
@@ -213,6 +217,7 @@ $userName = $_SESSION['user_name'] ?? 'Administrador';
                             <thead class="table-light">
                                 <tr>
                                     <th>Nombre</th>
+                                    <th>Cuadrillero</th>
                                     <th>Link ubicación</th>
                                     <th>Descripción</th>
                                     <th>Tarea asignada</th>
@@ -261,6 +266,15 @@ $userName = $_SESSION['user_name'] ?? 'Administrador';
                                 <input type="url" class="form-control" name="link_ubicacion" id="editFarmLink" placeholder="https://maps.google.com/..." required>
                             </div>
                             <div class="col-12">
+                                <label class="form-label">Cuadrillero responsable</label>
+                                <select class="form-select" name="cuadrillero_id" id="editFarmCuadrillero">
+                                    <option value="">Sin asignar</option>
+                                    <?php foreach ($cuadrilleros as $c): ?>
+                                        <option value="<?php echo (int)$c['id']; ?>"><?php echo htmlspecialchars((string)$c['nombre'], ENT_QUOTES, 'UTF-8'); ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="col-12">
                                 <label class="form-label">Descripción</label>
                                 <textarea class="form-control" rows="2" name="descripcion" id="editFarmDescripcion"></textarea>
                             </div>
@@ -304,6 +318,7 @@ $userName = $_SESSION['user_name'] ?? 'Administrador';
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         window.__FincasData = <?php echo json_encode($availableFincas, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT); ?>;
+        window.__ForemenData = <?php echo json_encode($cuadrilleros, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT); ?>;
     </script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -348,6 +363,8 @@ $userName = $_SESSION['user_name'] ?? 'Administrador';
             const normalizeFarm = farm => ({
                 id: Number(farm.id) || 0,
                 nombre: farm.nombre || 'Sin nombre',
+                cuadrillero_id: farm.cuadrillero_id ? Number(farm.cuadrillero_id) : null,
+                cuadrillero_nombre: farm.cuadrillero_nombre || '',
                 link_ubicacion: farm.link_ubicacion || '',
                 descripcion: farm.descripcion || '',
                 tarea_asignada: farm.tarea_asignada || '',
@@ -375,6 +392,7 @@ $userName = $_SESSION['user_name'] ?? 'Administrador';
                     row.dataset.id = farm.id;
                     row.innerHTML = `
                         <td class="fw-semibold">${escapeHtml(farm.nombre)}</td>
+                        <td>${farm.cuadrillero_nombre ? escapeHtml(farm.cuadrillero_nombre) : '<span class="text-muted">Sin asignar</span>'}</td>
                         <td>
                             ${farm.link_ubicacion ? `<a href="${escapeHtml(farm.link_ubicacion)}" target="_blank" rel="noopener">Ver ubicación</a>` : '-'}
                         </td>
@@ -411,7 +429,7 @@ $userName = $_SESSION['user_name'] ?? 'Administrador';
                         : observation === 'without'
                             ? !farm.observacion
                             : true;
-                    const haystack = `${farm.nombre} ${farm.descripcion} ${farm.tarea_asignada} ${farm.observacion}`.toLowerCase();
+                    const haystack = `${farm.nombre} ${farm.cuadrillero_nombre} ${farm.descripcion} ${farm.tarea_asignada} ${farm.observacion}`.toLowerCase();
                     const matchesTerm = term ? haystack.includes(term) : true;
                     return matchesTask && matchesLocation && matchesObservation && matchesTerm;
                 });
@@ -497,6 +515,10 @@ $userName = $_SESSION['user_name'] ?? 'Administrador';
                 farmEditForm.querySelector('#editFarmNombre').value = farm.nombre;
                 farmEditForm.querySelector('#editFarmLink').value = farm.link_ubicacion;
                 farmEditForm.querySelector('#editFarmDescripcion').value = farm.descripcion;
+                const foremanSelect = farmEditForm.querySelector('#editFarmCuadrillero');
+                if (foremanSelect) {
+                    foremanSelect.value = farm.cuadrillero_id ?? '';
+                }
                 farmEditForm.querySelector('#editFarmTarea').value = farm.tarea_asignada;
                 farmEditForm.querySelector('#editFarmObservacion').value = farm.observacion;
                 farmEditModal.show();
