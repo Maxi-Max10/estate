@@ -13,6 +13,49 @@ body {
     min-height: 100vh;
 }
 
+/* Banner hero */
+.banner-hero {
+    position: relative;
+    width: 100%;
+    min-height: 240px;
+    background: url('../img/banner.jpg') center center / cover no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 2rem 3rem;
+    margin: 0;
+    isolation: isolate;
+}
+
+.banner-hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.35) 60%, rgba(0,0,0,0.15) 100%);
+    z-index: 0;
+}
+
+.banner-greeting {
+    position: relative;
+    z-index: 1;
+    color: #fff;
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    font-weight: 600;
+    letter-spacing: .5px;
+    text-shadow: 0 4px 22px rgba(0,0,0,0.6);
+    backdrop-filter: blur(2px);
+}
+
+@media (max-width: 768px) {
+    .banner-hero {
+        min-height: 180px;
+        padding: 1.5rem 1.25rem;
+    }
+    .banner-greeting {
+        font-size: 1.75rem;
+    }
+}
+
 .cuadrillero-navbar {
     background: linear-gradient(135deg, var(--emerald-dark), var(--emerald));
     box-shadow: 0 15px 35px rgba(4, 120, 87, 0.35);

@@ -87,6 +87,18 @@ if ($cuadrilleroProfile === null) {
         'match' => 0,
     ];
 }
+
+// Saludo dinámico según hora del servidor
+$hourNow = (int) date('G');
+if ($hourNow >= 5 && $hourNow < 12) {
+    $dynamicGreeting = 'Buenos días';
+} elseif ($hourNow >= 12 && $hourNow < 19) {
+    $dynamicGreeting = 'Buenas tardes';
+} else {
+    $dynamicGreeting = 'Buenas noches';
+}
+// Opcional: agregar nombre
+$dynamicGreeting .= ', ' . htmlspecialchars($userName, ENT_QUOTES, 'UTF-8');
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -111,6 +123,13 @@ if ($cuadrilleroProfile === null) {
             </div>
         </div>
     </nav>
+
+    <!-- Banner con saludo dinámico -->
+    <header class="banner-hero" role="banner" aria-label="Saludo del día">
+        <div class="banner-greeting">
+            <span><?php echo $dynamicGreeting; ?></span>
+        </div>
+    </header>
 
     <div class="dashboard-shell">
         <div class="container-fluid">
