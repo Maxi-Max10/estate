@@ -27,24 +27,34 @@
   let active = false;
 
   function parseTranscript(text){
-    // Normalizar
-    let t = text.toLowerCase();
-    // Reemplazar posibles palabras variantes
-    t = t.replace(/tel[eé]fono/g,'telefono');
-    // Extraer por tokens
-    // Patrones básicos: nombre <valor>, apellido <valor>, dni <valor>, telefono <valor>
-    const patterns = {
-      nombre: /nombre\s+([a-záéíóúñ]+)/i,
-      apellido: /apellido\s+([a-záéíóúñ]+(?:\s+[a-záéíóúñ]+)?)/i,
-      dni: /dni\s+(\d{5,})/i,
-      telefono: /telefono\s+(\d{6,})/i
-    };
-    Object.keys(patterns).forEach(key => {
-      const m = text.match(patterns[key]);
-      if(m && m[1] && fields[key]){
-        fields[key].value = m[1].trim();
+    // Normalizar a minúsculas para búsqueda y unificar teléfono
+    let lower = text.toLowerCase().replace(/tel[eé]fono/g,'telefono');
+    // Lista de palabras clave para delimitar campos
+    const delimiters = '(nombre|apellido|dni|telefono)';
+
+    // Helper para extraer secciones entre palabra clave y siguiente palabra clave
+    function extract(keyword, regex){
+      const base = new RegExp(keyword + '\\s+(.+?)(?=\\s+' + delimiters + '|$)','i');
+      const match = lower.match(base);
+      if(match){
+        let raw = match[1].trim();
+        if(regex){ raw = (raw.match(regex) || []).join(' ').trim(); }
+        return raw;
       }
-    });
+      return null;
+    }
+
+    const nombreVal = extract('nombre', /[a-záéíóúñ]+/gi);
+    if(nombreVal && fields.nombre){ fields.nombre.value = nombreVal; }
+
+    const apellidoVal = extract('apellido', /[a-záéíóúñ]+/gi);
+    if(apellidoVal && fields.apellido){ fields.apellido.value = apellidoVal; }
+
+    const dniMatch = lower.match(/dni\s+(\d{5,})/i);
+    if(dniMatch && fields.dni){ fields.dni.value = dniMatch[1]; }
+
+    const telMatch = lower.match(/telefono\s+(\d{6,})/i);
+    if(telMatch && fields.telefono){ fields.telefono.value = telMatch[1]; }
   }
 
   recognition.onresult = (e) => {
