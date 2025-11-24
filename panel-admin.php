@@ -64,6 +64,8 @@ $cuadrillerosJson = json_encode($cuadrilleros, JSON_UNESCAPED_UNICODE) ?: '[]';
 					</div>
 				</div>
 				<div class="d-flex align-items-center gap-2 gap-sm-3 text-white user-actions">
+					<a class="btn btn-outline-light btn-sm" href="peones-admin.php"><i class="bi bi-people me-1"></i>Peones</a>
+					<a class="btn btn-outline-success btn-sm" href="fincas-admin.php"><i class="bi bi-map me-1"></i>Fincas</a>
 					<span class="fw-semibold"><i class="bi bi-person-badge me-2"></i><?php echo htmlspecialchars($userName, ENT_QUOTES, 'UTF-8'); ?></span>
 					<a class="btn btn-outline-light btn-sm" href="logout.php"><i class="bi bi-box-arrow-right me-1"></i>Salir</a>
 				</div>
@@ -286,36 +288,7 @@ $cuadrillerosJson = json_encode($cuadrilleros, JSON_UNESCAPED_UNICODE) ?: '[]';
 				</div>
 			</div>
 
-			<div class="row g-4 mb-4">
-				<div class="col-xl-7">
-					<div class="card table-card border-0 h-100">
-						<div class="card-body d-flex flex-column justify-content-between">
-							<div class="mb-3">
-								<h2 class="h5 mb-1">Peones</h2>
-								<small class="text-muted">El listado completo ahora está en una vista aparte.</small>
-							</div>
-							<p class="mb-2"><span class="badge bg-primary-subtle text-primary me-2"><?php echo count($availablePeones); ?> activos</span><span class="text-muted">Gestioná edición, eliminación y asignaciones en la vista dedicada.</span></p>
-							<a href="peones-admin.php" class="btn btn-outline-primary align-self-start"><i class="bi bi-people me-1"></i>Ver peones registrados</a>
-						</div>
-					</div>
-				</div>
-				</div>
-				<div class="col-xl-5">
-					<div class="card table-card border-0 h-100">
-						<div class="card-body d-flex flex-column justify-content-between">
-							<div class="mb-3">
-								<h2 class="h5 mb-1">Fincas</h2>
-								<small class="text-muted">Ahora el listado completo se ve aparte.</small>
-							</div>
-							<div class="d-flex flex-column gap-2">
-								<p class="mb-1"><span class="badge bg-success-subtle text-success me-2"><?php echo count($availableFincas); ?> activas</span><span class="text-muted">Gestioná enlaces, tareas y observaciones desde la vista dedicada.</span></p>
-								<a href="fincas-admin.php" class="btn btn-outline-success"><i class="bi bi-map me-1"></i>Ver fincas registradas</a>
-							</div>
-						</div>
-					</div>
-				</div>
-				</div>
-			</div>
+            <!-- Se removieron las tarjetas resumen de Peones y Fincas; navegación ahora está en el header -->
 
 			<div class="card border-0 shadow-sm">
 				<div class="card-body">
