@@ -21,8 +21,8 @@ body {
     background: url('../img/banner.jpg') center center / cover no-repeat, linear-gradient(135deg, #064e3b, #047857);
     display: flex;
     align-items: center;
-    justify-content: flex-start;
-    padding: 2rem 3rem;
+    justify-content: center; /* Centra el texto horizontalmente */
+    padding: 2rem 2rem;
     margin: 0;
     isolation: isolate;
 }
@@ -39,11 +39,12 @@ body {
     position: relative;
     z-index: 1;
     color: #fff;
-    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    font-size: clamp(1.4rem, 3.2vw, 2.1rem); /* Más pequeño */
     font-weight: 600;
     letter-spacing: .5px;
     text-shadow: 0 4px 22px rgba(0,0,0,0.6);
     backdrop-filter: blur(2px);
+    text-align: center;
 }
 
 @media (max-width: 768px) {
@@ -52,7 +53,7 @@ body {
         padding: 1.5rem 1.25rem;
     }
     .banner-greeting {
-        font-size: 1.75rem;
+        font-size: 1.5rem;
     }
 }
 
