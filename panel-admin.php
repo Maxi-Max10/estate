@@ -145,44 +145,82 @@ $cuadrillerosJson = json_encode($cuadrilleros, JSON_UNESCAPED_UNICODE) ?: '[]';
 							</div>
 						</div>
 						<form id="workerForm" action="guardar_trabajador.php" method="post" class="row g-3">
-							<div class="col-sm-6">
-								<label class="form-label">Nombre</label>
-								<input type="text" name="nombre" class="form-control" required>
+							<div class="col-12">
+								<div class="border rounded-3 p-3 bg-light-subtle d-flex gap-3 align-items-center">
+									<div class="icon-circle bg-primary text-white"><i class="bi bi-person-plus"></i></div>
+									<div>
+										<strong>Datos personales</strong>
+										<p class="text-muted mb-0">Completá la información tal como figura en el documento del trabajador.</p>
+									</div>
+								</div>
 							</div>
 							<div class="col-sm-6">
-								<label class="form-label">Apellido</label>
-								<input type="text" name="apellido" class="form-control" required>
+								<label class="form-label fw-semibold">Nombre</label>
+								<div class="input-group">
+									<span class="input-group-text"><i class="bi bi-person"></i></span>
+									<input type="text" name="nombre" class="form-control" placeholder="Ej. Juan" required>
+								</div>
+								<small class="form-text text-muted">Nombre tal como figura en el DNI.</small>
 							</div>
 							<div class="col-sm-6">
-								<label class="form-label">DNI</label>
-								<input type="text" name="dni" class="form-control" required>
+								<label class="form-label fw-semibold">Apellido</label>
+								<div class="input-group">
+									<span class="input-group-text"><i class="bi bi-person-lines-fill"></i></span>
+									<input type="text" name="apellido" class="form-control" placeholder="Ej. Pérez" required>
+								</div>
+								<small class="form-text text-muted">Apellidos completos.</small>
 							</div>
 							<div class="col-sm-6">
-								<label class="form-label">Teléfono</label>
-								<input type="tel" name="telefono" class="form-control" placeholder="Opcional">
+								<label class="form-label fw-semibold">DNI</label>
+								<div class="input-group">
+									<span class="input-group-text"><i class="bi bi-credit-card"></i></span>
+									<input type="text" name="dni" class="form-control" placeholder="Sin puntos" required>
+								</div>
+								<small class="form-text text-muted">Solo números, sin espacios ni guiones.</small>
 							</div>
 							<div class="col-sm-6">
-								<label class="form-label">Fecha de ingreso</label>
-								<input type="date" name="fecha_ingreso" class="form-control" required>
+								<label class="form-label fw-semibold">Teléfono</label>
+								<div class="input-group">
+									<span class="input-group-text"><i class="bi bi-telephone"></i></span>
+									<input type="tel" name="telefono" class="form-control" placeholder="+54 9 ...">
+								</div>
+								<small class="form-text text-muted">Campo opcional para contacto inmediato.</small>
 							</div>
 							<div class="col-sm-6">
-								<label class="form-label">Estado</label>
-								<select name="estado" class="form-select">
-									<option value="activo">Activo</option>
-									<option value="inactivo">Inactivo</option>
-								</select>
+								<label class="form-label fw-semibold">Fecha de ingreso</label>
+								<div class="input-group">
+									<span class="input-group-text"><i class="bi bi-calendar-event"></i></span>
+									<input type="date" name="fecha_ingreso" class="form-control" required>
+								</div>
+								<small class="form-text text-muted">Usa el formato calendario para evitar errores.</small>
+							</div>
+							<div class="col-sm-6">
+								<label class="form-label fw-semibold">Estado</label>
+								<div class="input-group">
+									<span class="input-group-text"><i class="bi bi-activity"></i></span>
+									<select name="estado" class="form-select">
+										<option value="activo">Activo</option>
+										<option value="inactivo">Inactivo</option>
+									</select>
+								</div>
+								<small class="form-text text-muted">Define si puede ser asignado hoy.</small>
 							</div>
 							<div class="col-12">
-								<label class="form-label">Cuadrillero responsable</label>
-								<select name="cuadrilla_id" class="form-select" id="workerCuadrillaSelect">
-									<option value="">Sin asignar</option>
-									<?php foreach ($cuadrilleros as $cuadrillero): ?>
-										<option value="<?php echo (int) $cuadrillero['id']; ?>"><?php echo htmlspecialchars($cuadrillero['nombre'], ENT_QUOTES, 'UTF-8'); ?></option>
-									<?php endforeach; ?>
-								</select>
+								<label class="form-label fw-semibold">Cuadrillero responsable</label>
+								<div class="input-group">
+									<span class="input-group-text"><i class="bi bi-people"></i></span>
+									<select name="cuadrilla_id" class="form-select" id="workerCuadrillaSelect">
+										<option value="">Sin asignar</option>
+										<?php foreach ($cuadrilleros as $cuadrillero): ?>
+											<option value="<?php echo (int) $cuadrillero['id']; ?>"><?php echo htmlspecialchars($cuadrillero['nombre'], ENT_QUOTES, 'UTF-8'); ?></option>
+										<?php endforeach; ?>
+									</select>
+								</div>
+								<small class="form-text text-muted">Si aún no tiene cuadrilla dejalo "Sin asignar".</small>
 							</div>
-							<div class="col-12 text-end">
-								<button type="submit" class="btn btn-primary">Guardar peón</button>
+							<div class="col-12 text-end d-flex justify-content-end gap-2">
+								<button type="reset" class="btn btn-outline-secondary">Limpiar</button>
+								<button type="submit" class="btn btn-primary"><i class="bi bi-save me-1"></i>Guardar peón</button>
 							</div>
 						</form>
 					</div>
@@ -196,28 +234,55 @@ $cuadrillerosJson = json_encode($cuadrilleros, JSON_UNESCAPED_UNICODE) ?: '[]';
 							</div>
 						</div>
 						<form id="farmForm" action="guardar_finca.php" method="post" class="row g-3">
-							<div class="col-sm-6">
-								<label class="form-label">Nombre</label>
-								<input type="text" name="nombre" class="form-control" required>
+							<div class="col-12">
+								<div class="border rounded-3 p-3 bg-success-subtle d-flex gap-3 align-items-center">
+									<div class="icon-circle bg-success text-white"><i class="bi bi-geo-alt"></i></div>
+									<div>
+										<strong>Datos de la finca</strong>
+										<p class="text-muted mb-0">Agregá referencias claras para que cuadrilleros y peones ubiquen la tarea.</p>
+									</div>
+								</div>
 							</div>
 							<div class="col-sm-6">
-								<label class="form-label">Link ubicación</label>
-								<input type="url" name="link_ubicacion" class="form-control" placeholder="https://..." required>
+								<label class="form-label fw-semibold">Nombre</label>
+								<div class="input-group">
+									<span class="input-group-text"><i class="bi bi-signpost"></i></span>
+									<input type="text" name="nombre" class="form-control" placeholder="Ej. Finca Norte" required>
+								</div>
+								<small class="form-text text-muted">Usá un nombre corto y reconocible.</small>
+							</div>
+							<div class="col-sm-6">
+								<label class="form-label fw-semibold">Link ubicación</label>
+								<div class="input-group">
+									<span class="input-group-text"><i class="bi bi-link-45deg"></i></span>
+									<input type="url" name="link_ubicacion" class="form-control" placeholder="https://maps.app.goo.gl/..." required>
+								</div>
+								<small class="form-text text-muted">Pegá el enlace de Google Maps u otra referencia.</small>
 							</div>
 							<div class="col-12">
-								<label class="form-label">Descripción</label>
-								<textarea name="descripcion" class="form-control" rows="2" placeholder="Notas generales"></textarea>
+								<label class="form-label fw-semibold">Descripción general</label>
+								<textarea name="descripcion" class="form-control" rows="3" placeholder="Notas generales, accesos, etc."></textarea>
+								<small class="form-text text-muted">Información adicional que ayude a llegar o planificar.</small>
 							</div>
 							<div class="col-sm-6">
-								<label class="form-label">Tarea asignada</label>
-								<input type="text" name="tarea_asignada" class="form-control" placeholder="Raleo, cosecha, etc.">
+								<label class="form-label fw-semibold">Tarea asignada</label>
+								<div class="input-group">
+									<span class="input-group-text"><i class="bi bi-clipboard-data"></i></span>
+									<input type="text" name="tarea_asignada" class="form-control" placeholder="Raleo, cosecha, etc.">
+								</div>
+								<small class="form-text text-muted">Describe la tarea principal a realizar.</small>
 							</div>
 							<div class="col-sm-6">
-								<label class="form-label">Observación</label>
-								<input type="text" name="observacion" class="form-control" placeholder="Observaciones opcionales">
+								<label class="form-label fw-semibold">Observación</label>
+								<div class="input-group">
+									<span class="input-group-text"><i class="bi bi-chat-left-text"></i></span>
+									<input type="text" name="observacion" class="form-control" placeholder="Observaciones opcionales">
+								</div>
+								<small class="form-text text-muted">Ej. "Ingreso por portón lateral".</small>
 							</div>
-							<div class="col-12 text-end">
-								<button type="submit" class="btn btn-success">Guardar finca</button>
+							<div class="col-12 text-end d-flex justify-content-end gap-2">
+								<button type="reset" class="btn btn-outline-secondary">Limpiar</button>
+								<button type="submit" class="btn btn-success"><i class="bi bi-save me-1"></i>Guardar finca</button>
 							</div>
 						</form>
 					</div>

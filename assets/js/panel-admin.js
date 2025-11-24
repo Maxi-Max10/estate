@@ -94,12 +94,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 'X-Requested-With': 'XMLHttpRequest',
                 Accept: 'application/json',
             },
+            credentials: 'same-origin',
         });
 
-        const expectsJson = response.headers.get('Content-Type')?.includes('application/json');
-        const payload = expectsJson ? await response.json() : {};
+        const contentType = response.headers.get('Content-Type') || '';
+        const expectsJson = contentType.includes('application/json');
+        const payload = expectsJson ? await response.json() : null;
 
-        if (!response.ok || payload.success === false) {
+        if (!response.ok) {
+            const errorMessage = payload?.message || 'La operación no pudo completarse.';
+            throw new Error(errorMessage);
+        }
+
+        if (!payload || typeof payload.success === 'undefined') {
+            throw new Error('No se pudo validar la respuesta del servidor. Verifica tu sesión e intenta nuevamente.');
+        }
+
+        if (payload.success === false) {
             throw new Error(payload.message || 'La operación no pudo completarse.');
         }
 
