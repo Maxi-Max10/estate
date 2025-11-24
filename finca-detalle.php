@@ -90,7 +90,7 @@ $dynamicGreeting .= ', ' . htmlspecialchars($userName, ENT_QUOTES, 'UTF-8');
         <div class="row mb-4">
             <div class="col-12">
                 <div class="card finca-header-card p-4">
-                    <div class="attendance-toolbar mb-3">
+                        <div class="attendance-toolbar mb-3">
                         <div class="flex-grow-1">
                             <h1 class="h4 mb-2"><?php echo htmlspecialchars($finca['nombre'], ENT_QUOTES, 'UTF-8'); ?></h1>
                             <p class="text-muted mb-2"><?php echo $finca['descripcion'] ? nl2br(htmlspecialchars($finca['descripcion'], ENT_QUOTES, 'UTF-8')) : 'Sin descripción.'; ?></p>
@@ -98,9 +98,16 @@ $dynamicGreeting .= ', ' . htmlspecialchars($userName, ENT_QUOTES, 'UTF-8');
                             <?php if ($finca['observacion']): ?><div class="alert alert-warning py-2 mb-2"><i class="bi bi-exclamation-triangle-fill me-1"></i><?php echo htmlspecialchars($finca['observacion'], ENT_QUOTES, 'UTF-8'); ?></div><?php endif; ?>
                             <?php if ($finca['link_ubicacion']): ?><a class="btn btn-outline-primary btn-sm" target="_blank" rel="noopener" href="<?php echo htmlspecialchars($finca['link_ubicacion'], ENT_QUOTES, 'UTF-8'); ?>"><i class="bi bi-map me-1"></i>Ubicación</a><?php endif; ?>
                         </div>
-                        <div class="d-flex gap-2">
+                        <div class="d-flex flex-column flex-md-row gap-2 align-items-start align-items-md-center">
                             <div class="attendance-counter present"><i class="bi bi-person-check"></i><span>Presentes: <?php echo $presentes; ?></span></div>
                             <div class="attendance-counter absent"><i class="bi bi-person-x"></i><span>Ausentes: <?php echo $ausentes; ?></span></div>
+                            <div class="attendance-filter-select">
+                                <select id="filterAsistencia" class="form-select form-select-sm">
+                                    <option value="todos" selected>Todos</option>
+                                    <option value="presentes">Solo presentes</option>
+                                    <option value="ausentes">Solo ausentes</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="attendance-search">
                             <input type="text" id="searchPeon" class="form-control form-control-sm" placeholder="Filtrar peones...">
@@ -224,6 +231,22 @@ function actualizarContadores(){
         const cp=document.querySelector('.attendance-counter.present span');
         const ca=document.querySelector('.attendance-counter.absent span');
         if(cp) cp.textContent='Presentes: '+presentes; if(ca) ca.textContent='Ausentes: '+ausentes;
+}
+
+// Filtro por asistencia
+const asistenciaSelect = document.getElementById('filterAsistencia');
+if(asistenciaSelect){
+    asistenciaSelect.addEventListener('change', () => {
+        const modo = asistenciaSelect.value; // todos | presentes | ausentes
+        document.querySelectorAll('#tablaPeones tbody tr').forEach(tr => {
+            const btn = tr.querySelector('.attendance-toggle');
+            const present = btn && btn.getAttribute('data-present')==='1';
+            let show = true;
+            if(modo==='presentes') show = present;
+            else if(modo==='ausentes') show = !present;
+            tr.style.display = show ? '' : 'none';
+        });
+    });
 }
 
 // Filtro rápido
