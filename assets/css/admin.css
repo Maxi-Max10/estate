@@ -110,11 +110,31 @@ body {
 }
 
 .form-section .form-label {
-    font-weight: 600;
-    margin-bottom: 0.25rem;
+    font-weight: 500;
+    font-size: 0.85rem;
+    margin-bottom: 0.2rem;
     color: #0f172a;
     background: transparent;
     padding: 0;
+    line-height: 1.2;
+}
+
+/* Reducir énfasis extra de labels con fw-semibold dentro de secciones */
+.form-section .form-label.fw-semibold {
+    font-weight: 500 !important;
+}
+
+/* Compactar los adornos de los input-group para evitar sensación de "inflado" */
+.form-section .input-group-text {
+    padding: 0.35rem 0.55rem;
+    font-size: 0.85rem;
+}
+
+/* Ajustar altura de controles para armonizar con nuevo tamaño de label */
+.form-section .form-control,
+.form-section .form-select {
+    padding: 0.5rem 0.65rem;
+    font-size: 0.85rem;
 }
 
 .table-card {
