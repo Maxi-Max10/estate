@@ -34,11 +34,29 @@ $stmtPeones = $pdo->prepare('SELECT id, nombre, apellido, dni, estado, fecha_ing
 $stmtPeones->execute([':cid' => $userId]);
 $peones = $stmtPeones->fetchAll(PDO::FETCH_ASSOC) ?: [];
 
-// Asistencias simuladas en sesión (placeholder hasta crear tabla real)
+// Asistencias de hoy: sincronizar desde BD y mantener en sesión para la UI
 $sessionKey = 'asistencia_finca_' . $fincaId;
-if (!isset($_SESSION[$sessionKey])) {
-    $_SESSION[$sessionKey] = [];
+if (!isset($_SESSION[$sessionKey])) { $_SESSION[$sessionKey] = []; }
+
+// Precarga desde BD para la fecha actual
+if ($peones) {
+    $ids = array_map(fn($p) => (int)$p['id'], $peones);
+    $placeholders = implode(',', array_fill(0, count($ids), '?'));
+    try {
+        $sql = "SELECT peon_id, presente FROM asistencias_peones WHERE finca_id = ? AND fecha = CURDATE() AND peon_id IN ($placeholders)";
+        $stmtA = $pdo->prepare($sql);
+        $params = array_merge([$fincaId], $ids);
+        $stmtA->execute($params);
+        $rows = $stmtA->fetchAll(PDO::FETCH_ASSOC) ?: [];
+        foreach ($rows as $r) {
+            $pid = (int)$r['peon_id'];
+            $_SESSION[$sessionKey][$pid] = ((int)$r['presente'] === 1);
+        }
+    } catch (Throwable $e) {
+        error_log('Error cargando asistencias de hoy: ' . $e->getMessage());
+    }
 }
+
 $asistencias = $_SESSION[$sessionKey];
 $presentes = 0; $ausentes = 0;
 foreach ($peones as $p){ $pid=(int)$p['id']; if(isset($asistencias[$pid]) && $asistencias[$pid]===true){ $presentes++; } else { $ausentes++; } }

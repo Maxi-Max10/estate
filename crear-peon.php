@@ -43,6 +43,13 @@ try {
             $attendanceKey = 'asistencia_finca_' . $redirectFinca;
             if (!isset($_SESSION[$attendanceKey])) { $_SESSION[$attendanceKey] = []; }
             $_SESSION[$attendanceKey][$newPeonId] = true; // presente por defecto
+            // Persistir también en la tabla de asistencias para el día de hoy
+            try {
+                $stmtA = $pdo->prepare('INSERT INTO asistencias_peones (finca_id, peon_id, fecha, presente) VALUES (:f, :p, CURDATE(), 1) ON DUPLICATE KEY UPDATE presente = 1');
+                $stmtA->execute([':f'=>$redirectFinca, ':p'=>$newPeonId]);
+            } catch (Throwable $e2) {
+                error_log('No se pudo registrar asistencia por defecto: ' . $e2->getMessage());
+            }
         }
     }
     $_SESSION['flash_success'] = 'Peón creado correctamente';
