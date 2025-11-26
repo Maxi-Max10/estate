@@ -121,10 +121,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <div class="card login-card">
         <div class="login-header text-center">
-            <div class="brand-circle">ES</div>
-            <h1 class="h4 mb-2">Panel de acceso</h1>
-            <p class="text-muted mb-0">Ingresa con tu correo y contraseña</p>
-            <p class="role-hint">Roles disponibles: Admin | Cuadrillero</p>
+            <div class="brand-circle mb-3" style="background: #2563eb;">
+                <!-- Ícono cohete SVG -->
+                <svg width="38" height="38" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="12" fill="#2563eb"/><path d="M8.5 15.5L9.5 13.5L13.5 9.5L15.5 8.5L14.5 10.5L10.5 14.5L8.5 15.5Z" fill="#fff"/><circle cx="15" cy="9" r="1" fill="#fff"/></svg>
+            </div>
+            <h1 class="h4 mb-2">Bienvenido</h1>
+            <p class="text-muted mb-0">Crea tu cuenta o inicia sesión para continuar</p>
+            <p class="role-hint">Administra cuadrillas y fincas fácilmente</p>
         </div>
         <div class="card-body p-4 pt-0">
             <?php if ($error): ?>
@@ -134,7 +137,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php endif; ?>
             <form method="post" action="" class="needs-validation" novalidate>
                 <div class="mb-3">
-                    <label for="email" class="form-label">Correo corporativo</label>
+                    <label for="name" class="form-label">Nombre</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Ingresa tu nombre" autocomplete="name">
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">E-mail</label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="bi bi-envelope"></i></span>
                         <input type="email" class="form-control" id="email" name="email" placeholder="usuario@empresa.com" value="<?php echo htmlspecialchars($oldEmail, ENT_QUOTES, 'UTF-8'); ?>" required>
@@ -152,24 +159,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="invalid-feedback">La contraseña debe tener al menos 8 caracteres.</div>
                     </div>
                 </div>
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="1" id="remember" name="remember">
-                        <label class="form-check-label" for="remember">Recordarme</label>
-                    </div>
-                    <a href="#" class="link-primary link-underline-opacity-0">¿Olvidaste tu contraseña?</a>
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" value="1" id="terms" name="terms" required>
+                    <label class="form-check-label" for="terms">
+                        Al registrarte aceptas los <a href="#" class="link-primary">Términos y Condiciones</a>
+                    </label>
+                    <div class="invalid-feedback">Debes aceptar los términos.</div>
                 </div>
-                <div class="d-grid gap-2">
-                    <button type="submit" class="btn btn-primary btn-lg">Ingresar</button>
-                    <button type="button" class="btn btn-outline-dark" onclick="window.location.href='https://tu-dominio.com'">
+                <div class="d-grid gap-2 mb-2">
+                    <button type="submit" class="btn btn-primary btn-lg rounded-pill">Sign Up</button>
+                    <button type="button" class="btn btn-outline-dark rounded-pill" onclick="window.location.href='https://tu-dominio.com'">
                         Volver al sitio
                     </button>
+                </div>
+                <div class="text-center mb-2">
+                    <button type="button" class="btn btn-light rounded-pill" onclick="window.location.href='login.php'">Sign In</button>
                 </div>
             </form>
         </div>
         <div class="card-footer text-center login-footer">
-            <span class="d-block">Powered by Hostinger · Estate</span>
-            <small>Seguridad reforzada para cuadrillas y admins</small>
+            <span class="d-block">CREATOR HERE &nbsp;|&nbsp; DESIGNER HERE</span>
+            <small>Estate · Seguridad y gestión para cuadrillas</small>
         </div>
     </div>
 
