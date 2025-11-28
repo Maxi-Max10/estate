@@ -123,17 +123,44 @@ body {
     background: #fff;
 }
 
+/* Card de finca asignada con fondo color y estilo destacado */
 .assigned-farm-card {
-    border-radius: 1rem;
-    border: 1px solid rgba(15, 23, 42, 0.08);
-    background: #fff;
-    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+    border-radius: 1.25rem;
+    border: 1px solid #e0e7ef;
+    background: linear-gradient(135deg, #e3f0ff 80%, #f8fafc 100%);
+    box-shadow: 0 12px 30px rgba(37, 99, 235, 0.10);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    padding: 1.5rem;
 }
 
 .assigned-farm-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 18px 35px rgba(15, 23, 42, 0.12);
+    box-shadow: 0 22px 45px rgba(37, 99, 235, 0.18);
+}
+/* Íconos de acción en la card de finca */
+.assigned-farm-card .btn-outline-success {
+    border-radius: 0.7rem;
+    border: 2px solid #22c55e;
+    background: #e7fbe9;
+    color: #22c55e;
+    font-size: 1.2rem;
+    box-shadow: 0 2px 8px rgba(34,197,94,0.08);
+}
+.assigned-farm-card .btn-outline-success:hover {
+    background: #22c55e;
+    color: #fff;
+}
+.assigned-farm-card .btn-outline-primary {
+    border-radius: 0.7rem;
+    border: 2px solid #2563eb;
+    background: #e3f0ff;
+    color: #2563eb;
+    font-size: 1.2rem;
+    box-shadow: 0 2px 8px rgba(37,99,235,0.08);
+}
+.assigned-farm-card .btn-outline-primary:hover {
+    background: #2563eb;
+    color: #fff;
 }
 
 .assigned-empty-state i {
