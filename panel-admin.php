@@ -71,8 +71,8 @@ $attendanceJson = json_encode($attendanceData, JSON_UNESCAPED_UNICODE) ?: '[]';
 				<div class="d-flex align-items-center gap-2 gap-sm-3 flex-grow-1">
 					<img src="assets/img/logo.png" class="admin-logo" alt="Estate">
 					<div class="d-flex flex-column">
-						<span class="navbar-brand fs-6 mb-0">Estate · Panel Administrador</span>
-						<small class="text-white-50">Gestión integral de cuadrillas y fincas</small>
+						<span class="navbar-brand fs-6 mb-0">Panel Administrador</span>
+						<small class="text-white-50">Gestión integral</small>
 					</div>
 				</div>
 				<button class="navbar-toggler ms-auto d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavLinks" aria-controls="adminNavLinks" aria-expanded="false" aria-label="Alternar navegación">
