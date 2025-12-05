@@ -162,9 +162,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <div class="d-grid gap-2">
                     <button type="submit" class="btn btn-primary btn-lg">Ingresar</button>
-                    <button type="button" class="btn btn-outline-dark" onclick="window.location.href='https://tu-dominio.com'">
-                        Volver al sitio
-                    </button>
                 </div>
             </form>
         </div>
