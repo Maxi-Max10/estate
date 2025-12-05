@@ -169,7 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </form>
         </div>
         <div class="card-footer text-center login-footer">
-            <span class="d-block">Powered by Hostinger · Estate</span>
+            <span class="d-block">Powered by Polo +</span>
             <small>Seguridad reforzada para cuadrillas y admins</small>
         </div>
     </div>
