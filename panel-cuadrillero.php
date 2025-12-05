@@ -119,11 +119,11 @@ $dynamicGreeting .= ', ' . htmlspecialchars($userName, ENT_QUOTES, 'UTF-8');
                     <span class="navbar-brand h3 mb-1">Estate · Operaciones</span>
                     <p class="mb-0 text-white-50">Seguimiento diario de cuadrillas y tareas</p>
                 </div>
-                <div class="cuadrillero-navbar__session">
-                    <a class="btn session-back" href="javascript:history.back()">
+                <div class="cuadrillero-navbar__session ms-auto d-flex align-items-center gap-2">
+                    <a class="btn btn-light text-dark fw-semibold px-3 py-2 rounded-pill" href="javascript:history.back()">
                         <i class="bi bi-arrow-left me-2"></i>Volver
                     </a>
-                    <a class="btn session-logout" href="logout.php">
+                    <a class="btn btn-danger fw-semibold px-3 py-2 rounded-pill" href="logout.php">
                         <i class="bi bi-box-arrow-right me-2"></i>Salir
                     </a>
                 </div>
