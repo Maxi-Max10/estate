@@ -118,12 +118,12 @@ $dynamicGreeting .= ', ' . htmlspecialchars($userName, ENT_QUOTES, 'UTF-8');
                 <div class="cuadrillero-navbar__brand">
                     <span class="navbar-brand h3 mb-1">Estate · Operaciones</span>
                     <p class="mb-0 text-white-50">Seguimiento diario de cuadrillas y tareas</p>
-                </div>
-                <div class="cuadrillero-navbar__session">
                     <div class="user-pill">
                         <i class="bi bi-person-workspace"></i>
                         <span><?php echo htmlspecialchars($userName, ENT_QUOTES, 'UTF-8'); ?></span>
                     </div>
+                </div>
+                <div class="cuadrillero-navbar__session">
                     <a class="btn btn-outline-light btn-sm session-logout" href="logout.php">
                         <i class="bi bi-box-arrow-right me-1"></i>Salir
                     </a>
