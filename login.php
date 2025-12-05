@@ -121,6 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <div class="card login-card">
         <div class="login-header text-center">
+            <img src="assets/img/logo.png" alt="Logo Estate" style="width:80px; height:auto; margin-bottom:1rem; display:block; margin-left:auto; margin-right:auto;">
             <div class="brand-circle">ES</div>
             <h1 class="h4 mb-2">Panel de acceso</h1>
             <p class="text-muted mb-0">Ingresa con tu correo y contraseña</p>

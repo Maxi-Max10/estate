@@ -112,15 +112,22 @@ $dynamicGreeting .= ', ' . htmlspecialchars($userName, ENT_QUOTES, 'UTF-8');
     <link href="assets/css/cuadrillero.css" rel="stylesheet">
 </head>
 <body>
-    <nav class="navbar navbar-dark cuadrillero-navbar">
+    <nav class="navbar cuadrillero-navbar">
         <div class="container-fluid py-3">
-            <div>
-                <span class="navbar-brand h3 mb-0">Estate · Operaciones</span>
-                <p class="mb-0 text-white-50">Seguimiento diario de cuadrillas y tareas</p>
-            </div>
-            <div class="d-flex align-items-center gap-3 text-white">
-                <span class="fw-semibold"><i class="bi bi-person-workspace me-2"></i><?php echo htmlspecialchars($userName, ENT_QUOTES, 'UTF-8'); ?></span>
-                <a class="btn btn-outline-light btn-sm" href="logout.php"><i class="bi bi-box-arrow-right me-1"></i>Salir</a>
+            <div class="cuadrillero-navbar__content">
+                <div class="cuadrillero-navbar__brand">
+                    <span class="navbar-brand h3 mb-1">Estate · Operaciones</span>
+                    <p class="mb-0 text-white-50">Seguimiento diario de cuadrillas y tareas</p>
+                </div>
+                <div class="cuadrillero-navbar__session">
+                    <div class="user-pill">
+                        <i class="bi bi-person-workspace"></i>
+                        <span><?php echo htmlspecialchars($userName, ENT_QUOTES, 'UTF-8'); ?></span>
+                    </div>
+                    <a class="btn btn-outline-light btn-sm session-logout" href="logout.php">
+                        <i class="bi bi-box-arrow-right me-1"></i>Salir
+                    </a>
+                </div>
             </div>
         </div>
     </nav>
