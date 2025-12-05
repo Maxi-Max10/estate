@@ -112,39 +112,63 @@ body {
     align-items: center;
     justify-content: flex-end;
     flex: 0 0 auto;
+    gap: 0.75rem;
 }
 
-.session-back,
-.session-logout {
+.cuadrillero-navbar__session .btn {
     white-space: nowrap;
-    transition: transform 0.12s ease, box-shadow 0.12s ease;
+    transition: all 0.2s ease;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 0.5rem 1.25rem;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
-.session-back:hover,
-.session-back:focus,
-.session-logout:hover,
-.session-logout:focus {
-    transform: translateY(-1px);
+.cuadrillero-navbar__session .btn-light {
+    background: rgba(255, 255, 255, 0.95);
+    color: var(--emerald-dark);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.cuadrillero-navbar__session .btn-light:hover {
+    background: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+}
+
+.cuadrillero-navbar__session .btn-danger {
+    background: #dc2626;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+}
+
+.cuadrillero-navbar__session .btn-danger:hover {
+    background: #b91c1c;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(220, 38, 38, 0.45);
 }
 
 @media (max-width: 576px) {
     .cuadrillero-navbar__content {
         flex-direction: column;
         align-items: stretch;
+        gap: 1rem;
     }
 
     .cuadrillero-navbar__session {
         width: 100%;
-        justify-content: flex-end;
-        align-items: center;
-        gap: 0.4rem;
-        flex-wrap: nowrap;
-        align-self: flex-end;
+        justify-content: center;
+        gap: 0.5rem;
     }
 
-    .session-logout {
-        align-self: flex-end;
-        width: auto;
+    .cuadrillero-navbar__session .btn {
+        flex: 1;
+        justify-content: center;
+        font-size: 0.85rem;
+        padding: 0.5rem 1rem;
     }
 }
 
