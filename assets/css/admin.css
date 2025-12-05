@@ -1,4 +1,4 @@
-:root {
+﻿:root {
     --blue-dark: #1e3a8a;
     --blue: #2563eb;
     --navy: #0f172a;
@@ -10,30 +10,15 @@
 body {
     background: #e2e8f0;
     min-height: 100vh;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     color: #0f172a;
 }
 
-.admin-navbar {
-    background: transparent;
-    padding-bottom: 0;
-}
-
-.admin-logo {
-    width: 28px;
-    height: 28px;
-    object-fit: contain;
-}
-
-.admin-navbar .navbar-brand {
-    font-weight: 600;
-}
-
 .admin-hero {
-    background: linear-gradient(135deg, var(--blue-dark), var(--blue));
+    background: linear-gradient(120deg, #0f172a, #1d4ed8);
     color: #fff;
-    padding: clamp(1.5rem, 4vw, 3rem) 0 clamp(1rem, 3vw, 2rem);
-    box-shadow: 0 10px 35px rgba(15, 23, 42, 0.25);
+    padding: 0.75rem 0 1rem;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.2);
 }
 
 .admin-hero h1 {
@@ -50,37 +35,6 @@ body {
     gap: 0.35rem;
 }
 
-.hero-meta {
-        background: rgba(15, 23, 42, 0.35);
-        padding: 0.35rem 1rem;
-        border-radius: 1rem;
-        backdrop-filter: blur(6px);
-        margin: 0 auto;
-        max-width: 1200px;
-    gap: 1rem;
-    margin-top: 1rem;
-        background: rgba(15, 23, 42, 0.25);
-        padding: 0;
-        backdrop-filter: blur(6px);
-        border-radius: 0.85rem;
-        margin: 0 auto;
-        max-width: 1200px;
-}
-.hero-meta .meta-card {
-    background: rgba(15, 23, 42, 0.25);
-    border-radius: 0.85rem;
-    padding: 0.75rem 1rem;
-        background: linear-gradient(120deg, #0f172a, #1d4ed8);
-        color: #fff;
-        padding: 0.75rem 0 1rem;
-        box-shadow: 0 8px 25px rgba(15, 23, 42, 0.25);
-    background: var(--shell-bg);
-        background: linear-gradient(120deg, #0f172a, #1e40af);
-    margin-top: -2rem;
-        padding: 0.5rem 0;
-    box-shadow: 0 20px 50px rgba(15, 23, 42, 0.12);
-}
-
 .stats-grid .card {
     border: none;
     border-radius: 1rem;
@@ -95,12 +49,6 @@ body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-        background: rgba(15, 23, 42, 0.25);
-        padding: 0;
-        backdrop-filter: blur(6px);
-        border-radius: 0.85rem;
-        margin: 0 auto;
-        max-width: 1200px;
 }
 
 .form-section {
@@ -119,18 +67,15 @@ body {
     line-height: 1.2;
 }
 
-/* Reducir énfasis extra de labels con fw-semibold dentro de secciones */
 .form-section .form-label.fw-semibold {
     font-weight: 500 !important;
 }
 
-/* Compactar los adornos de los input-group para evitar sensación de "inflado" */
 .form-section .input-group-text {
     padding: 0.35rem 0.55rem;
     font-size: 0.85rem;
 }
 
-/* Ajustar altura de controles para armonizar con nuevo tamaño de label */
 .form-section .form-control,
 .form-section .form-select {
     padding: 0.5rem 0.65rem;
@@ -171,14 +116,6 @@ body {
     box-shadow: var(--card-shadow);
 }
 
-/* Header compact/responsive overrides */
-.admin-hero {
-    background: linear-gradient(120deg, #0f172a, #1d4ed8);
-    color: #fff;
-    padding: 0.75rem 0 1rem;
-    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.2);
-}
-
 .admin-navbar {
     background: rgba(15, 23, 42, 0.35);
     padding: 0.4rem 1rem;
@@ -196,6 +133,19 @@ body {
     gap: 0.75rem;
 }
 
+.admin-navbar .navbar-brand {
+    font-weight: 600;
+}
+
+.admin-navbar .navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.35);
+    box-shadow: none;
+}
+
+.admin-navbar .navbar-toggler:focus {
+    box-shadow: 0 0 0 0.15rem rgba(255, 255, 255, 0.35);
+}
+
 .admin-logo {
     width: 18px;
     height: 18px;
@@ -205,6 +155,11 @@ body {
 .user-actions {
     display: inline-flex;
     align-items: center;
+}
+
+.user-actions .btn,
+.user-actions .fw-semibold {
+    white-space: nowrap;
 }
 
 .dashboard-shell {
@@ -219,9 +174,23 @@ body {
         align-items: flex-start;
     }
 
+    .admin-navbar .navbar-collapse {
+        width: 100%;
+    }
+
     .user-actions {
         width: 100%;
-        justify-content: space-between;
+        gap: 0.5rem;
+        justify-content: flex-start;
+    }
+
+    .user-actions .btn {
+        flex: 1 1 calc(50% - 0.5rem);
+        text-align: center;
+    }
+
+    .user-actions .fw-semibold {
+        flex: 1 1 100%;
     }
 }
 

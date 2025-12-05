@@ -66,21 +66,26 @@ $attendanceJson = json_encode($attendanceData, JSON_UNESCAPED_UNICODE) ?: '[]';
 </head>
 <body>
 	<header class="admin-hero">
-		<nav class="navbar navbar-dark admin-navbar">
+		<nav class="navbar navbar-dark admin-navbar navbar-expand-lg">
 			<div class="container-fluid py-2">
-				<div class="d-flex align-items-center gap-2 gap-sm-3 flex-wrap">
+				<div class="d-flex align-items-center gap-2 gap-sm-3 flex-grow-1">
 					<img src="assets/img/logo.png" class="admin-logo" alt="Estate">
 					<div class="d-flex flex-column">
 						<span class="navbar-brand fs-6 mb-0">Estate · Panel Administrador</span>
 						<small class="text-white-50">Gestión integral de cuadrillas y fincas</small>
 					</div>
 				</div>
-				<div class="d-flex align-items-center gap-2 gap-sm-3 text-white user-actions">
-					<a class="btn btn-outline-light btn-sm" href="peones-admin.php"><i class="bi bi-people me-1"></i>Peones</a>
-					<a class="btn btn-outline-info btn-sm" href="cuadrilleros-admin.php"><i class="bi bi-person-lines-fill me-1"></i>Cuadrilleros</a>
-					<a class="btn btn-outline-success btn-sm" href="fincas-admin.php"><i class="bi bi-map me-1"></i>Fincas</a>
-					<span class="fw-semibold"><i class="bi bi-person-badge me-2"></i><?php echo htmlspecialchars($userName, ENT_QUOTES, 'UTF-8'); ?></span>
-					<a class="btn btn-danger btn-sm" href="logout.php"><i class="bi bi-box-arrow-right me-1"></i>Salir</a>
+				<button class="navbar-toggler ms-auto d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavLinks" aria-controls="adminNavLinks" aria-expanded="false" aria-label="Alternar navegación">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse flex-grow-0" id="adminNavLinks">
+					<div class="d-flex align-items-center gap-2 gap-sm-3 text-white user-actions flex-wrap flex-lg-nowrap">
+						<a class="btn btn-outline-light btn-sm" href="peones-admin.php"><i class="bi bi-people me-1"></i>Peones</a>
+						<a class="btn btn-outline-info btn-sm" href="cuadrilleros-admin.php"><i class="bi bi-person-lines-fill me-1"></i>Cuadrilleros</a>
+						<a class="btn btn-outline-success btn-sm" href="fincas-admin.php"><i class="bi bi-map me-1"></i>Fincas</a>
+						<span class="fw-semibold text-nowrap"><i class="bi bi-person-badge me-2"></i><?php echo htmlspecialchars($userName, ENT_QUOTES, 'UTF-8'); ?></span>
+						<a class="btn btn-danger btn-sm" href="logout.php"><i class="bi bi-box-arrow-right me-1"></i>Salir</a>
+					</div>
 				</div>
 			</div>
 		</nav>
