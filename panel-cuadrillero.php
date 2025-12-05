@@ -120,6 +120,9 @@ $dynamicGreeting .= ', ' . htmlspecialchars($userName, ENT_QUOTES, 'UTF-8');
                     <p class="mb-0 text-white-50">Seguimiento diario de cuadrillas y tareas</p>
                 </div>
                 <div class="cuadrillero-navbar__session">
+                    <a class="btn session-back" href="javascript:history.back()">
+                        <i class="bi bi-arrow-left me-2"></i>Volver
+                    </a>
                     <a class="btn session-logout" href="logout.php">
                         <i class="bi bi-box-arrow-right me-2"></i>Salir
                     </a>
