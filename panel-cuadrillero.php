@@ -112,21 +112,16 @@ $dynamicGreeting .= ', ' . htmlspecialchars($userName, ENT_QUOTES, 'UTF-8');
     <link href="assets/css/cuadrillero.css" rel="stylesheet">
 </head>
 <body>
-    <nav class="navbar cuadrillero-navbar">
+    <nav class="navbar navbar-dark cuadrillero-navbar">
         <div class="container-fluid py-3">
-            <div class="cuadrillero-navbar__content">
-                <div class="cuadrillero-navbar__brand">
-                    <span class="navbar-brand h3 mb-1">Estate · Operaciones</span>
-                    <p class="mb-0 text-white-50">Seguimiento diario de cuadrillas y tareas</p>
-                </div>
-                <div class="cuadrillero-navbar__session ms-auto d-flex align-items-center gap-2">
-                    <a class="btn btn-light text-dark fw-semibold px-3 py-2 rounded-pill" href="javascript:history.back()">
-                        <i class="bi bi-arrow-left me-2"></i>Volver
-                    </a>
-                    <a class="btn btn-danger fw-semibold px-3 py-2 rounded-pill" href="logout.php">
-                        <i class="bi bi-box-arrow-right me-2"></i>Salir
-                    </a>
-                </div>
+            <div>
+                <span class="navbar-brand h3 mb-0">Estate · Operaciones</span>
+                <p class="mb-0 text-white-50">Seguimiento diario de cuadrillas y tareas</p>
+            </div>
+            <div class="d-flex align-items-center gap-3 text-white">
+                <span class="fw-semibold"><i class="bi bi-person-workspace me-2"></i><?php echo htmlspecialchars($userName, ENT_QUOTES, 'UTF-8'); ?></span>
+                <a class="btn btn-outline-light btn-sm" href="javascript:history.back()"><i class="bi bi-arrow-left me-1"></i>Volver</a>
+                <a class="btn btn-outline-light btn-sm" href="logout.php"><i class="bi bi-box-arrow-right me-1"></i>Salir</a>
             </div>
         </div>
     </nav>
