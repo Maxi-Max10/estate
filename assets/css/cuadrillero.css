@@ -120,7 +120,7 @@ body {
 .session-back,
 .session-logout {
     border-radius: 999px;
-    padding: 0.6rem 1.6rem;
+    padding: 0.7rem 1.7rem;
     font-weight: 600;
     border: none;
     transition: transform 0.15s ease, box-shadow 0.15s ease;
@@ -133,14 +133,15 @@ body {
 .session-back {
     background: #fff;
     color: var(--slate);
-    box-shadow: 0 8px 18px rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+    border: 1px solid rgba(15, 23, 42, 0.06);
 }
 
 .session-back:hover,
 .session-back:focus {
     color: var(--slate);
     transform: translateY(-1px);
-    box-shadow: 0 10px 22px rgba(255, 255, 255, 0.45);
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.18);
 }
 
 .session-logout {
