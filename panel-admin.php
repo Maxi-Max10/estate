@@ -74,10 +74,11 @@ $attendanceJson = json_encode($attendanceData, JSON_UNESCAPED_UNICODE) ?: '[]';
 						<span class="navbar-brand fs-6 mb-0">Panel Administrador</span>
 						<small class="text-white-50">Gestión integral</small>
 					</div>
+					<button class="navbar-toggler ms-auto d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavLinks" aria-controls="adminNavLinks" aria-expanded="false" aria-label="Alternar navegación">
+						<span class="navbar-toggler-icon"></span>
+					</button>
 				</div>
-				<button class="navbar-toggler ms-auto d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavLinks" aria-controls="adminNavLinks" aria-expanded="false" aria-label="Alternar navegación">
-					<span class="navbar-toggler-icon"></span>
-				</button>
+
 				<div class="collapse navbar-collapse flex-grow-0" id="adminNavLinks">
 					<div class="d-flex align-items-center gap-2 gap-sm-3 text-white user-actions flex-wrap flex-lg-nowrap">
 						<a class="btn btn-outline-light btn-sm" href="peones-admin.php"><i class="bi bi-people me-1"></i>Peones</a>
