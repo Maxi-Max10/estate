@@ -297,11 +297,11 @@ body {
     .admin-navbar .navbar-collapse {
         position: fixed;
         inset: 0;
-        background: linear-gradient(160deg, rgba(15, 23, 42, 0.98), rgba(29, 78, 216, 0.92));
-        padding: 1.5rem 1.25rem 2rem;
+        background: #1f6b64;
+        padding: 1.25rem 1.25rem 2rem;
         display: flex;
         flex-direction: column;
-        gap: 1.5rem;
+        gap: 1.25rem;
         overflow-y: auto;
         transform: translateY(-100%);
         transition: transform 0.25s ease;
@@ -322,38 +322,56 @@ body {
     .admin-menu-title {
         color: #fff;
         font-weight: 600;
-        font-size: 1.1rem;
+        font-size: 1rem;
+        letter-spacing: 0.3px;
     }
 
     .admin-menu-close {
-        width: 44px;
-        height: 44px;
-        border-radius: 999px;
-        border: 1.5px solid rgba(255, 255, 255, 0.35);
-        background: rgba(255, 255, 255, 0.12);
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        border: none;
+        background: transparent;
         color: #fff;
-        font-size: 1.35rem;
+        font-size: 1.6rem;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 10px 22px rgba(15, 23, 42, 0.3);
     }
 
     .admin-menu-close:hover {
-        background: rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.12);
     }
 
     .admin-nav-links {
         flex-direction: column;
         align-items: stretch;
-        gap: 0.75rem;
+        gap: 0.2rem;
     }
 
     .admin-nav-link {
         width: 100%;
         justify-content: space-between;
-        padding: 0.85rem 1.1rem;
-        font-size: 0.95rem;
+        padding: 0.8rem 0.25rem;
+        font-size: 0.98rem;
+        border: none;
+        background: transparent;
+        border-radius: 0;
+    }
+
+    .admin-nav-link::after {
+        content: "›";
+        font-size: 1.4rem;
+        line-height: 1;
+        color: #fbbf24;
+        margin-left: auto;
+    }
+
+    .admin-nav-link.active {
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        font-weight: 600;
     }
 
     .admin-user-badge,
@@ -363,6 +381,11 @@ body {
 
     .admin-logout {
         padding: 0.75rem 1rem;
+    }
+
+    .admin-user-badge {
+        background: rgba(255, 255, 255, 0.12);
+        border: none;
     }
 
     .admin-nav-links,
