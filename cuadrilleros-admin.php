@@ -48,21 +48,31 @@ $userName = trim((string)($_SESSION['user_name'] ?? 'Administrador'));
 </head>
 <body>
 <header class="admin-hero">
-    <nav class="navbar navbar-dark admin-navbar">
+    <nav class="navbar navbar-dark admin-navbar navbar-expand-lg">
         <div class="container-fluid py-2">
-            <div class="d-flex align-items-center gap-2 gap-sm-3 flex-wrap">
+            <a class="admin-brand d-flex align-items-center gap-2 gap-sm-3 flex-grow-1" href="panel-admin.php">
                 <img src="assets/img/logo.png" class="admin-logo" alt="Estate">
                 <div class="d-flex flex-column">
                     <span class="navbar-brand fs-6 mb-0">Estate · Panel Administrador</span>
                     <small class="text-white-50">Gestión de cuadrilleros</small>
                 </div>
-            </div>
-            <div class="d-flex align-items-center gap-2 gap-sm-3 text-white user-actions">
-                <a class="btn btn-outline-light btn-sm" href="panel-admin.php"><i class="bi bi-grid me-1"></i>Panel</a>
-                <a class="btn btn-outline-primary btn-sm" href="peones-admin.php"><i class="bi bi-people me-1"></i>Peones</a>
-                <a class="btn btn-outline-success btn-sm" href="fincas-admin.php"><i class="bi bi-map me-1"></i>Fincas</a>
-                <span class="fw-semibold"><i class="bi bi-person-badge me-2"></i><?php echo htmlspecialchars($userName, ENT_QUOTES, 'UTF-8'); ?></span>
-                <a class="btn btn-danger btn-sm" href="logout.php"><i class="bi bi-box-arrow-right me-1"></i>Salir</a>
+            </a>
+            <button class="navbar-toggler ms-auto d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavLinks" aria-controls="adminNavLinks" aria-expanded="false" aria-label="Alternar navegación">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="adminNavLinks">
+                <div class="ms-lg-auto d-flex flex-column flex-lg-row align-items-lg-center gap-2 gap-lg-3">
+                    <div class="admin-nav-links">
+                        <a class="admin-nav-link" href="panel-admin.php"><i class="bi bi-grid"></i>Panel</a>
+                        <a class="admin-nav-link" href="peones-admin.php"><i class="bi bi-people"></i>Peones</a>
+                        <a class="admin-nav-link active" href="cuadrilleros-admin.php"><i class="bi bi-person-lines-fill"></i>Cuadrilleros</a>
+                        <a class="admin-nav-link" href="fincas-admin.php"><i class="bi bi-map"></i>Fincas</a>
+                    </div>
+                    <div class="d-flex flex-column flex-lg-row align-items-lg-center gap-2">
+                        <span class="admin-user-badge"><i class="bi bi-person-badge"></i><?php echo htmlspecialchars($userName, ENT_QUOTES, 'UTF-8'); ?></span>
+                        <a class="btn btn-danger btn-sm admin-logout" href="logout.php"><i class="bi bi-box-arrow-right me-1"></i>Salir</a>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>
