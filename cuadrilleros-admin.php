@@ -68,6 +68,14 @@ $userName = trim((string)($_SESSION['user_name'] ?? 'Administrador'));
             <button class="navbar-toggler ms-auto d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavLinks" aria-controls="adminNavLinks" aria-expanded="false" aria-label="Alternar navegación">
                 <span class="navbar-toggler-icon"></span>
             </button>
+            <div class="d-none d-lg-flex align-items-center gap-2 text-white ms-auto">
+                <a class="btn btn-outline-light btn-sm" href="panel-admin.php"><i class="bi bi-grid me-1"></i>Panel</a>
+                <a class="btn btn-outline-light btn-sm" href="peones-admin.php"><i class="bi bi-people me-1"></i>Peones</a>
+                <a class="btn btn-light btn-sm text-dark" href="cuadrilleros-admin.php"><i class="bi bi-person-lines-fill me-1"></i>Cuadrilleros</a>
+                <a class="btn btn-outline-light btn-sm" href="fincas-admin.php"><i class="bi bi-map me-1"></i>Fincas</a>
+                <span class="fw-semibold text-nowrap"><i class="bi bi-person-badge me-2"></i><?php echo htmlspecialchars($userName, ENT_QUOTES, 'UTF-8'); ?></span>
+                <a class="btn btn-danger btn-sm" href="logout.php"><i class="bi bi-box-arrow-right me-1"></i>Salir</a>
+            </div>
             <div class="collapse navbar-collapse fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-sm px-6 pt-6 pb-28 text-white lg:static lg:inset-auto lg:z-auto lg:bg-transparent lg:backdrop-blur-0 lg:p-0" id="adminNavLinks">
                 <div class="flex h-full flex-col lg:h-auto">
                     <div class="flex items-center justify-between lg:hidden">
