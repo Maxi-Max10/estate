@@ -76,66 +76,14 @@ $userName = trim((string)($_SESSION['user_name'] ?? 'Administrador'));
                 <span class="fw-semibold text-nowrap"><i class="bi bi-person-badge me-2"></i><?php echo htmlspecialchars($userName, ENT_QUOTES, 'UTF-8'); ?></span>
                 <a class="btn btn-danger btn-sm" href="logout.php"><i class="bi bi-box-arrow-right me-1"></i>Salir</a>
             </div>
-            <div class="collapse navbar-collapse fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-sm px-6 pt-6 pb-28 text-white lg:static lg:inset-auto lg:z-auto lg:bg-transparent lg:backdrop-blur-0 lg:p-0" id="adminNavLinks">
-                <div class="flex h-full flex-col lg:h-auto">
-                    <div class="flex items-center justify-between lg:hidden">
-                        <span class="text-white text-base font-semibold tracking-wide">Menú administrador</span>
-                        <button class="h-10 w-10 rounded-full border border-white/30 text-white text-2xl leading-none flex items-center justify-center" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavLinks" aria-label="Cerrar menú">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-
-                    <div class="mt-6 lg:mt-0 lg:flex lg:items-start lg:justify-end lg:gap-8">
-                        <div class="space-y-6 lg:space-y-0 lg:flex lg:items-start lg:gap-6">
-                            <div class="space-y-3">
-                                <button class="submenu-toggle w-full lg:w-auto flex items-center justify-between text-white/80 text-xs font-semibold uppercase tracking-widest" type="button" data-bs-toggle="collapse" data-bs-target="#adminMenuMain" aria-expanded="true" aria-controls="adminMenuMain">
-                                    Gestión
-                                    <i class="bi bi-chevron-right submenu-chevron"></i>
-                                </button>
-                                <div class="collapse show lg:!block" id="adminMenuMain">
-                                    <a class="block py-2 text-white text-lg lg:text-sm lg:font-medium lg:py-1 lg:inline-flex lg:items-center lg:gap-2 lg:rounded-full lg:bg-white/10 lg:px-3 lg:py-2 lg:hover:bg-white/20" href="panel-admin.php">Panel</a>
-                                </div>
-                            </div>
-                            <div class="space-y-3">
-                                <button class="submenu-toggle w-full lg:w-auto flex items-center justify-between text-white/80 text-xs font-semibold uppercase tracking-widest" type="button" data-bs-toggle="collapse" data-bs-target="#adminMenuPeople" aria-expanded="true" aria-controls="adminMenuPeople">
-                                    Personas
-                                    <i class="bi bi-chevron-right submenu-chevron"></i>
-                                </button>
-                                <div class="collapse show lg:!block" id="adminMenuPeople">
-                                    <a class="block py-2 text-white text-lg lg:text-sm lg:font-medium lg:py-1 lg:inline-flex lg:items-center lg:gap-2 lg:rounded-full lg:bg-white/10 lg:px-3 lg:py-2 lg:hover:bg-white/20" href="peones-admin.php">Peones</a>
-                                    <a class="block py-2 text-amber-300 text-lg lg:text-sm lg:font-medium lg:py-1 lg:inline-flex lg:items-center lg:gap-2 lg:rounded-full lg:bg-white/10 lg:px-3 lg:py-2 lg:text-white" href="cuadrilleros-admin.php">Cuadrilleros</a>
-                                </div>
-                            </div>
-                            <div class="space-y-3">
-                                <button class="submenu-toggle w-full lg:w-auto flex items-center justify-between text-white/80 text-xs font-semibold uppercase tracking-widest" type="button" data-bs-toggle="collapse" data-bs-target="#adminMenuOps" aria-expanded="true" aria-controls="adminMenuOps">
-                                    Operaciones
-                                    <i class="bi bi-chevron-right submenu-chevron"></i>
-                                </button>
-                                <div class="collapse show lg:!block" id="adminMenuOps">
-                                    <a class="block py-2 text-white text-lg lg:text-sm lg:font-medium lg:py-1 lg:inline-flex lg:items-center lg:gap-2 lg:rounded-full lg:bg-white/10 lg:px-3 lg:py-2 lg:hover:bg-white/20" href="fincas-admin.php">Fincas</a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="mt-6 lg:mt-0 lg:flex lg:items-center lg:gap-3">
-                            <span class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-sm font-semibold text-white">
-                                <i class="bi bi-person-badge"></i><?php echo htmlspecialchars($userName, ENT_QUOTES, 'UTF-8'); ?>
-                            </span>
-                            <a class="inline-flex items-center justify-center rounded-full bg-amber-400 px-4 py-2 text-sm font-semibold text-slate-900 shadow-lg" href="panel-admin.php">Acción rápida</a>
-                            <a class="inline-flex items-center justify-center rounded-full border border-white/30 px-4 py-2 text-sm font-semibold text-white" href="logout.php"><i class="bi bi-box-arrow-right me-1"></i>Salir</a>
-                        </div>
-                    </div>
-
-                    <div class="mt-auto lg:hidden pt-6">
-                        <div class="flex items-center justify-between text-white/70 text-xs uppercase tracking-widest">
-                            <span>Síguenos</span>
-                            <div class="flex items-center gap-3 text-base">
-                                <a class="text-white/80 hover:text-white" href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
-                                <a class="text-white/80 hover:text-white" href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
-                                <a class="text-white/80 hover:text-white" href="#" aria-label="WhatsApp"><i class="bi bi-whatsapp"></i></a>
-                            </div>
-                        </div>
-                    </div>
+            <div class="collapse navbar-collapse d-lg-none" id="adminNavLinks">
+                <div class="mt-3 d-grid gap-2">
+                    <a class="btn btn-outline-light btn-sm" href="panel-admin.php"><i class="bi bi-grid me-1"></i>Panel</a>
+                    <a class="btn btn-outline-light btn-sm" href="peones-admin.php"><i class="bi bi-people me-1"></i>Peones</a>
+                    <a class="btn btn-light btn-sm text-dark" href="cuadrilleros-admin.php"><i class="bi bi-person-lines-fill me-1"></i>Cuadrilleros</a>
+                    <a class="btn btn-outline-light btn-sm" href="fincas-admin.php"><i class="bi bi-map me-1"></i>Fincas</a>
+                    <span class="fw-semibold text-white"><i class="bi bi-person-badge me-2"></i><?php echo htmlspecialchars($userName, ENT_QUOTES, 'UTF-8'); ?></span>
+                    <a class="btn btn-danger btn-sm" href="logout.php"><i class="bi bi-box-arrow-right me-1"></i>Salir</a>
                 </div>
             </div>
         </div>
