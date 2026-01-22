@@ -292,6 +292,12 @@ body {
 }
 
 @media (max-width: 992px) {
+    .admin-navbar {
+        overflow: visible;
+    }
+}
+
+@media (max-width: 992px) {
     .action-buttons {
         flex-direction: column;
     }
