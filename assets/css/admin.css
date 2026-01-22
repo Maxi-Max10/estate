@@ -201,6 +201,52 @@ body {
     object-fit: contain;
 }
 
+.admin-desktop-actions {
+    flex-wrap: wrap;
+}
+
+.admin-desktop-actions .btn {
+    border-radius: 999px;
+    padding: 0.35rem 0.85rem;
+    font-weight: 600;
+    font-size: 0.85rem;
+    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(15, 23, 42, 0.2);
+    color: #fff;
+    transition: all 0.2s ease;
+}
+
+.admin-desktop-actions .btn:hover {
+    transform: translateY(-1px);
+    background: rgba(255, 255, 255, 0.18);
+    color: #fff;
+}
+
+.admin-desktop-actions .btn.btn-light {
+    background: #fff;
+    color: #0f172a;
+    border-color: #fff;
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.18);
+}
+
+.admin-desktop-actions .btn.btn-danger {
+    background: #ef4444;
+    border-color: #ef4444;
+    color: #fff;
+}
+
+.admin-desktop-actions .btn.btn-danger:hover {
+    background: #dc2626;
+    border-color: #dc2626;
+}
+
+.admin-desktop-actions .fw-semibold {
+    padding: 0.35rem 0.65rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
 .submenu-toggle .submenu-chevron {
     transition: transform 0.2s ease;
 }

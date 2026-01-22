@@ -93,7 +93,7 @@ $userName = $_SESSION['user_name'] ?? 'Administrador';
                 <button class="navbar-toggler ms-auto d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavLinks" aria-controls="adminNavLinks" aria-expanded="false" aria-label="Alternar navegación">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="d-none d-lg-flex align-items-center gap-2 text-white ms-auto">
+                <div class="d-none d-lg-flex align-items-center gap-2 text-white ms-auto admin-desktop-actions">
                     <a class="btn btn-outline-light btn-sm" href="panel-admin.php"><i class="bi bi-grid me-1"></i>Panel</a>
                     <a class="btn btn-outline-light btn-sm" href="peones-admin.php"><i class="bi bi-people me-1"></i>Peones</a>
                     <a class="btn btn-outline-light btn-sm" href="cuadrilleros-admin.php"><i class="bi bi-person-lines-fill me-1"></i>Cuadrilleros</a>
