@@ -87,13 +87,8 @@ $attendanceJson = json_encode($attendanceData, JSON_UNESCAPED_UNICODE) ?: '[]';
 					<span class="navbar-toggler-icon"></span>
 				</button>
 
-<<<<<<< HEAD
-				<div class="collapse navbar-collapse fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-sm px-6 pt-6 pb-28 text-white md:static md:inset-auto md:z-auto md:bg-transparent md:backdrop-blur-0 md:p-0" id="adminNavLinks">
-					<div class="flex h-full flex-col md:h-auto">
-=======
 				<div class="collapse navbar-collapse" id="adminNavLinks">
 					<div class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-sm px-6 pt-6 pb-28 text-white md:static md:inset-auto md:z-auto md:bg-transparent md:backdrop-blur-0 md:p-0">
->>>>>>> refs/remotes/origin/main
 						<div class="flex items-center justify-between md:hidden">
 							<span class="text-white text-base font-semibold tracking-wide">Menú administrador</span>
 							<button class="h-10 w-10 rounded-full border border-white/30 text-white text-2xl leading-none flex items-center justify-center" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavLinks" aria-label="Cerrar menú">
@@ -142,11 +137,7 @@ $attendanceJson = json_encode($attendanceData, JSON_UNESCAPED_UNICODE) ?: '[]';
 							</div>
 						</div>
 
-<<<<<<< HEAD
-						<div class="mt-auto md:hidden pt-6">
-=======
 						<div class="fixed bottom-0 left-0 right-0 md:hidden px-6 pb-6">
->>>>>>> refs/remotes/origin/main
 							<div class="flex items-center justify-between text-white/70 text-xs uppercase tracking-widest">
 								<span>Síguenos</span>
 								<div class="flex items-center gap-3 text-base">
