@@ -83,7 +83,7 @@ $attendanceJson = json_encode($attendanceData, JSON_UNESCAPED_UNICODE) ?: '[]';
 						<small class="text-white-50">Gestión integral</small>
 					</div>
 				</a>
-				<button class="navbar-toggler ms-auto d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavLinks" aria-controls="adminNavLinks" aria-expanded="false" aria-label="Alternar navegación">
+				<button class="navbar-toggler ms-auto d-lg-none admin-nav-toggle" type="button" data-nav-target="#adminNavLinks" aria-controls="adminNavLinks" aria-expanded="false" aria-label="Alternar navegación">
 					<span class="navbar-toggler-icon"></span>
 				</button>
 				<div class="d-none d-lg-flex align-items-center gap-2 text-white ms-auto admin-desktop-actions">
@@ -94,7 +94,7 @@ $attendanceJson = json_encode($attendanceData, JSON_UNESCAPED_UNICODE) ?: '[]';
 					<span class="fw-semibold text-nowrap"><i class="bi bi-person-badge me-2"></i><?php echo htmlspecialchars($userName, ENT_QUOTES, 'UTF-8'); ?></span>
 					<a class="btn btn-danger btn-sm" href="logout.php"><i class="bi bi-box-arrow-right me-1"></i>Salir</a>
 				</div>
-				<div class="collapse navbar-collapse d-lg-none" id="adminNavLinks">
+				<div class="navbar-collapse d-lg-none mobile-nav" id="adminNavLinks">
 					<div class="mt-3 d-grid gap-2">
 						<a class="btn btn-outline-light btn-sm" href="panel-admin.php"><i class="bi bi-grid me-1"></i>Panel</a>
 						<a class="btn btn-outline-light btn-sm" href="peones-admin.php"><i class="bi bi-people me-1"></i>Peones</a>
@@ -563,5 +563,6 @@ $attendanceJson = json_encode($attendanceData, JSON_UNESCAPED_UNICODE) ?: '[]';
 		window.__AttendanceData = <?php echo $attendanceJson; ?>;
 	</script>
 	<script src="assets/js/panel-admin.js"></script>
+	<script src="assets/js/admin-nav.js"></script>
 </body>
 </html>

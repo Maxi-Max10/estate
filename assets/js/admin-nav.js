@@ -7,28 +7,34 @@ document.addEventListener('DOMContentLoaded', () => {
         const target = document.querySelector(targetSelector);
         if (!target) return;
 
+        const openMenu = () => {
+            target.classList.add('is-open');
+            toggle.setAttribute('aria-expanded', 'true');
+        };
+
         const closeMenu = () => {
-            if (!target.classList.contains('show')) return;
-            target.classList.remove('show');
+            target.classList.remove('is-open');
             toggle.setAttribute('aria-expanded', 'false');
         };
 
         toggle.addEventListener('click', event => {
             event.preventDefault();
             event.stopPropagation();
-            const isOpen = target.classList.contains('show');
-            target.classList.toggle('show', !isOpen);
-            toggle.setAttribute('aria-expanded', String(!isOpen));
+            const isOpen = target.classList.contains('is-open');
+            if (isOpen) {
+                closeMenu();
+            } else {
+                openMenu();
+            }
         });
 
         document.addEventListener('click', event => {
-            if (!target.classList.contains('show')) return;
+            if (!target.classList.contains('is-open')) return;
             if (toggle.contains(event.target) || target.contains(event.target)) return;
             closeMenu();
         });
 
         target.querySelectorAll('a, button').forEach(el => {
-            if (el === toggle) return;
             el.addEventListener('click', () => {
                 closeMenu();
             });

@@ -247,6 +247,14 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
+.mobile-nav {
+    display: none;
+}
+
+.mobile-nav.is-open {
+    display: block;
+}
+
 .submenu-toggle .submenu-chevron {
     transition: transform 0.2s ease;
 }
