@@ -65,7 +65,7 @@ $userName = trim((string)($_SESSION['user_name'] ?? 'Administrador'));
                     <small class="text-white-50">Gestión de cuadrilleros</small>
                 </div>
             </a>
-            <button class="navbar-toggler ms-auto d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavLinks" aria-controls="adminNavLinks" aria-expanded="false" aria-label="Alternar navegación">
+            <button class="navbar-toggler ms-auto d-lg-none admin-nav-toggle" type="button" data-nav-target="#adminNavLinks" aria-controls="adminNavLinks" aria-expanded="false" aria-label="Alternar navegación">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="d-none d-lg-flex align-items-center gap-2 text-white ms-auto admin-desktop-actions">
