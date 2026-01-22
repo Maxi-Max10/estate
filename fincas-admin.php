@@ -623,5 +623,6 @@ $userName = $_SESSION['user_name'] ?? 'Administrador';
             filterFarms();
         });
     </script>
+    <script src="assets/js/admin-nav.js"></script>
 </body>
 </html>

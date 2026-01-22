@@ -453,5 +453,6 @@ $userName = trim((string)($_SESSION['user_name'] ?? 'Administrador'));
     }
 })();
 </script>
+<script src="assets/js/admin-nav.js"></script>
 </body>
 </html>

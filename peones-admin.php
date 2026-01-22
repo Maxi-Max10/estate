@@ -310,5 +310,6 @@ $userName = trim((string) ($_SESSION['user_name'] ?? 'Administrador'));
         window.__PeonesData = <?php echo json_encode($availablePeones, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT); ?>;
     </script>
     <script src="assets/js/peones-admin.js"></script>
+    <script src="assets/js/admin-nav.js"></script>
 </body>
 </html>

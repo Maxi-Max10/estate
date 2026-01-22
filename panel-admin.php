@@ -563,5 +563,6 @@ $attendanceJson = json_encode($attendanceData, JSON_UNESCAPED_UNICODE) ?: '[]';
 		window.__AttendanceData = <?php echo $attendanceJson; ?>;
 	</script>
 	<script src="assets/js/panel-admin.js"></script>
+	<script src="assets/js/admin-nav.js"></script>
 </body>
 </html>
