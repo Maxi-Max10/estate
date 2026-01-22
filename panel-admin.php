@@ -87,48 +87,48 @@ $attendanceJson = json_encode($attendanceData, JSON_UNESCAPED_UNICODE) ?: '[]';
 					<span class="navbar-toggler-icon"></span>
 				</button>
 
-				<div class="collapse navbar-collapse fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-sm px-6 pt-6 pb-28 text-white md:static md:inset-auto md:z-auto md:bg-transparent md:backdrop-blur-0 md:p-0" id="adminNavLinks">
-					<div class="flex h-full flex-col md:h-auto">
-						<div class="flex items-center justify-between md:hidden">
+				<div class="collapse navbar-collapse fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-sm px-6 pt-6 pb-28 text-white lg:static lg:inset-auto lg:z-auto lg:bg-transparent lg:backdrop-blur-0 lg:p-0" id="adminNavLinks">
+					<div class="flex h-full flex-col lg:h-auto">
+						<div class="flex items-center justify-between lg:hidden">
 							<span class="text-white text-base font-semibold tracking-wide">Menú administrador</span>
 							<button class="h-10 w-10 rounded-full border border-white/30 text-white text-2xl leading-none flex items-center justify-center" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavLinks" aria-label="Cerrar menú">
 								<span aria-hidden="true">×</span>
 							</button>
 						</div>
 
-						<div class="mt-6 md:mt-0 md:flex md:items-start md:justify-end md:gap-8">
-							<div class="space-y-6 md:space-y-0 md:flex md:items-start md:gap-6">
+						<div class="mt-6 lg:mt-0 lg:flex lg:items-start lg:justify-end lg:gap-8">
+							<div class="space-y-6 lg:space-y-0 lg:flex lg:items-start lg:gap-6">
 								<div class="space-y-3">
-									<button class="submenu-toggle w-full md:w-auto flex items-center justify-between text-white/80 text-xs font-semibold uppercase tracking-widest" type="button" data-bs-toggle="collapse" data-bs-target="#adminMenuMain" aria-expanded="true" aria-controls="adminMenuMain">
+									<button class="submenu-toggle w-full lg:w-auto flex items-center justify-between text-white/80 text-xs font-semibold uppercase tracking-widest" type="button" data-bs-toggle="collapse" data-bs-target="#adminMenuMain" aria-expanded="true" aria-controls="adminMenuMain">
 										Gestión
 										<i class="bi bi-chevron-right submenu-chevron"></i>
 									</button>
-									<div class="collapse show md:!block" id="adminMenuMain">
-										<a class="block py-2 text-amber-300 text-lg md:text-sm md:font-medium md:py-1" href="panel-admin.php">Panel</a>
+									<div class="collapse show lg:!block" id="adminMenuMain">
+										<a class="block py-2 text-amber-300 text-lg lg:text-sm lg:font-medium lg:py-1 lg:inline-flex lg:items-center lg:gap-2 lg:rounded-full lg:bg-white/10 lg:px-3 lg:py-2 lg:text-white" href="panel-admin.php">Panel</a>
 									</div>
 								</div>
 								<div class="space-y-3">
-									<button class="submenu-toggle w-full md:w-auto flex items-center justify-between text-white/80 text-xs font-semibold uppercase tracking-widest" type="button" data-bs-toggle="collapse" data-bs-target="#adminMenuPeople" aria-expanded="true" aria-controls="adminMenuPeople">
+									<button class="submenu-toggle w-full lg:w-auto flex items-center justify-between text-white/80 text-xs font-semibold uppercase tracking-widest" type="button" data-bs-toggle="collapse" data-bs-target="#adminMenuPeople" aria-expanded="true" aria-controls="adminMenuPeople">
 										Personas
 										<i class="bi bi-chevron-right submenu-chevron"></i>
 									</button>
-									<div class="collapse show md:!block" id="adminMenuPeople">
-										<a class="block py-2 text-white text-lg md:text-sm md:font-medium md:py-1" href="peones-admin.php">Peones</a>
-										<a class="block py-2 text-white text-lg md:text-sm md:font-medium md:py-1" href="cuadrilleros-admin.php">Cuadrilleros</a>
+									<div class="collapse show lg:!block" id="adminMenuPeople">
+										<a class="block py-2 text-white text-lg lg:text-sm lg:font-medium lg:py-1 lg:inline-flex lg:items-center lg:gap-2 lg:rounded-full lg:bg-white/10 lg:px-3 lg:py-2 lg:hover:bg-white/20" href="peones-admin.php">Peones</a>
+										<a class="block py-2 text-white text-lg lg:text-sm lg:font-medium lg:py-1 lg:inline-flex lg:items-center lg:gap-2 lg:rounded-full lg:bg-white/10 lg:px-3 lg:py-2 lg:hover:bg-white/20" href="cuadrilleros-admin.php">Cuadrilleros</a>
 									</div>
 								</div>
 								<div class="space-y-3">
-									<button class="submenu-toggle w-full md:w-auto flex items-center justify-between text-white/80 text-xs font-semibold uppercase tracking-widest" type="button" data-bs-toggle="collapse" data-bs-target="#adminMenuOps" aria-expanded="true" aria-controls="adminMenuOps">
+									<button class="submenu-toggle w-full lg:w-auto flex items-center justify-between text-white/80 text-xs font-semibold uppercase tracking-widest" type="button" data-bs-toggle="collapse" data-bs-target="#adminMenuOps" aria-expanded="true" aria-controls="adminMenuOps">
 										Operaciones
 										<i class="bi bi-chevron-right submenu-chevron"></i>
 									</button>
-									<div class="collapse show md:!block" id="adminMenuOps">
-										<a class="block py-2 text-white text-lg md:text-sm md:font-medium md:py-1" href="fincas-admin.php">Fincas</a>
+									<div class="collapse show lg:!block" id="adminMenuOps">
+										<a class="block py-2 text-white text-lg lg:text-sm lg:font-medium lg:py-1 lg:inline-flex lg:items-center lg:gap-2 lg:rounded-full lg:bg-white/10 lg:px-3 lg:py-2 lg:hover:bg-white/20" href="fincas-admin.php">Fincas</a>
 									</div>
 								</div>
 							</div>
 
-							<div class="mt-6 md:mt-0 md:flex md:items-center md:gap-3">
+							<div class="mt-6 lg:mt-0 lg:flex lg:items-center lg:gap-3">
 								<span class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-sm font-semibold text-white">
 									<i class="bi bi-person-badge"></i><?php echo htmlspecialchars($userName, ENT_QUOTES, 'UTF-8'); ?>
 								</span>
@@ -137,7 +137,7 @@ $attendanceJson = json_encode($attendanceData, JSON_UNESCAPED_UNICODE) ?: '[]';
 							</div>
 						</div>
 
-						<div class="mt-auto md:hidden pt-6">
+						<div class="mt-auto lg:hidden pt-6">
 							<div class="flex items-center justify-between text-white/70 text-xs uppercase tracking-widest">
 								<span>Síguenos</span>
 								<div class="flex items-center gap-3 text-base">
