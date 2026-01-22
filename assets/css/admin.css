@@ -17,7 +17,7 @@ body {
 .admin-hero {
     background: linear-gradient(120deg, #0f172a, #1d4ed8);
     color: #fff;
-    padding: 0.75rem 0 1rem;
+    padding: 0.6rem 0 0.6rem;
     box-shadow: 0 8px 24px rgba(15, 23, 42, 0.2);
 }
 
@@ -266,7 +266,7 @@ body {
 }
 
 .dashboard-shell {
-    margin-top: 1.5rem;
+    margin-top: 0.75rem;
     border-radius: 1.5rem;
     padding: clamp(1.25rem, 2.5vw, 2.5rem);
 }
