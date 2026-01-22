@@ -51,6 +51,14 @@ $userName = trim((string) ($_SESSION['user_name'] ?? 'Administrador'));
     <link rel="icon" href="assets/img/favicon.ico" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            corePlugins: {
+                preflight: false
+            }
+        };
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="assets/css/admin.css" rel="stylesheet">
 </head>
 <body>
@@ -68,22 +76,64 @@ $userName = trim((string) ($_SESSION['user_name'] ?? 'Administrador'));
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="adminNavLinks">
-                    <div class="ms-lg-auto d-flex flex-column flex-lg-row align-items-lg-center gap-2 gap-lg-3">
-                        <div class="admin-menu-header">
-                            <div class="admin-menu-title">Menú administrador</div>
-                            <button class="admin-menu-close" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavLinks" aria-label="Cerrar menú">
+                    <div class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-sm px-6 pt-6 pb-28 text-white md:static md:inset-auto md:z-auto md:bg-transparent md:backdrop-blur-0 md:p-0">
+                        <div class="flex items-center justify-between md:hidden">
+                            <span class="text-white text-base font-semibold tracking-wide">Menú administrador</span>
+                            <button class="h-10 w-10 rounded-full border border-white/30 text-white text-2xl leading-none flex items-center justify-center" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavLinks" aria-label="Cerrar menú">
                                 <span aria-hidden="true">×</span>
                             </button>
                         </div>
-                        <div class="admin-nav-links">
-                            <a class="admin-nav-link" href="panel-admin.php"><i class="bi bi-grid"></i>Panel</a>
-                            <a class="admin-nav-link active" href="peones-admin.php"><i class="bi bi-people"></i>Peones</a>
-                            <a class="admin-nav-link" href="cuadrilleros-admin.php"><i class="bi bi-person-lines-fill"></i>Cuadrilleros</a>
-                            <a class="admin-nav-link" href="fincas-admin.php"><i class="bi bi-map"></i>Fincas</a>
+
+                        <div class="mt-6 md:mt-0 md:flex md:items-start md:justify-end md:gap-8">
+                            <div class="space-y-6 md:space-y-0 md:flex md:items-start md:gap-6">
+                                <div class="space-y-3">
+                                    <button class="submenu-toggle w-full md:w-auto flex items-center justify-between text-white/80 text-xs font-semibold uppercase tracking-widest" type="button" data-bs-toggle="collapse" data-bs-target="#adminMenuMain" aria-expanded="true" aria-controls="adminMenuMain">
+                                        Gestión
+                                        <i class="bi bi-chevron-right submenu-chevron"></i>
+                                    </button>
+                                    <div class="collapse show md:!block" id="adminMenuMain">
+                                        <a class="block py-2 text-white text-lg md:text-sm md:font-medium md:py-1" href="panel-admin.php">Panel</a>
+                                    </div>
+                                </div>
+                                <div class="space-y-3">
+                                    <button class="submenu-toggle w-full md:w-auto flex items-center justify-between text-white/80 text-xs font-semibold uppercase tracking-widest" type="button" data-bs-toggle="collapse" data-bs-target="#adminMenuPeople" aria-expanded="true" aria-controls="adminMenuPeople">
+                                        Personas
+                                        <i class="bi bi-chevron-right submenu-chevron"></i>
+                                    </button>
+                                    <div class="collapse show md:!block" id="adminMenuPeople">
+                                        <a class="block py-2 text-amber-300 text-lg md:text-sm md:font-medium md:py-1" href="peones-admin.php">Peones</a>
+                                        <a class="block py-2 text-white text-lg md:text-sm md:font-medium md:py-1" href="cuadrilleros-admin.php">Cuadrilleros</a>
+                                    </div>
+                                </div>
+                                <div class="space-y-3">
+                                    <button class="submenu-toggle w-full md:w-auto flex items-center justify-between text-white/80 text-xs font-semibold uppercase tracking-widest" type="button" data-bs-toggle="collapse" data-bs-target="#adminMenuOps" aria-expanded="true" aria-controls="adminMenuOps">
+                                        Operaciones
+                                        <i class="bi bi-chevron-right submenu-chevron"></i>
+                                    </button>
+                                    <div class="collapse show md:!block" id="adminMenuOps">
+                                        <a class="block py-2 text-white text-lg md:text-sm md:font-medium md:py-1" href="fincas-admin.php">Fincas</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-6 md:mt-0 md:flex md:items-center md:gap-3">
+                                <span class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-sm font-semibold text-white">
+                                    <i class="bi bi-person-badge"></i><?php echo htmlspecialchars($userName, ENT_QUOTES, 'UTF-8'); ?>
+                                </span>
+                                <a class="inline-flex items-center justify-center rounded-full bg-amber-400 px-4 py-2 text-sm font-semibold text-slate-900 shadow-lg" href="panel-admin.php">Acción rápida</a>
+                                <a class="inline-flex items-center justify-center rounded-full border border-white/30 px-4 py-2 text-sm font-semibold text-white" href="logout.php"><i class="bi bi-box-arrow-right me-1"></i>Salir</a>
+                            </div>
                         </div>
-                        <div class="d-flex flex-column flex-lg-row align-items-lg-center gap-2">
-                            <span class="admin-user-badge"><i class="bi bi-person-badge"></i><?php echo htmlspecialchars($userName, ENT_QUOTES, 'UTF-8'); ?></span>
-                            <a class="btn btn-danger btn-sm admin-logout" href="logout.php"><i class="bi bi-box-arrow-right me-1"></i>Salir</a>
+
+                        <div class="fixed bottom-0 left-0 right-0 md:hidden px-6 pb-6">
+                            <div class="flex items-center justify-between text-white/70 text-xs uppercase tracking-widest">
+                                <span>Síguenos</span>
+                                <div class="flex items-center gap-3 text-base">
+                                    <a class="text-white/80 hover:text-white" href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+                                    <a class="text-white/80 hover:text-white" href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+                                    <a class="text-white/80 hover:text-white" href="#" aria-label="WhatsApp"><i class="bi bi-whatsapp"></i></a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

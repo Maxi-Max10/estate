@@ -195,68 +195,18 @@ body {
     background-size: 22px 22px;
 }
 
-.admin-menu-header {
-    display: none;
-}
-
 .admin-logo {
     width: 22px;
     height: 22px;
     object-fit: contain;
 }
 
-.admin-nav-links {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    flex-wrap: wrap;
+.submenu-toggle .submenu-chevron {
+    transition: transform 0.2s ease;
 }
 
-.admin-nav-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.4rem 0.85rem;
-    border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    color: #fff;
-    font-size: 0.85rem;
-    font-weight: 500;
-    text-decoration: none;
-    transition: all 0.2s ease;
-    background: rgba(15, 23, 42, 0.2);
-}
-
-.admin-nav-link:hover {
-    transform: translateY(-1px);
-    background: rgba(255, 255, 255, 0.18);
-    color: #fff;
-}
-
-.admin-nav-link.active {
-    background: linear-gradient(120deg, rgba(255, 255, 255, 0.2), rgba(96, 165, 250, 0.25));
-    border-color: rgba(255, 255, 255, 0.45);
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
-}
-
-.admin-user-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    background: rgba(255, 255, 255, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    padding: 0.35rem 0.7rem;
-    border-radius: 999px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: #fff;
-    white-space: nowrap;
-}
-
-.admin-logout {
-    border-radius: 999px;
-    padding: 0.4rem 0.85rem;
-    font-weight: 600;
+.submenu-toggle[aria-expanded="true"] .submenu-chevron {
+    transform: rotate(90deg);
 }
 
 .user-actions {
@@ -292,131 +242,6 @@ body {
 
     .admin-navbar .navbar-toggler {
         margin-left: 0;
-    }
-
-    .admin-navbar .navbar-collapse {
-        position: fixed;
-        inset: 0;
-        background-color: #1c615b;
-        background-image: none;
-        opacity: 1;
-        padding: 1.25rem 1.5rem 2.5rem;
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-        overflow-y: auto;
-        transform: translateY(-100%);
-        transition: transform 0.25s ease;
-        z-index: 1050;
-    }
-
-    .admin-navbar .navbar-collapse.show {
-        transform: translateY(0);
-    }
-
-    .admin-menu-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 1rem;
-    }
-
-    .admin-menu-title {
-        color: #fff;
-        font-weight: 600;
-        font-size: 1.05rem;
-        letter-spacing: 0.4px;
-    }
-
-    .admin-menu-close {
-        width: 44px;
-        height: 44px;
-        border-radius: 999px;
-        border: 1px solid rgba(255, 255, 255, 0.25);
-        background: rgba(255, 255, 255, 0.08);
-        color: #fff;
-        font-size: 1.5rem;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
-    }
-
-    .admin-menu-close:hover {
-        background: rgba(255, 255, 255, 0.18);
-    }
-
-    .admin-nav-links {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 0;
-    }
-
-    .admin-nav-link {
-        width: 100%;
-        justify-content: space-between;
-        padding: 0.95rem 0;
-        font-size: 1.02rem;
-        border: none;
-        background: transparent;
-        border-radius: 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-        color: #fff;
-        font-weight: 500;
-    }
-
-    .admin-nav-link::after {
-        content: "›";
-        font-size: 1.5rem;
-        line-height: 1;
-        color: #fbbf24;
-        margin-left: auto;
-    }
-
-    .admin-nav-link.active {
-        background: transparent;
-        border: none;
-        box-shadow: none;
-        font-weight: 700;
-    }
-
-    .admin-user-badge,
-    .admin-logout {
-        width: 100%;
-    }
-
-    .admin-logout {
-        padding: 0.75rem 1rem;
-    }
-
-    .admin-user-badge {
-        background: rgba(255, 255, 255, 0.12);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .admin-nav-links,
-    .admin-user-badge,
-    .admin-logout {
-        width: 100%;
-    }
-
-    .admin-nav-link {
-        justify-content: center;
-    }
-
-    .user-actions {
-        width: 100%;
-        gap: 0.5rem;
-        justify-content: flex-start;
-    }
-
-    .user-actions .btn {
-        flex: 1 1 calc(50% - 0.5rem);
-        text-align: center;
-    }
-
-    .user-actions .fw-semibold {
-        flex: 1 1 100%;
     }
 }
 
