@@ -81,6 +81,12 @@ $attendanceJson = json_encode($attendanceData, JSON_UNESCAPED_UNICODE) ?: '[]';
 
 				<div class="collapse navbar-collapse" id="adminNavLinks">
 					<div class="ms-lg-auto d-flex flex-column flex-lg-row align-items-lg-center gap-2 gap-lg-3">
+						<div class="admin-menu-header">
+							<div class="admin-menu-title">Menú administrador</div>
+							<button class="admin-menu-close" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavLinks" aria-label="Cerrar menú">
+								<span aria-hidden="true">×</span>
+							</button>
+						</div>
 						<div class="admin-nav-links">
 							<a class="admin-nav-link active" href="panel-admin.php"><i class="bi bi-grid"></i>Panel</a>
 							<a class="admin-nav-link" href="peones-admin.php"><i class="bi bi-people"></i>Peones</a>
