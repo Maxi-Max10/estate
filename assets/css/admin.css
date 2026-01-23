@@ -15,10 +15,10 @@ body {
 }
 
 .admin-hero {
-    background: linear-gradient(120deg, #0f172a, #1d4ed8);
-    color: #fff;
-    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.2);
-    padding: 0.25rem 0;
+    background: #e2e8f0;
+    color: #0f172a;
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.12);
+    padding: 0.5rem 0;
 }
 
 .admin-hero .navbar {
@@ -34,7 +34,7 @@ body {
 }
 
 .admin-hero .navbar-brand img {
-    filter: brightness(0) invert(1);
+    filter: none;
     height: 36px;
     max-height: 36px;
     width: auto;
@@ -42,26 +42,27 @@ body {
 }
 
 .admin-hero .nav-link {
-    color: rgba(255, 255, 255, 0.85);
+    color: #0f172a;
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     font-weight: 500;
 }
 
 .admin-hero .nav-link:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
+    background: rgba(15, 23, 42, 0.08);
+    color: #0f172a;
 }
 
 .admin-hero .nav-link.active {
-    background: rgba(255, 255, 255, 0.2);
-    color: #fff;
+    background: rgba(15, 23, 42, 0.12);
+    color: #0f172a;
 }
 
 .admin-hero .user-badge {
-    background: rgba(255, 255, 255, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    color: #0f172a;
     font-size: 0.875rem;
 }
 
