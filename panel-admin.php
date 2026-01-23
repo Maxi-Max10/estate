@@ -87,7 +87,7 @@ $attendanceJson = json_encode($attendanceData, JSON_UNESCAPED_UNICODE) ?: '[]';
 					<span class="navbar-toggler-icon"></span>
 				</button>
 				
-				<ul class="navbar-nav mb-2 mb-lg-0 align-items-lg-center gap-2 d-none d-lg-flex me-auto">
+				<ul class="navbar-nav mb-2 mb-lg-0 align-items-lg-center gap-2 d-none d-lg-flex ms-auto">
 					<li class="nav-item">
 						<a class="nav-link active" href="panel-admin.php">
 							<i class="bi bi-grid-fill me-1"></i>Panel
@@ -109,7 +109,7 @@ $attendanceJson = json_encode($attendanceData, JSON_UNESCAPED_UNICODE) ?: '[]';
 						</a>
 					</li>
 				</ul>
-				<div class="d-none d-lg-flex align-items-center gap-2">
+				<div class="d-none d-lg-flex align-items-center gap-2 ms-3">
 					<span class="navbar-text px-3 py-1 rounded-pill user-badge">
 						<i class="bi bi-person-badge me-1"></i><?php echo htmlspecialchars($userName, ENT_QUOTES, 'UTF-8'); ?>
 					</span>
@@ -117,7 +117,6 @@ $attendanceJson = json_encode($attendanceData, JSON_UNESCAPED_UNICODE) ?: '[]';
 						<i class="bi bi-box-arrow-right me-1"></i>Salir
 					</a>
 				</div>
-				</ul>
 				
 				<div class="collapse navbar-collapse d-lg-none" id="adminNavbar">
 					<ul class="navbar-nav mt-2">
