@@ -81,34 +81,36 @@ $userName = $_SESSION['user_name'] ?? 'Administrador';
 </head>
 <body>
     <header class="admin-hero">
-        <nav class="navbar navbar-dark admin-navbar navbar-expand-lg">
-            <div class="container-fluid py-2">
-                <a class="admin-brand d-flex align-items-center gap-2 gap-sm-3 flex-grow-1" href="panel-admin.php">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary bg-gradient shadow-sm">
+            <div class="container-fluid">
+                <a class="navbar-brand d-flex align-items-center gap-2" href="panel-admin.php">
                     <img src="assets/img/logo.png" class="admin-logo" alt="Estate" />
                     <div class="d-flex flex-column">
-                        <span class="navbar-brand fs-6 mb-0">Estate · Panel Administrador</span>
+                        <span class="fw-semibold">Estate · Panel Administrador</span>
                         <small class="text-white-50">Vista de fincas</small>
                     </div>
                 </a>
-                <button class="navbar-toggler ms-auto d-lg-none admin-nav-toggle" type="button" data-nav-target="#adminNavLinks" aria-controls="adminNavLinks" aria-expanded="false" aria-label="Alternar navegación">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavLinks" aria-controls="adminNavLinks" aria-expanded="false" aria-label="Alternar navegación">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="d-none d-lg-flex align-items-center gap-2 text-white ms-auto admin-desktop-actions">
-                    <a class="btn btn-outline-light btn-sm" href="panel-admin.php"><i class="bi bi-grid me-1"></i>Panel</a>
-                    <a class="btn btn-outline-light btn-sm" href="peones-admin.php"><i class="bi bi-people me-1"></i>Peones</a>
-                    <a class="btn btn-outline-light btn-sm" href="cuadrilleros-admin.php"><i class="bi bi-person-lines-fill me-1"></i>Cuadrilleros</a>
-                    <a class="btn btn-light btn-sm text-dark" href="fincas-admin.php"><i class="bi bi-map me-1"></i>Fincas</a>
-                    <span class="fw-semibold text-nowrap"><i class="bi bi-person-badge me-2"></i><?php echo htmlspecialchars($userName, ENT_QUOTES, 'UTF-8'); ?></span>
-                    <a class="btn btn-danger btn-sm" href="logout.php"><i class="bi bi-box-arrow-right me-1"></i>Salir</a>
-                </div>
-                <div class="navbar-collapse d-lg-none mobile-nav" id="adminNavLinks">
-                    <div class="mt-3 d-grid gap-2">
-                        <a class="btn btn-outline-light btn-sm" href="panel-admin.php"><i class="bi bi-grid me-1"></i>Panel</a>
-                        <a class="btn btn-outline-light btn-sm" href="peones-admin.php"><i class="bi bi-people me-1"></i>Peones</a>
-                        <a class="btn btn-outline-light btn-sm" href="cuadrilleros-admin.php"><i class="bi bi-person-lines-fill me-1"></i>Cuadrilleros</a>
-                        <a class="btn btn-light btn-sm text-dark" href="fincas-admin.php"><i class="bi bi-map me-1"></i>Fincas</a>
-                        <span class="fw-semibold text-white"><i class="bi bi-person-badge me-2"></i><?php echo htmlspecialchars($userName, ENT_QUOTES, 'UTF-8'); ?></span>
-                        <a class="btn btn-danger btn-sm" href="logout.php"><i class="bi bi-box-arrow-right me-1"></i>Salir</a>
+                <div class="collapse navbar-collapse" id="adminNavLinks">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" href="panel-admin.php"><i class="bi bi-grid me-1"></i>Panel</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="peones-admin.php"><i class="bi bi-people me-1"></i>Peones</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="cuadrilleros-admin.php"><i class="bi bi-person-lines-fill me-1"></i>Cuadrilleros</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="fincas-admin.php"><i class="bi bi-map me-1"></i>Fincas</a>
+                        </li>
+                    </ul>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="navbar-text text-white"><i class="bi bi-person-badge me-2"></i><?php echo htmlspecialchars($userName, ENT_QUOTES, 'UTF-8'); ?></span>
+                        <a class="btn btn-outline-light btn-sm" href="logout.php"><i class="bi bi-box-arrow-right me-1"></i>Salir</a>
                     </div>
                 </div>
             </div>
