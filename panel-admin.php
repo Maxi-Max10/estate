@@ -77,7 +77,7 @@ $attendanceJson = json_encode($attendanceData, JSON_UNESCAPED_UNICODE) ?: '[]';
 		<nav class="navbar navbar-expand-lg navbar-light bg-light admin-navbar">
 			<div class="container-fluid">
 				<a class="navbar-brand d-flex align-items-center gap-2" href="panel-admin.php">
-					<div class="d-none d-sm-flex flex-column">
+					<div class="d-flex flex-column">
 						<span class="fw-semibold mb-0">Panel Administrador</span>
 						<small class="text-white-50" style="font-size: 0.75rem;">Gestión integral</small>
 					</div>

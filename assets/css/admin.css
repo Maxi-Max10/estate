@@ -15,10 +15,11 @@ body {
 }
 
 .admin-hero {
-    background: #e2e8f0;
-    color: #0f172a;
-    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.12);
-    padding: 0.5rem 0;
+    background: #f8f9fa;
+    color: #212529;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+    border-bottom: 1px solid #e2e8f0;
+    padding: 0.25rem 0;
 }
 
 .admin-hero .navbar {
@@ -42,27 +43,13 @@ body {
 }
 
 .admin-hero .nav-link {
-    color: #0f172a;
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    transition: all 0.2s ease;
     font-weight: 500;
 }
 
-.admin-hero .nav-link:hover {
-    background: rgba(15, 23, 42, 0.08);
-    color: #0f172a;
-}
-
-.admin-hero .nav-link.active {
-    background: rgba(15, 23, 42, 0.12);
-    color: #0f172a;
-}
-
 .admin-hero .user-badge {
-    background: #f1f5f9;
-    border: 1px solid #e2e8f0;
-    color: #0f172a;
+    background: #ffffff;
+    border: 1px solid #dee2e6;
+    color: #212529;
     font-size: 0.875rem;
 }
 
@@ -177,7 +164,7 @@ body {
 }
 
 .admin-navbar {
-    background: transparent;
+    background: inherit;
     border: none;
     box-shadow: none;
     border-radius: 0;
