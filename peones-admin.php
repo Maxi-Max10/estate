@@ -76,7 +76,7 @@ $userName = trim((string) ($_SESSION['user_name'] ?? 'Administrador'));
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 
-                <ul class="navbar-nav mb-2 mb-lg-0 align-items-lg-center gap-2 d-none d-lg-flex me-auto">
+                <ul class="navbar-nav mb-2 mb-lg-0 align-items-lg-center gap-2 d-none d-lg-flex">
                     <li class="nav-item">
                         <a class="nav-link" href="panel-admin.php">
                             <i class="bi bi-grid-fill me-1"></i>Panel
@@ -98,7 +98,7 @@ $userName = trim((string) ($_SESSION['user_name'] ?? 'Administrador'));
                         </a>
                     </li>
                 </ul>
-                <div class="d-none d-lg-flex align-items-center gap-2">
+                <div class="d-none d-lg-flex align-items-center gap-2 ms-auto">
                     <a class="btn btn-danger btn-sm" href="logout.php">
                         <i class="bi bi-box-arrow-right me-1"></i>Salir
                     </a>
