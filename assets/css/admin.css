@@ -44,6 +44,17 @@ body {
 
 .admin-hero .nav-link {
     font-weight: 500;
+    color: #212529;
+}
+
+.admin-hero .nav-link:hover,
+.admin-hero .nav-link:focus {
+    color: #0f172a;
+}
+
+.admin-hero .navbar-brand,
+.admin-hero .navbar-brand:hover {
+    color: #212529;
 }
 
 .admin-hero .user-badge {
@@ -217,6 +228,10 @@ body {
     .admin-navbar .navbar-nav {
         flex-direction: row;
         align-items: center;
+    }
+
+    .admin-navbar .d-lg-flex {
+        display: flex !important;
     }
 }
 

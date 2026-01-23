@@ -61,7 +61,7 @@ $userName = trim((string)($_SESSION['user_name'] ?? 'Administrador'));
             <a class="navbar-brand d-flex align-items-center gap-2" href="panel-admin.php">
                 <div class="d-flex flex-column">
                     <span class="fw-semibold mb-0">Panel Administrador</span>
-                    <small class="text-white-50" style="font-size: 0.75rem;">Gestión de cuadrilleros</small>
+                    <small class="text-muted" style="font-size: 0.75rem;">Gestión de cuadrilleros</small>
                 </div>
             </a>
             
@@ -69,8 +69,8 @@ $userName = trim((string)($_SESSION['user_name'] ?? 'Administrador'));
                 <span class="navbar-toggler-icon"></span>
             </button>
             
-            <div class="collapse navbar-collapse" id="adminNavbar">
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center gap-2">
+            <div class="d-none d-lg-flex align-items-center gap-2 ms-auto">
+                <ul class="navbar-nav mb-0 align-items-center gap-2">
                     <li class="nav-item">
                         <a class="nav-link" href="panel-admin.php">
                             <i class="bi bi-grid-fill me-1"></i>Panel
@@ -92,9 +92,39 @@ $userName = trim((string)($_SESSION['user_name'] ?? 'Administrador'));
                         </a>
                     </li>
                 </ul>
-                <a class="btn btn-danger btn-sm ms-lg-3 mt-2 mt-lg-0" href="logout.php">
+                <a class="btn btn-danger btn-sm" href="logout.php">
                     <i class="bi bi-box-arrow-right me-1"></i>Salir
                 </a>
+            </div>
+            
+            <div class="collapse navbar-collapse d-lg-none" id="adminNavbar">
+                <ul class="navbar-nav mt-2">
+                    <li class="nav-item">
+                        <a class="nav-link" href="panel-admin.php">
+                            <i class="bi bi-grid-fill me-1"></i>Panel
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="peones-admin.php">
+                            <i class="bi bi-people-fill me-1"></i>Peones
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="cuadrilleros-admin.php">
+                            <i class="bi bi-person-lines-fill me-1"></i>Cuadrilleros
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="fincas-admin.php">
+                            <i class="bi bi-map-fill me-1"></i>Fincas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-danger btn-sm mt-2" href="logout.php">
+                            <i class="bi bi-box-arrow-right me-1"></i>Salir
+                        </a>
+                    </li>
+                </ul>
             </div>
         </div>
     </nav>
