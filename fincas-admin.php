@@ -81,37 +81,53 @@ $userName = $_SESSION['user_name'] ?? 'Administrador';
 </head>
 <body>
     <header class="admin-hero">
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary bg-gradient shadow-sm">
+        <nav class="navbar navbar-expand-lg navbar-dark">
             <div class="container-fluid">
                 <a class="navbar-brand d-flex align-items-center gap-2" href="panel-admin.php">
-                    <img src="assets/img/logo.png" class="admin-logo" alt="Estate" />
-                    <div class="d-flex flex-column">
-                        <span class="fw-semibold">Estate · Panel Administrador</span>
-                        <small class="text-white-50">Vista de fincas</small>
+                    <img src="assets/img/logo.png" height="40" alt="Estate">
+                    <div class="d-none d-sm-flex flex-column">
+                        <span class="fw-semibold mb-0">Panel Administrador</span>
+                        <small class="text-white-50" style="font-size: 0.75rem;">Vista de fincas</small>
                     </div>
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavLinks" aria-controls="adminNavLinks" aria-expanded="false" aria-label="Alternar navegación">
+                
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavbar" aria-controls="adminNavbar" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="adminNavLinks">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                
+                <div class="collapse navbar-collapse" id="adminNavbar">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center gap-2">
                         <li class="nav-item">
-                            <a class="nav-link" href="panel-admin.php"><i class="bi bi-grid me-1"></i>Panel</a>
+                            <a class="nav-link" href="panel-admin.php">
+                                <i class="bi bi-grid-fill me-1"></i>Panel
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="peones-admin.php"><i class="bi bi-people me-1"></i>Peones</a>
+                            <a class="nav-link" href="peones-admin.php">
+                                <i class="bi bi-people-fill me-1"></i>Peones
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="cuadrilleros-admin.php"><i class="bi bi-person-lines-fill me-1"></i>Cuadrilleros</a>
+                            <a class="nav-link" href="cuadrilleros-admin.php">
+                                <i class="bi bi-person-lines-fill me-1"></i>Cuadrilleros
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="fincas-admin.php"><i class="bi bi-map me-1"></i>Fincas</a>
+                            <a class="nav-link active" href="fincas-admin.php">
+                                <i class="bi bi-map-fill me-1"></i>Fincas
+                            </a>
+                        </li>
+                        <li class="nav-item d-none d-lg-block">
+                            <span class="navbar-text px-3 py-1 rounded-pill user-badge">
+                                <i class="bi bi-person-badge me-1"></i><?php echo htmlspecialchars($userName, ENT_QUOTES, 'UTF-8'); ?>
+                            </span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-danger btn-sm" href="logout.php">
+                                <i class="bi bi-box-arrow-right me-1"></i>Salir
+                            </a>
                         </li>
                     </ul>
-                    <div class="d-flex align-items-center gap-2">
-                        <span class="navbar-text text-white"><i class="bi bi-person-badge me-2"></i><?php echo htmlspecialchars($userName, ENT_QUOTES, 'UTF-8'); ?></span>
-                        <a class="btn btn-outline-light btn-sm" href="logout.php"><i class="bi bi-box-arrow-right me-1"></i>Salir</a>
-                    </div>
                 </div>
             </div>
         </nav>
