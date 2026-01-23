@@ -18,14 +18,27 @@ body {
     background: linear-gradient(120deg, #0f172a, #1d4ed8);
     color: #fff;
     box-shadow: 0 8px 24px rgba(15, 23, 42, 0.2);
+    padding: 0.25rem 0;
 }
 
 .admin-hero .navbar {
     padding: 0.5rem 0;
+    min-height: 64px;
+}
+
+.admin-hero .navbar-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 40px;
 }
 
 .admin-hero .navbar-brand img {
     filter: brightness(0) invert(1);
+    height: 36px;
+    max-height: 36px;
+    width: auto;
+    object-fit: contain;
 }
 
 .admin-hero .nav-link {
