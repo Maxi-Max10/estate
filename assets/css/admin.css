@@ -211,6 +211,8 @@ body {
     .admin-navbar .navbar-nav {
         flex-direction: row;
         align-items: center;
+        margin-left: auto;
+        justify-content: flex-end;
     }
 }
 
