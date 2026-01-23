@@ -214,16 +214,9 @@ body {
 }
 
 @media (min-width: 992px) {
-    .admin-navbar .navbar-collapse {
-        display: flex !important;
-        flex-basis: auto;
-    }
-
     .admin-navbar .navbar-nav {
         flex-direction: row;
         align-items: center;
-        margin-left: auto;
-        justify-content: flex-end;
     }
 }
 
