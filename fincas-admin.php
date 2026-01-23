@@ -94,8 +94,41 @@ $userName = $_SESSION['user_name'] ?? 'Administrador';
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 
-                <div class="collapse navbar-collapse" id="adminNavbar">
-                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center gap-2">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center gap-2 d-none d-lg-flex">
+                    <li class="nav-item">
+                        <a class="nav-link" href="panel-admin.php">
+                            <i class="bi bi-grid-fill me-1"></i>Panel
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="peones-admin.php">
+                            <i class="bi bi-people-fill me-1"></i>Peones
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cuadrilleros-admin.php">
+                            <i class="bi bi-person-lines-fill me-1"></i>Cuadrilleros
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="fincas-admin.php">
+                            <i class="bi bi-map-fill me-1"></i>Fincas
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <span class="navbar-text px-3 py-1 rounded-pill user-badge">
+                            <i class="bi bi-person-badge me-1"></i><?php echo htmlspecialchars($userName, ENT_QUOTES, 'UTF-8'); ?>
+                        </span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-danger btn-sm" href="logout.php">
+                            <i class="bi bi-box-arrow-right me-1"></i>Salir
+                        </a>
+                    </li>
+                </ul>
+                
+                <div class="collapse navbar-collapse d-lg-none" id="adminNavbar">
+                    <ul class="navbar-nav mt-2">
                         <li class="nav-item">
                             <a class="nav-link" href="panel-admin.php">
                                 <i class="bi bi-grid-fill me-1"></i>Panel
@@ -116,13 +149,13 @@ $userName = $_SESSION['user_name'] ?? 'Administrador';
                                 <i class="bi bi-map-fill me-1"></i>Fincas
                             </a>
                         </li>
-                        <li class="nav-item d-none d-lg-block">
+                        <li class="nav-item">
                             <span class="navbar-text px-3 py-1 rounded-pill user-badge">
                                 <i class="bi bi-person-badge me-1"></i><?php echo htmlspecialchars($userName, ENT_QUOTES, 'UTF-8'); ?>
                             </span>
                         </li>
                         <li class="nav-item">
-                            <a class="btn btn-danger btn-sm" href="logout.php">
+                            <a class="btn btn-danger btn-sm mt-2" href="logout.php">
                                 <i class="bi bi-box-arrow-right me-1"></i>Salir
                             </a>
                         </li>
