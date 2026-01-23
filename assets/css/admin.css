@@ -66,6 +66,17 @@ body {
     .admin-hero .btn-danger {
         margin-top: 0.5rem;
     }
+
+    .admin-navbar .navbar-collapse {
+        background: #ffffff;
+        border-radius: 0.5rem;
+        padding: 0.75rem;
+        box-shadow: 0 8px 18px rgba(15, 23, 42, 0.12);
+    }
+
+    .admin-navbar .navbar-collapse .nav-link {
+        color: #212529 !important;
+    }
 }
 
 .admin-hero h1 {
