@@ -20,7 +20,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $user = $stmt->fetch();
 
         $storedPassword = $user['password_hash'] ?? '';
-        if ($user && hash_equals($storedPassword, $password)) {
+        $isHashed = is_string($storedPassword) && preg_match('/^\$2y\$|^\$2a\$|^\$2b\$|^\$argon2/', $storedPassword);
+        $isValid = false;
+
+        if ($user && $isHashed) {
+            $isValid = password_verify($password, $storedPassword);
+        } elseif ($user) {
+            $isValid = hash_equals($storedPassword, $password);
+        }
+
+        if ($isValid) {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['user_email'] = $user['email'];
             $_SESSION['user_role'] = $user['rol'];
