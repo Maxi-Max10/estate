@@ -1,9 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const fallbackFincas = [
-        { id: 1, nombre: 'Finca Norte', link_ubicacion: '#', descripcion: '', tarea_asignada: '', observacion: '' },
-        { id: 2, nombre: 'Finca Sur', link_ubicacion: '#', descripcion: '', tarea_asignada: '', observacion: '' },
-        { id: 3, nombre: 'Finca Central', link_ubicacion: '#', descripcion: '', tarea_asignada: '', observacion: '' },
-    ];
+    const fallbackFincas = [];
 
     const normalizeFinca = finca => ({
         id: Number(finca.id) || 0,
@@ -34,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     };
 
-    let fincasData = Array.isArray(window.__FincasData) && window.__FincasData.length ? window.__FincasData.map(normalizeFinca) : fallbackFincas.map(normalizeFinca);
+    let fincasData = Array.isArray(window.__FincasData) ? window.__FincasData.map(normalizeFinca) : fallbackFincas.map(normalizeFinca);
     let workersData = Array.isArray(window.__PeonesData) ? window.__PeonesData.map(normalizePeon) : [];
 
     const normalizeAttendance = r => {
