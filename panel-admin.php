@@ -380,6 +380,12 @@ $attendanceJson = json_encode($attendanceData, JSON_UNESCAPED_UNICODE) ?: '[]';
 
 			<div class="card border-0 shadow-sm">
 				<div class="card-body">
+					<div class="d-flex align-items-center justify-content-between mb-3">
+						<div>
+							<h2 class="h5 mb-0">Asistencias</h2>
+							<small class="text-muted">Resumen de registros por fecha</small>
+						</div>
+					</div>
 					<div class="d-flex flex-column flex-xl-row align-items-xl-end justify-content-between gap-3">
 						<div class="row g-3 flex-grow-1">
 							<div class="col-md-4">
