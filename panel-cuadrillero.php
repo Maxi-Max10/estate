@@ -50,7 +50,7 @@ $farmsCount = count($assignedFarms);
 $farmsWithTask = 0;
 $farmsWithObservations = 0;
 foreach ($assignedFarms as $farm) {
-    if (trim((string) ($farm['tarea'] ?? '')) !== '') {
+    if (trim((string) ($farm['tarea_asignada'] ?? '')) !== '') {
         $farmsWithTask++;
     }
     if (trim((string) ($farm['observacion'] ?? '')) !== '') {
