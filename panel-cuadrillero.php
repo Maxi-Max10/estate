@@ -214,40 +214,6 @@ $dynamicGreeting .= ', ' . htmlspecialchars($userName, ENT_QUOTES, 'UTF-8');
             <div class="card assigned-card p-4 mb-4">
                 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-3">
                     <div>
-                        <h2 class="h5 mb-1">Tareas planificadas</h2>
-                        <small class="text-muted">Listado de tareas asignadas por finca.</small>
-                    </div>
-                </div>
-                <?php
-                    $tasks = array_filter($assignedFarms, static function (array $farm): bool {
-                        return trim((string) ($farm['tarea_asignada'] ?? '')) !== '';
-                    });
-                ?>
-                <?php if ($tasks): ?>
-                    <div class="list-group">
-                        <?php foreach ($tasks as $taskFarm): ?>
-                            <div class="list-group-item d-flex flex-column gap-1">
-                                <div class="fw-semibold">
-                                    <i class="bi bi-geo-alt me-1"></i><?php echo htmlspecialchars((string) $taskFarm['nombre'], ENT_QUOTES, 'UTF-8'); ?>
-                                </div>
-                                <div class="text-muted small">
-                                    <?php echo nl2br(htmlspecialchars((string) $taskFarm['tarea_asignada'], ENT_QUOTES, 'UTF-8')); ?>
-                                </div>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
-                <?php else: ?>
-                    <div class="assigned-empty-state text-center text-muted">
-                        <i class="bi bi-clipboard-x display-5 mb-2"></i>
-                        <p class="mb-1">No hay tareas planificadas todavía.</p>
-                        <small>El administrador debe asignar tareas a las fincas.</small>
-                    </div>
-                <?php endif; ?>
-            </div>
-
-            <div class="card assigned-card p-4 mb-4">
-                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-3">
-                    <div>
                         <h2 class="h5 mb-1">Mis fincas asignadas</h2>
                         <small class="text-muted">Consulta las tareas, links de ubicación y observaciones pendientes.</small>
                     </div>
