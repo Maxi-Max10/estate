@@ -87,7 +87,7 @@ $attendanceJson = json_encode($attendanceData, JSON_UNESCAPED_UNICODE) ?: '[]';
 					<span class="navbar-toggler-icon"></span>
 				</button>
 				
-				<div class="d-none d-lg-flex align-items-center gap-2 ms-auto w-100 justify-content-end">
+				<div class="d-none d-lg-flex admin-navbar-right">
 					<ul class="navbar-nav mb-0 align-items-center gap-2">
 						<li class="nav-item">
 							<a class="nav-link active" href="panel-admin.php">

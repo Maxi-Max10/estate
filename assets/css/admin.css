@@ -198,6 +198,15 @@ body {
     letter-spacing: 0.2px;
 }
 
+.admin-navbar-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    justify-content: flex-end;
+    flex: 1 1 auto;
+}
+
 .admin-navbar .navbar-brand img {
     height: 40px;
     width: auto;
