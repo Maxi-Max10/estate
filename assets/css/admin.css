@@ -219,6 +219,11 @@ body {
     border-radius: 999px;
 }
 
+.admin-navbar .collapse,
+.admin-navbar .collapsing {
+    visibility: visible !important;
+}
+
 @media (max-width: 991.98px) {
     .admin-navbar .navbar-collapse {
         padding-top: 0.5rem;
@@ -237,6 +242,7 @@ body {
     }
 
     .admin-navbar .navbar-collapse {
+        display: flex !important;
         justify-content: center;
         gap: 0.75rem;
     }
