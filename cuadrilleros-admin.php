@@ -69,7 +69,7 @@ $userName = trim((string)($_SESSION['user_name'] ?? 'Administrador'));
                 <span class="navbar-toggler-icon"></span>
             </button>
             
-            <div class="d-none d-lg-flex admin-navbar-right">
+            <div class="d-none d-lg-flex ms-auto admin-navbar-right">
                 <ul class="navbar-nav mb-0 align-items-center gap-2">
                     <li class="nav-item">
                         <a class="nav-link" href="panel-admin.php">
