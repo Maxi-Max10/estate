@@ -69,16 +69,6 @@ $userName = $_SESSION['user_name'] ?? 'Administrador';
     <link rel="icon" href="assets/img/favicon.ico" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-    <script>
-        window.tailwind = {
-            config: {
-                corePlugins: {
-                    preflight: false
-                }
-            }
-        };
-    </script>
-    <script src="https://cdn.tailwindcss.com"></script>
     <link href="assets/css/admin.css" rel="stylesheet">
 </head>
 <body>
