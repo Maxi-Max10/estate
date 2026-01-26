@@ -63,9 +63,11 @@ $attendanceJson = json_encode($attendanceData, JSON_UNESCAPED_UNICODE) ?: '[]';
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 	<script>
-		tailwind.config = {
-			corePlugins: {
-				preflight: false
+		window.tailwind = {
+			config: {
+				corePlugins: {
+					preflight: false
+				}
 			}
 		};
 	</script>
