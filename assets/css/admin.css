@@ -234,6 +234,10 @@ body {
 }
 
 @media (min-width: 992px) {
+    .admin-navbar .container-fluid {
+        position: relative;
+    }
+
     .admin-navbar .navbar-nav {
         flex-direction: row;
         align-items: center;
@@ -241,6 +245,13 @@ body {
 
     .admin-navbar .d-lg-flex {
         display: flex !important;
+    }
+
+    .admin-navbar-right {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        width: auto;
     }
 }
 
