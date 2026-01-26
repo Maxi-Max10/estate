@@ -219,6 +219,13 @@ body {
     border-radius: 999px;
 }
 
+/* Deshabilitar collapse en navbar admin */
+.admin-navbar .collapse {
+    display: block !important;
+    height: auto !important;
+    visibility: visible !important;
+}
+
 
 @media (max-width: 991.98px) {
     .admin-navbar .navbar-collapse {
