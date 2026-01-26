@@ -20,8 +20,6 @@ body {
     box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
     border-bottom: 1px solid #e2e8f0;
     padding: 0.25rem 0;
-    position: relative;
-    overflow: visible;
 }
 
 .admin-hero .navbar {
@@ -29,9 +27,6 @@ body {
     min-height: 64px;
 }
 
-.admin-navbar .container-fluid {
-    position: relative;
-}
 
 .admin-hero .navbar-brand {
     display: inline-flex;
@@ -89,11 +84,6 @@ body {
         border-radius: 0.5rem;
         padding: 0.75rem;
         box-shadow: 0 8px 18px rgba(15, 23, 42, 0.12);
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        z-index: 1050;
     }
 
     .admin-navbar .navbar-collapse .nav-link {
@@ -209,14 +199,6 @@ body {
     letter-spacing: 0.2px;
 }
 
-.admin-navbar-right {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    justify-content: center;
-    flex: 1 1 auto;
-    width: 100%;
-}
 
 .admin-navbar .navbar-brand img {
     height: 40px;
@@ -245,10 +227,6 @@ body {
 }
 
 @media (min-width: 992px) {
-    .admin-navbar .container-fluid {
-        position: relative;
-    }
-
     .admin-navbar .navbar-nav {
         flex-direction: row;
         align-items: center;
@@ -258,12 +236,9 @@ body {
         display: flex !important;
     }
 
-    .admin-navbar-right {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        width: max-content;
+    .admin-navbar .navbar-collapse {
+        justify-content: center;
+        gap: 0.75rem;
     }
 }
 

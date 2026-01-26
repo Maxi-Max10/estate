@@ -69,8 +69,8 @@ $userName = trim((string)($_SESSION['user_name'] ?? 'Administrador'));
                 <span class="navbar-toggler-icon"></span>
             </button>
             
-            <div class="d-none d-lg-flex admin-navbar-right">
-                <ul class="navbar-nav mb-0 align-items-center gap-2">
+            <div class="collapse navbar-collapse" id="adminNavbar">
+                <ul class="navbar-nav mb-2 mb-lg-0 align-items-lg-center gap-lg-2">
                     <li class="nav-item">
                         <a class="nav-link" href="panel-admin.php">
                             <i class="bi bi-grid-fill me-1"></i>Panel
@@ -92,39 +92,9 @@ $userName = trim((string)($_SESSION['user_name'] ?? 'Administrador'));
                         </a>
                     </li>
                 </ul>
-                <a class="btn btn-danger btn-sm" href="logout.php">
+                <a class="btn btn-danger btn-sm mt-2 mt-lg-0 ms-lg-3" href="logout.php">
                     <i class="bi bi-box-arrow-right me-1"></i>Salir
                 </a>
-            </div>
-            
-            <div class="collapse navbar-collapse d-lg-none" id="adminNavbar">
-                <ul class="navbar-nav mt-2">
-                    <li class="nav-item">
-                        <a class="nav-link" href="panel-admin.php">
-                            <i class="bi bi-grid-fill me-1"></i>Panel
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="peones-admin.php">
-                            <i class="bi bi-people-fill me-1"></i>Peones
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="cuadrilleros-admin.php">
-                            <i class="bi bi-person-lines-fill me-1"></i>Cuadrilleros
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="fincas-admin.php">
-                            <i class="bi bi-map-fill me-1"></i>Fincas
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="btn btn-danger btn-sm mt-2" href="logout.php">
-                            <i class="bi bi-box-arrow-right me-1"></i>Salir
-                        </a>
-                    </li>
-                </ul>
             </div>
         </div>
     </nav>
