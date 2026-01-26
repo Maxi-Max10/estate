@@ -250,8 +250,9 @@ body {
     .admin-navbar-right {
         position: absolute;
         left: 50%;
-        transform: translateX(-50%);
-        width: auto;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: max-content;
     }
 }
 
