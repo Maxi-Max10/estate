@@ -39,6 +39,46 @@ try {
     error_log('Error obteniendo peones asignados: ' . $e->getMessage());
 }
 
+$taskStandards = [];
+$cuadrilleroNotifications = [];
+try {
+    $pdo->exec(
+        'CREATE TABLE IF NOT EXISTS tareas_estandar (
+            id INT NOT NULL AUTO_INCREMENT,
+            nombre VARCHAR(150) NOT NULL,
+            unidad VARCHAR(80) NOT NULL DEFAULT "unidades",
+            cantidad_normal INT NOT NULL DEFAULT 0,
+            actualizado_en TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY (id),
+            UNIQUE KEY uq_tarea_nombre (nombre)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci'
+    );
+    $pdo->exec(
+        'CREATE TABLE IF NOT EXISTS notificaciones (
+            id INT NOT NULL AUTO_INCREMENT,
+            rol_destino ENUM("admin","cuadrillero") NOT NULL,
+            usuario_id INT NULL,
+            titulo VARCHAR(150) NOT NULL,
+            mensaje TEXT NOT NULL,
+            leida TINYINT(1) NOT NULL DEFAULT 0,
+            created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (id),
+            KEY idx_rol (rol_destino),
+            KEY idx_usuario (usuario_id),
+            KEY idx_fecha (created_at)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci'
+    );
+
+    $stmtStandards = $pdo->query('SELECT id, nombre, unidad, cantidad_normal FROM tareas_estandar ORDER BY nombre ASC');
+    $taskStandards = $stmtStandards->fetchAll(PDO::FETCH_ASSOC) ?: [];
+
+    $stmtNotifs = $pdo->prepare('SELECT titulo, mensaje, created_at FROM notificaciones WHERE rol_destino = :rol AND usuario_id = :uid ORDER BY created_at DESC LIMIT 10');
+    $stmtNotifs->execute([':rol' => 'cuadrillero', ':uid' => $userId]);
+    $cuadrilleroNotifications = $stmtNotifs->fetchAll(PDO::FETCH_ASSOC) ?: [];
+} catch (Throwable $e) {
+    error_log('Error cargando estándares/notificaciones: ' . $e->getMessage());
+}
+
 // Perfil básico del cuadrillero (se podría ampliar consultando usuarios)
 $cuadrilleroProfile = [
     'nombre' => $userName,
@@ -86,6 +126,62 @@ $cuadrilleroStats = [
     'workersActive' => $workersActive,
     'workersInactive' => $workersInactive,
 ];
+
+$photoStatus = trim((string) ($_GET['foto'] ?? ''));
+$photoAlert = null;
+$photoAlertClass = 'success';
+if ($photoStatus !== '') {
+    switch ($photoStatus) {
+        case 'ok':
+            $photoAlert = 'Foto cargada correctamente.';
+            $photoAlertClass = 'success';
+            break;
+        case 'size':
+            $photoAlert = 'La foto supera el tamaño permitido.';
+            $photoAlertClass = 'warning';
+            break;
+        case 'type':
+            $photoAlert = 'Formato no permitido. Usa JPG, PNG o WEBP.';
+            $photoAlertClass = 'warning';
+            break;
+        case 'missing':
+            $photoAlert = 'Selecciona una foto antes de subir.';
+            $photoAlertClass = 'warning';
+            break;
+        case 'forbidden':
+            $photoAlert = 'No tienes permiso para cargar fotos de este peón.';
+            $photoAlertClass = 'danger';
+            break;
+        default:
+            $photoAlert = 'No se pudo cargar la foto. Inténtalo nuevamente.';
+            $photoAlertClass = 'danger';
+            break;
+    }
+}
+
+$rendStatus = trim((string) ($_GET['rend'] ?? ''));
+$rendAlert = null;
+$rendAlertClass = 'success';
+if ($rendStatus !== '') {
+    switch ($rendStatus) {
+        case 'ok':
+            $rendAlert = 'Rendimiento guardado correctamente.';
+            $rendAlertClass = 'success';
+            break;
+        case 'low':
+            $rendAlert = 'Rendimiento por debajo del estándar. Se notificó al administrador.';
+            $rendAlertClass = 'warning';
+            break;
+        case 'missing':
+            $rendAlert = 'Completa tarea y cantidad antes de guardar.';
+            $rendAlertClass = 'warning';
+            break;
+        default:
+            $rendAlert = 'No se pudo guardar el rendimiento.';
+            $rendAlertClass = 'danger';
+            break;
+    }
+}
 
 if ($cuadrilleroProfile === null) {
     $cuadrilleroProfile = [
@@ -179,6 +275,32 @@ $dynamicGreeting .= ', ' . htmlspecialchars($userName, ENT_QUOTES, 'UTF-8');
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div class="card assigned-card p-4 mb-4">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-3">
+                    <div>
+                        <h2 class="h5 mb-1">Notificaciones de rendimiento</h2>
+                        <small class="text-muted">Alertas por bajas de rendimiento registradas.</small>
+                    </div>
+                </div>
+                <?php if ($cuadrilleroNotifications): ?>
+                    <ul class="list-group list-group-flush">
+                        <?php foreach ($cuadrilleroNotifications as $notif): ?>
+                            <li class="list-group-item">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <strong><?php echo htmlspecialchars((string) $notif['titulo'], ENT_QUOTES, 'UTF-8'); ?></strong>
+                                        <div class="text-muted small"><?php echo htmlspecialchars((string) $notif['mensaje'], ENT_QUOTES, 'UTF-8'); ?></div>
+                                    </div>
+                                    <small class="text-muted"><?php echo htmlspecialchars((string) $notif['created_at'], ENT_QUOTES, 'UTF-8'); ?></small>
+                                </div>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php else: ?>
+                    <div class="text-muted">Sin alertas recientes.</div>
+                <?php endif; ?>
             </div>
             <div class="row g-3 mb-4">
                 <div class="col-md-4">
@@ -282,6 +404,28 @@ $dynamicGreeting .= ', ' . htmlspecialchars($userName, ENT_QUOTES, 'UTF-8');
                         <small class="text-muted">Estado y fecha de ingreso de cada trabajador.</small>
                     </div>
                 </div>
+                <?php if ($photoAlert): ?>
+                    <div class="alert alert-<?php echo $photoAlertClass; ?> border-0">
+                        <i class="bi bi-camera me-1"></i><?php echo htmlspecialchars($photoAlert, ENT_QUOTES, 'UTF-8'); ?>
+                    </div>
+                <?php endif; ?>
+                <?php if ($rendAlert): ?>
+                    <div class="alert alert-<?php echo $rendAlertClass; ?> border-0">
+                        <i class="bi bi-clipboard-check me-1"></i><?php echo htmlspecialchars($rendAlert, ENT_QUOTES, 'UTF-8'); ?>
+                    </div>
+                <?php endif; ?>
+
+                <?php if (!$taskStandards): ?>
+                    <div class="alert alert-warning border-0">
+                        <i class="bi bi-exclamation-triangle me-1"></i>No hay estándares de tarea configurados por el administrador.
+                    </div>
+                <?php endif; ?>
+
+                <form id="peonPhotoForm" method="post" action="upload_peon_foto.php" enctype="multipart/form-data">
+                    <input type="hidden" name="peon_id" id="peonPhotoPeonId" value="">
+                    <input type="file" name="foto_tarea" id="peonPhotoFile" accept="image/jpeg,image/png,image/webp" style="position:absolute;left:-9999px;width:1px;height:1px;" aria-hidden="true">
+                </form>
+                <div id="photoUploadStatus" class="small text-muted mb-3"></div>
                 <?php if ($assignedWorkers): ?>
                     <div class="table-responsive">
                         <table class="table align-middle mb-0">
@@ -292,6 +436,8 @@ $dynamicGreeting .= ', ' . htmlspecialchars($userName, ENT_QUOTES, 'UTF-8');
                                     <th>Estado</th>
                                     <th>Ingreso</th>
                                     <th>Teléfono</th>
+                                    <th>Foto tarea</th>
+                                    <th>Rendimiento</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -308,6 +454,30 @@ $dynamicGreeting .= ', ' . htmlspecialchars($userName, ENT_QUOTES, 'UTF-8');
                                         </td>
                                         <td><?php echo htmlspecialchars((string)$w['fecha_ingreso'], ENT_QUOTES, 'UTF-8'); ?></td>
                                         <td><?php echo $w['telefono'] ? htmlspecialchars((string)$w['telefono'], ENT_QUOTES, 'UTF-8') : '<span class="text-muted">-</span>'; ?></td>
+                                        <td>
+                                            <button type="button" class="btn btn-outline-primary btn-sm js-upload-peon-photo" data-peon-id="<?php echo (int)$w['id']; ?>" data-peon-name="<?php echo htmlspecialchars(trim((string)$w['nombre'].' '.$w['apellido']), ENT_QUOTES, 'UTF-8'); ?>">
+                                                <i class="bi bi-camera me-1"></i>Subir
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <?php if ($taskStandards): ?>
+                                                <form method="post" action="registrar_rendimiento.php" class="d-flex flex-wrap gap-2 align-items-center">
+                                                    <input type="hidden" name="peon_id" value="<?php echo (int)$w['id']; ?>">
+                                                    <select name="tarea_id" class="form-select form-select-sm" required>
+                                                        <option value="">Tarea</option>
+                                                        <?php foreach ($taskStandards as $t): ?>
+                                                            <option value="<?php echo (int) $t['id']; ?>">
+                                                                <?php echo htmlspecialchars((string) $t['nombre'], ENT_QUOTES, 'UTF-8'); ?> (<?php echo (int) $t['cantidad_normal']; ?> <?php echo htmlspecialchars((string) $t['unidad'], ENT_QUOTES, 'UTF-8'); ?>)
+                                                            </option>
+                                                        <?php endforeach; ?>
+                                                    </select>
+                                                    <input type="number" name="cantidad" min="0" class="form-control form-control-sm" placeholder="Cantidad" required style="max-width:120px;">
+                                                    <button type="submit" class="btn btn-success btn-sm"><i class="bi bi-check2"></i></button>
+                                                </form>
+                                            <?php else: ?>
+                                                <span class="text-muted small">Sin estándares</span>
+                                            <?php endif; ?>
+                                        </td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>

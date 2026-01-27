@@ -25,6 +25,8 @@ $fincasJson = '[]';
 $peonesJson = '[]';
 $cuadrillerosJson = '[]';
 $attendanceJson = '[]';
+$taskStandards = [];
+$adminNotifications = [];
 
 try {
 	$stmtFincas = $pdo->query('SELECT id, nombre, link_ubicacion, descripcion, tarea_asignada, observacion FROM fincas ORDER BY nombre ASC');
@@ -46,6 +48,64 @@ try {
 	}
 } catch (Throwable $e) {
 	error_log('Error cargando datos en panel admin: ' . $e->getMessage());
+}
+
+$taskStatus = trim((string) ($_GET['tarea'] ?? ''));
+$taskAlert = null;
+$taskAlertClass = 'success';
+if ($taskStatus !== '') {
+	switch ($taskStatus) {
+		case 'ok':
+			$taskAlert = 'Estándar de tarea guardado.';
+			$taskAlertClass = 'success';
+			break;
+		case 'deleted':
+			$taskAlert = 'Estándar eliminado.';
+			$taskAlertClass = 'warning';
+			break;
+		default:
+			$taskAlert = 'No se pudo guardar el estándar.';
+			$taskAlertClass = 'danger';
+			break;
+	}
+}
+
+try {
+	$pdo->exec(
+		'CREATE TABLE IF NOT EXISTS tareas_estandar (
+			id INT NOT NULL AUTO_INCREMENT,
+			nombre VARCHAR(150) NOT NULL,
+			unidad VARCHAR(80) NOT NULL DEFAULT "unidades",
+			cantidad_normal INT NOT NULL DEFAULT 0,
+			actualizado_en TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+			PRIMARY KEY (id),
+			UNIQUE KEY uq_tarea_nombre (nombre)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci'
+	);
+	$pdo->exec(
+		'CREATE TABLE IF NOT EXISTS notificaciones (
+			id INT NOT NULL AUTO_INCREMENT,
+			rol_destino ENUM("admin","cuadrillero") NOT NULL,
+			usuario_id INT NULL,
+			titulo VARCHAR(150) NOT NULL,
+			mensaje TEXT NOT NULL,
+			leida TINYINT(1) NOT NULL DEFAULT 0,
+			created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+			PRIMARY KEY (id),
+			KEY idx_rol (rol_destino),
+			KEY idx_usuario (usuario_id),
+			KEY idx_fecha (created_at)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci'
+	);
+
+	$stmtStandards = $pdo->query('SELECT id, nombre, unidad, cantidad_normal FROM tareas_estandar ORDER BY nombre ASC');
+	$taskStandards = $stmtStandards->fetchAll(PDO::FETCH_ASSOC) ?: [];
+
+	$stmtNotifs = $pdo->prepare('SELECT titulo, mensaje, created_at FROM notificaciones WHERE rol_destino = :rol ORDER BY created_at DESC LIMIT 10');
+	$stmtNotifs->execute([':rol' => 'admin']);
+	$adminNotifications = $stmtNotifs->fetchAll(PDO::FETCH_ASSOC) ?: [];
+} catch (Throwable $e) {
+	error_log('Error cargando estándares/notificaciones: ' . $e->getMessage());
 }
 
 $fincasJson = json_encode($availableFincas, JSON_UNESCAPED_UNICODE) ?: '[]';
@@ -168,6 +228,34 @@ $attendanceJson = json_encode($attendanceData, JSON_UNESCAPED_UNICODE) ?: '[]';
 							<div class="stat-icon bg-danger-subtle text-danger"><i class="bi bi-exclamation-octagon"></i></div>
 						</div>
 					</div>
+				</div>
+			</div>
+
+			<div class="card border-0 shadow-sm mb-4">
+				<div class="card-body">
+					<div class="d-flex align-items-center justify-content-between mb-3">
+						<div>
+							<h2 class="h5 mb-0">Notificaciones de rendimiento</h2>
+							<small class="text-muted">Alertas automáticas por bajas de rendimiento</small>
+						</div>
+					</div>
+					<?php if ($adminNotifications): ?>
+						<ul class="list-group list-group-flush">
+							<?php foreach ($adminNotifications as $notif): ?>
+								<li class="list-group-item">
+									<div class="d-flex justify-content-between">
+										<div>
+											<strong><?php echo htmlspecialchars((string) $notif['titulo'], ENT_QUOTES, 'UTF-8'); ?></strong>
+											<div class="text-muted small"><?php echo htmlspecialchars((string) $notif['mensaje'], ENT_QUOTES, 'UTF-8'); ?></div>
+										</div>
+										<small class="text-muted"><?php echo htmlspecialchars((string) $notif['created_at'], ENT_QUOTES, 'UTF-8'); ?></small>
+									</div>
+								</li>
+							<?php endforeach; ?>
+						</ul>
+					<?php else: ?>
+						<div class="text-muted">Sin alertas recientes.</div>
+					<?php endif; ?>
 				</div>
 			</div>
 
@@ -334,6 +422,82 @@ $attendanceJson = json_encode($attendanceData, JSON_UNESCAPED_UNICODE) ?: '[]';
 								<button type="submit" class="btn btn-success"><i class="bi bi-save me-1"></i>Guardar finca</button>
 							</div>
 						</form>
+					</div>
+				</div>
+			</div>
+
+			<div class="row g-4 mb-4">
+				<div class="col-lg-6">
+					<div class="card form-section p-4 h-100">
+						<div class="d-flex justify-content-between align-items-center mb-3">
+							<div>
+								<h2 class="h5 mb-0">Estándares de tarea</h2>
+								<small class="text-muted">Define la cantidad normal por día.</small>
+							</div>
+						</div>
+						<?php if ($taskAlert): ?>
+							<div class="alert alert-<?php echo $taskAlertClass; ?> border-0">
+								<i class="bi bi-clipboard-check me-1"></i><?php echo htmlspecialchars($taskAlert, ENT_QUOTES, 'UTF-8'); ?>
+							</div>
+						<?php endif; ?>
+						<form action="guardar_tarea_estandar.php" method="post" class="row g-3">
+							<div class="col-12">
+								<label class="form-label fw-semibold">Tarea</label>
+								<input type="text" name="nombre" class="form-control" placeholder="Ej. Poda" required>
+							</div>
+							<div class="col-sm-6">
+								<label class="form-label fw-semibold">Cantidad normal</label>
+								<input type="number" name="cantidad_normal" class="form-control" min="0" required>
+							</div>
+							<div class="col-sm-6">
+								<label class="form-label fw-semibold">Unidad</label>
+								<input type="text" name="unidad" class="form-control" placeholder="hileras" required>
+							</div>
+							<div class="col-12 text-end">
+								<button type="submit" class="btn btn-primary"><i class="bi bi-save me-1"></i>Guardar estándar</button>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div class="col-lg-6">
+					<div class="card form-section p-4 h-100">
+						<div class="d-flex justify-content-between align-items-center mb-3">
+							<div>
+								<h2 class="h5 mb-0">Lista de estándares</h2>
+								<small class="text-muted">Se usan para validar rendimiento.</small>
+							</div>
+						</div>
+						<?php if ($taskStandards): ?>
+							<div class="table-responsive">
+								<table class="table align-middle mb-0">
+									<thead class="table-light">
+										<tr>
+											<th>Tarea</th>
+											<th>Cantidad</th>
+											<th>Unidad</th>
+											<th></th>
+										</tr>
+									</thead>
+									<tbody>
+										<?php foreach ($taskStandards as $standard): ?>
+											<tr>
+												<td><?php echo htmlspecialchars((string) $standard['nombre'], ENT_QUOTES, 'UTF-8'); ?></td>
+												<td><?php echo (int) $standard['cantidad_normal']; ?></td>
+												<td><?php echo htmlspecialchars((string) $standard['unidad'], ENT_QUOTES, 'UTF-8'); ?></td>
+												<td class="text-end">
+													<form action="eliminar_tarea_estandar.php" method="post" onsubmit="return confirm('¿Eliminar este estándar?');" class="d-inline">
+														<input type="hidden" name="id" value="<?php echo (int) $standard['id']; ?>">
+														<button type="submit" class="btn btn-outline-danger btn-sm"><i class="bi bi-trash"></i></button>
+													</form>
+												</td>
+											</tr>
+										<?php endforeach; ?>
+									</tbody>
+								</table>
+							</div>
+						<?php else: ?>
+							<div class="text-muted">Todavía no hay estándares cargados.</div>
+						<?php endif; ?>
 					</div>
 				</div>
 			</div>
